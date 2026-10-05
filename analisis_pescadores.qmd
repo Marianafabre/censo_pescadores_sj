@@ -108,9 +108,7 @@ tabla_frecuencias <- function(df, var) {
     arrange(desc(n))                      
 }
 
-# tabla_frecuencias_ordenada(): igual que la anterior, pero en vez de ordenar
-# por frecuencia respeta un orden fijo que le pasamos (`niveles`), y permite
-# ponerle una etiqueta más legible a cada código (`etiquetas`). 
+# tabla_frecuencias_ordenada
 tabla_frecuencias_ordenada <- function(df, var, niveles, etiquetas = niveles) {
   df %>%
     filter(!is.na(.data[[var]])) %>%
