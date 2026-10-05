@@ -135,7 +135,7 @@ grafico_barras_estilo <- function(tabla, var, titulo, subtitulo = NULL) {
 }
 ```
 
-El relevamiento cubrió `r n_distinct(hogares$id_hogar)` hogares y `r nrow(personas_solo)` personas que trabajan en la pesca artesanal en el departamento.
+El relevamiento cubrió hogares y personas que trabajan en la pesca artesanal en el departamento.
 
 ```{r}
 #| echo: false
@@ -156,8 +156,7 @@ hogares_por_localidad <- hogares %>%
   mutate(localidad = recode_localidad(localidad)) %>%
   count(localidad, name = "Hogares (n)")
 
-# 2. Personas por localidad: usamos `datos` porque ahí cada persona ya tiene
-#    pegada la localidad de SU hogar.
+# 2. Personas por localidad
 personas_por_localidad <- datos %>%
   mutate(localidad = recode_localidad(localidad)) %>%
   count(localidad, name = "Personas (n)")
@@ -173,9 +172,6 @@ tabla_localidad <- hogares_por_localidad %>%
   arrange(desc(`Hogares (n)`)) %>%
   select(Localidad, `Hogares (n)`, `Hogares (%)`, `Personas (n)`, `Personas (%)`)
 
-# 4. Le agregamos una fila de "Total" al final, calculada a partir de la
-#    tabla que acabamos de armar (sin usar el pronombre `.`, para que quede
-#    más claro de dónde sale cada número).
 fila_total <- tibble(
   Localidad      = "Total",
   "Hogares (n)"  = sum(tabla_localidad$`Hogares (n)`),
@@ -311,10 +307,7 @@ grafico_en_paneles <- function(tabla, colores, titulo, subtitulo = NULL) {
     tema_informe
 }
 
-# Materialidad de la vivienda: armamos una tabla de frecuencias por cada
-# variable (paredes, piso, techo), con las categorías ya traducidas a
-# etiquetas legibles, y las apilamos en una sola tabla con la columna
-# "dimension" que indica a qué panel del gráfico pertenece cada fila.
+# Materialidad de la vivienda
 tabla_materialidad <- bind_rows(
   tabla_frecuencias(
     hogares %>% mutate(material_paredes = recode(material_paredes,
