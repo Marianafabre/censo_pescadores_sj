@@ -422,9 +422,341 @@ tabla_frecuencias(hogares, "hay_discapacidad") %>%
 
 ### Trayectoria y rol
 
+```{r}
+#| echo: false
+
+# --- 1. Procesamiento de datos ---
+trayectoria <- datos %>% 
+  mutate(Tramos_antiguedad = case_when(
+    anos_oficio_pesca < 10 ~ "Menos de 10 años",
+    anos_oficio_pesca >= 10 & anos_oficio_pesca < 25 ~ "De 10 a 25 años",
+    anos_oficio_pesca >= 25 ~ "25 años o más",
+    TRUE ~ "Sin dato"
+  )) %>%
+  group_by(Tramos_antiguedad) %>% 
+  summarise(Cantidad = n(), .groups = "drop") %>% 
+  mutate(
+    Porcentaje = round(Cantidad / sum(Cantidad) * 100, 1),
+    Porcentaje_formateado = paste0(Porcentaje, "%")
+  )
+
+# --- 2. Definir tamaño del agujero (hsize) ---
+hsize <- 2
+
+# --- 3. Paleta y tema (los que ya tenías) ---
+paleta_pesca   <- c("#1A5276", "#2E86AB", "#48A9A6", "#73AB84",
+                    "#A6C36F", "#F4A259", "#C1666B", "#7B506F")
+
+fuente_caption <- "Fuente: Elaboración propia en base a Censo de pescadores artesanales, IDE-San José"
+
+tema_informe <- theme_minimal(base_size = 12) +
+  theme(
+    plot.title    = element_text(face = "bold", size = 13, hjust = 0.5),
+    plot.subtitle = element_text(size = 10, hjust = 0.5, color = "gray40"),
+    plot.caption  = element_text(size = 8, color = "gray50", hjust = 1),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.y = element_blank(),
+    plot.background = element_rect(fill = "white", color = NA)
+  )
+
+# --- 4. Gráfico de rosca ---
+ggplot(trayectoria, aes(x = hsize, y = Porcentaje, fill = Tramos_antiguedad)) +
+  geom_col(color = "white", width = 1) +
+  geom_text(aes(label = Porcentaje_formateado),
+            size = 4,
+            position = position_stack(vjust = 0.5),
+            fontface = "bold",
+            color = "white") +
+  coord_polar(theta = "y") +
+  scale_fill_manual(values = paleta_pesca) +
+  xlim(c(0.2, hsize + 0.5)) +
+  labs(
+    title   = "Distribución por tramos de antigüedad en el oficio",
+    fill    = "Tramos de antigüedad",
+    caption = fuente_caption
+  ) +
+  tema_informe +
+  theme(
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text  = element_blank(),
+    panel.grid = element_blank(),
+    legend.title = element_text(size = 10),
+    legend.text  = element_text(size = 9)
+  )
+
+```
+
+```{r}
+#| echo: false
+datos <- datos %>%
+  mutate(
+    rol_principal_pesca = trimws(rol_principal_pesca),
+    # ¿Es multirrespuesta?
+    multi_rol = grepl(",", rol_principal_pesca),
+    # Rol jerarquizado: si tiene patrón, gana patrón; si no, el primero listado
+    rol_jerarquizado = case_when(
+      is.na(rol_principal_pesca) | rol_principal_pesca == "" ~ "Sin dato",
+      grepl("patron_duenio", rol_principal_pesca) ~ "Patrón / dueño",
+      grepl("marinero_tripulante", rol_principal_pesca) ~ "Marinero / tripulante",
+      grepl("procesamiento", rol_principal_pesca) ~ "Procesamiento",
+      grepl("venta_directa|comercializacion_publico", rol_principal_pesca) ~ "Comercialización",
+      grepl("apoyo_tierra", rol_principal_pesca) ~ "Apoyo en tierra",
+      grepl("construccion_artes", rol_principal_pesca) ~ "Construcción de artes",
+      TRUE ~ "Otro"
+    ),
+    # Etiqueta legible
+    Rol = recode(rol_jerarquizado,
+      "Patrón / dueño"       = "Patrón / dueño",
+      "Marinero / tripulante"= "Marinero / tripulante",
+      "Procesamiento"        = "Procesamiento",
+      "Comercialización"     = "Comercialización",
+      "Apoyo en tierra"      = "Apoyo en tierra",
+      "Construcción de artes"= "Construcción de artes",
+      "Otro"                 = "Otro",
+      "Sin dato"             = "Sin dato"
+    )
+  )
+
+# Resumen
+roles_resumen <- datos %>%
+  count(Rol, name = "Cantidad") %>%
+  mutate(
+    Porcentaje = round(Cantidad / sum(Cantidad) * 100, 1),
+    Porcentaje_formateado = paste0(Porcentaje, "%")
+  ) %>%
+  arrange(desc(Cantidad))
+
+orden <- c("Patrón / dueño", "Marinero / tripulante", "Procesamiento",
+           "Comercialización", "Apoyo en tierra", "Construcción de artes",
+           "Otro", "Sin dato")
+roles_resumen <- roles_resumen %>%
+  mutate(Rol = factor(Rol, levels = rev(orden[orden %in% Rol])))
+
+ggplot(roles_resumen, aes(x = Rol, y = Porcentaje, fill = Rol)) +
+  geom_col(width = 0.65, show.legend = FALSE) +
+  geom_text(aes(label = paste0(Porcentaje, "%")), 
+            hjust = -0.15, size = 3.8, fontface = "bold") +
+  scale_fill_manual(values = rep(paleta_pesca, length.out = nrow(roles_resumen))) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+  coord_flip() +
+  labs(
+    title = "DISTRIBUCIÓN POR ROL PRINCIPAL EN LA PESCA",
+    subtitle = "Porcentaje de personas según rol jerarquizado",
+    caption = fuente_caption, x = NULL, y = "%"
+  ) +
+  tema_informe
+
+
+```
+
 ### Embarcaciones y permisos
 
+```{r}
+#| echo: false
+
+library(patchwork)
+
+# --- 1. NA -> "Sin dato" ---
+datos <- datos %>%
+  mutate(
+    tiene_embarcacion_propia = ifelse(is.na(tiene_embarcacion_propia), "Sin dato", tiene_embarcacion_propia),
+    tiene_libreta_prefectura = ifelse(is.na(tiene_libreta_prefectura), "Sin dato", tiene_libreta_prefectura)
+  )
+
+# --- 2. Tablas resumen ---
+tabla_emb <- datos %>%
+  count(tiene_embarcacion_propia, name = "Cantidad") %>%
+  mutate(
+    Porcentaje = round(Cantidad / sum(Cantidad) * 100, 1),
+    Porcentaje_formateado = paste0(Porcentaje, "%")
+  ) %>%
+  mutate(tiene_embarcacion_propia = factor(
+    tiene_embarcacion_propia, levels = c("si", "no", "Sin dato")
+  )) %>%
+  arrange(tiene_embarcacion_propia)
+
+tabla_lib <- datos %>%
+  count(tiene_libreta_prefectura, name = "Cantidad") %>%
+  mutate(
+    Porcentaje = round(Cantidad / sum(Cantidad) * 100, 1),
+    Porcentaje_formateado = paste0(Porcentaje, "%")
+  ) %>%
+  mutate(tiene_libreta_prefectura = factor(
+    tiene_libreta_prefectura, levels = c("si", "no", "Sin dato")
+  )) %>%
+  arrange(tiene_libreta_prefectura)
+
+# --- 3. Rosca 1: embarcación ---
+hsize <- 2
+
+g_emb <- ggplot(tabla_emb, aes(x = hsize, y = Porcentaje, fill = tiene_embarcacion_propia)) +
+  geom_col(color = "white", width = 1) +
+  geom_text(aes(label = Porcentaje_formateado),
+            size = 4, position = position_stack(vjust = 0.5),
+            fontface = "bold", color = "white") +
+  coord_polar(theta = "y") +
+  scale_fill_manual(
+    values = paleta_pesca,
+    name   = "Respuesta",
+    labels = c("si" = "Sí", "no" = "No", "Sin dato" = "Sin dato")
+  ) +
+  xlim(c(0.2, hsize + 0.5)) +
+  labs(title = "EMBARCACIÓN PROPIA",
+       subtitle = "Porcentaje de pescadores según tenencia") +
+  tema_informe +
+  theme(axis.title = element_blank(), axis.ticks = element_blank(),
+        axis.text = element_blank(), panel.grid = element_blank(),
+        legend.title = element_text(size = 10),
+        legend.text = element_text(size = 9))
+
+# --- 4. Rosca 2: libreta ---
+g_lib <- ggplot(tabla_lib, aes(x = hsize, y = Porcentaje, fill = tiene_libreta_prefectura)) +
+  geom_col(color = "white", width = 1) +
+  geom_text(aes(label = Porcentaje_formateado),
+            size = 4, position = position_stack(vjust = 0.5),
+            fontface = "bold", color = "white") +
+  coord_polar(theta = "y") +
+  scale_fill_manual(
+    values = paleta_pesca,
+    name   = "Respuesta",
+    labels = c("si" = "Sí", "no" = "No", "Sin dato" = "Sin dato")
+  ) +
+  xlim(c(0.2, hsize + 0.5)) +
+  labs(title = "LIBRETA DE PREFECTURA",
+       subtitle = "Porcentaje de pescadores según tenencia") +
+  tema_informe +
+  theme(axis.title = element_blank(), axis.ticks = element_blank(),
+        axis.text = element_blank(), panel.grid = element_blank(),
+        legend.title = element_text(size = 10),
+        legend.text = element_text(size = 9))
+
+# --- 5. Panel único con UNA sola leyenda y UN solo caption ---
+g_emb + g_lib +
+  plot_layout(guides = "collect") +
+  plot_annotation(
+    title   = "TENENCIA DE ACTIVOS Y HABILITACIONES",
+    caption = fuente_caption,
+    theme   = theme(
+      plot.title   = element_text(face = "bold", size = 14, hjust = 0.5),
+      plot.caption = element_text(size = 8, color = "gray50", hjust = 1)
+    )
+  ) &
+  theme(legend.position = "bottom")
+```
+
+tolal 62 embarcaciones.de los que tienen embarcacion propia, todos declran tener 1, excepto seis casos que declaran 2 cada uno.39% no tienen permiso de pesca
+
 ### Formalización laboral
+
+```{r}
+#| echo: false
+
+
+library(dplyr)
+library(ggplot2)
+
+# --- 1. Limpieza: NA, vacíos y variantes -> "si" / "no" / "Sin dato" ---
+datos <- datos %>%
+  mutate(
+    aporta_bps = trimws(as.character(aporta_bps)),
+    aporta_bps = case_when(
+      is.na(aporta_bps) | aporta_bps == "" ~ "Sin dato",
+      tolower(aporta_bps) %in% c("si", "sí", "s") ~ "si",
+      tolower(aporta_bps) %in% c("no", "n")      ~ "no",
+      TRUE ~ "Sin dato"
+    )
+  )
+
+# --- 2. Tabla resumen ---
+tabla_bps <- datos %>%
+  count(aporta_bps, name = "Cantidad") %>%
+  mutate(
+    Porcentaje = round(Cantidad / sum(Cantidad) * 100, 1),
+    Porcentaje_formateado = paste0(Porcentaje, "%")
+  ) %>%
+  mutate(aporta_bps = factor(
+    aporta_bps, levels = c("si", "no", "Sin dato")
+  )) %>%
+  arrange(aporta_bps)
+
+# --- 3. Rosca ---
+hsize <- 2
+
+ggplot(tabla_bps, aes(x = hsize, y = Porcentaje, fill = aporta_bps)) +
+  geom_col(color = "white", width = 1) +
+  geom_text(aes(label = Porcentaje_formateado),
+            size = 4, position = position_stack(vjust = 0.5),
+            fontface = "bold", color = "white") +
+  coord_polar(theta = "y") +
+  scale_fill_manual(
+    values = paleta_pesca,
+    name   = "Respuesta",
+    labels = c("si" = "Sí", "no" = "No", "Sin dato" = "Sin dato")
+  ) +
+  xlim(c(0.2, hsize + 0.5)) +
+  labs(
+    title    = "APORTES A BPS",
+    subtitle = "Porcentaje de pescadores según aporte",
+    caption  = fuente_caption
+  ) +
+  tema_informe +
+  theme(
+    axis.title = element_blank(), axis.ticks = element_blank(),
+    axis.text  = element_blank(), panel.grid = element_blank(),
+    legend.title = element_text(size = 10),
+    legend.text  = element_text(size = 9)
+  )
+```
+
+forma predominante de aporte monotributo, 3 monotributo social, 1 empleado formal,
+
+```{r}
+#| echo: false
+
+library(dplyr)
+library(ggplot2)
+
+# --- 1. Limpieza: NA y vacíos -> "Sin dato" ---
+datos <- datos %>%
+  mutate(
+    relacion_laboral = trimws(as.character(relacion_laboral)),
+    relacion_laboral = case_when(
+      is.na(relacion_laboral) | relacion_laboral == "" ~ "Sin dato",
+      TRUE ~ relacion_laboral
+    )
+  )
+
+# --- 2. Tabla resumen ---
+tabla_rel <- datos %>%
+  count(relacion_laboral, name = "Cantidad") %>%
+  mutate(
+    pct = round(Cantidad / sum(Cantidad) * 100, 1)
+  ) %>%
+  arrange(desc(pct))
+
+# --- 3. Ordenar: categorías reales por frecuencia desc, "Sin dato" al final ---
+tabla_rel <- tabla_rel %>%
+  mutate(es_sin_dato = relacion_laboral == "Sin dato") %>%
+  arrange(es_sin_dato, desc(pct)) %>%
+  mutate(relacion_laboral = factor(relacion_laboral, levels = rev(relacion_laboral)))
+
+# --- 4. Barras horizontales ---
+ggplot(tabla_rel, aes(x = relacion_laboral, y = pct, fill = relacion_laboral)) +
+  geom_col(width = 0.65, show.legend = FALSE) +
+  geom_text(aes(label = paste0(pct, "%")),
+            hjust = -0.15, size = 3.8, fontface = "bold") +
+  scale_fill_manual(values = rep(paleta_pesca, length.out = nrow(tabla_rel))) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+  coord_flip() +
+  labs(
+    title    = "DISTRIBUCIÓN POR RELACIÓN LABORAL",
+    subtitle = "Porcentaje de pescadores según relación laboral",
+    caption  = fuente_caption,
+    x = NULL, y = "%"
+  ) +
+  tema_informe
+```
 
 ### Fuente de ingresos
 
