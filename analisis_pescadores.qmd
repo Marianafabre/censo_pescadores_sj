@@ -1,5 +1,5 @@
 ---
-title: "Censo de pescadores artesanales del departamento de San José"
+title: "Censo de pescadores artesanales del departamento de San José-2026"
 subtitle: "Serie de informes IDE-San José"
 author: "Instituto Departamental de Estadísticas - Intendencia de San José"
 date: today
@@ -23,9 +23,13 @@ number-sections: true
 booktabs: true
 ---
 
-# Presentación
+# Presentación y antecedentes
 
-El presente informe fue elaborado por el Instituto Departamental de Estadísticas de la Intendencia de San José en base a los datos del censo a pescadores artesanales del departamento....
+El presente informe fue elaborado por el Instituto Departamental de Estadísticas de la Intendencia de San José en base a los datos del Censo a Pescadores Artesanales del Departamento de San José -2026.
+
+El mencionado Censo fue realizado por iniciativa de la Dirección de Desarrollo con el apoyo del Instituto Departamental de Estadísticas. El Instituto se encargó del entrenamiento del equipo de encuestadores, diseño del instrumento de recolección, de la prueba del formulario y del procesamiento, análisis y elaboración del informe final.
+
+Para el diseño del censo, se tuvo en cuenta un trabajo desarrollado en forma parcial en 2007, antecedentes nacionales e internacionales y se mantuvieron entrevistas on line con integrantes del equipo técnico de la Dirección Nacional de Recursos Acuáticos (Dinara), y pescadores con experiencia de trabaja en la costa del Río de la Plata en el departamento de San José.
 
 Aquellos ciudadanos que tengan dudas o requieran información adicional, pueden comunicarse con el IDE-San José a ide\@sanjose.gub.uy o al teléfono +598 43429000 int 1904.
 
@@ -33,7 +37,13 @@ Aquellos ciudadanos que tengan dudas o requieran información adicional, pueden 
 
 # Aspectos metodológicos
 
-Los datos fueron procesados con el programa R y el documento fue producido en el entorno Quarto.
+La selección de los entrevistados fue no probabilistica y se realizó mediante identificación directa y, en un segundo paso, por la técnica de bola de nieve que permitió llegar a los pescadores a través de la referencia de sus pares anteriormente contactados. Las dimensiones incluidas en la encuesta fueron las siguientes: Se localizaron 78 personas personas que trabajan en la pesca, pertenecientes a 53 hogares.
+
+La encuesta se dividió en dos módulos: vivienda, hogares y personas por un lado y por otro, unidades de producción (embarcaciones). Las dimensiones principales fueron: ubicación y tenencia de la vivienda; calidad de la vivienda y servicios básicos; composición del hogar; datos básicos de las personas; educación y salud; arraigo; perfil laboral e ingresos de la pesca; organización, participación y capacitación; percepción de desafíos y problemas. En el módulo relativo a la unidad de producción se identifican las siguientes dimensiones: identificación técnica y formalización; propulsión y seguridad; artes de pesca; esfuerzo y captura y comercialización y precios.
+
+El trabajo de campo, realizado por un equipo de pertenecientes a la Dirección de Desarrollo, se aplicó entre el 26 de junio y el 8 de setiembre de 2026.
+
+La información se presenta en tablas y gráficos con su correspondiente lectura. Al final se presenta un capítulo de conclusiones. Los datos fueron procesados con el programa R y el documento fue producido en el entorno Quarto.
 
 \newpage
 
@@ -54,7 +64,7 @@ library(knitr)
 library(kableExtra)  
 
 
-ruta_archivo <- "C:/Users/gobernanza/Desktop/IDE/Censo pescadores/base_pescadores.xlsx"
+ruta_archivo <- "C:/Users/wramirez/Desktop/INSTITUTO DEPARTAMENTAL DE ESTADISTICAS/Censo pescadores/Censo pescadores 2026/censo_pescadores_sj/base_pescadores_original_limpia.xlsx"
 
 hogares       <- read_excel(ruta_archivo, sheet = "_10_de_formulario_0") %>% clean_names()
 personas_solo <- read_excel(ruta_archivo, sheet = "personas_pesca_1")    %>% clean_names()
