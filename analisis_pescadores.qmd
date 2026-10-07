@@ -653,8 +653,6 @@ tolal 62 embarcaciones.de los que tienen embarcacion propia, todos declran tener
 ```{r}
 #| echo: false
 
-
-library(dplyr)
 library(ggplot2)
 
 # --- 1. Limpieza: NA, vacíos y variantes -> "si" / "no" / "Sin dato" ---
@@ -761,9 +759,944 @@ ggplot(tabla_rel, aes(x = relacion_laboral, y = pct, fill = relacion_laboral)) +
 
 ### Fuente de ingresos
 
+```{r}
+#| echo: false
+
+
+
+# --- 1. Limpieza: NA, vacíos y variantes -> "si" / "no" / "Sin dato" ---
+datos <- datos %>%
+  mutate(
+    trabaja_todo_ano = trimws(as.character(trabaja_todo_ano)),
+    trabaja_todo_ano = case_when(
+      is.na(trabaja_todo_ano) | trabaja_todo_ano == "" ~ "Sin dato",
+      tolower(trabaja_todo_ano) %in% c("si", "sí", "s") ~ "si",
+      tolower(trabaja_todo_ano) %in% c("no", "n")      ~ "no",
+      TRUE ~ "Sin dato"
+    )
+  )
+
+# --- 2. Tabla resumen ---
+tabla_trabajo <- datos %>%
+  count(trabaja_todo_ano, name = "Cantidad") %>%
+  mutate(
+    Porcentaje = round(Cantidad / sum(Cantidad) * 100, 1),
+    Porcentaje_formateado = paste0(Porcentaje, "%")
+  ) %>%
+  mutate(trabaja_todo_ano = factor(
+    trabaja_todo_ano, levels = c("si", "no", "Sin dato")
+  )) %>%
+  arrange(trabaja_todo_ano)
+
+# --- 3. Rosca ---
+hsize <- 2
+
+ggplot(tabla_trabajo, aes(x = hsize, y = Porcentaje, fill = trabaja_todo_ano)) +
+  geom_col(color = "white", width = 1) +
+  geom_text(aes(label = Porcentaje_formateado),
+            size = 4, position = position_stack(vjust = 0.5),
+            fontface = "bold", color = "white") +
+  coord_polar(theta = "y") +
+  scale_fill_manual(
+    values = paleta_pesca,
+    name   = "Respuesta",
+    labels = c("si" = "Sí", "no" = "No", "Sin dato" = "Sin dato")
+  ) +
+  xlim(c(0.2, hsize + 0.5)) +
+  labs(
+    title    = "TRABAJO DURANTE TODO EL AÑO",
+    subtitle = "Porcentaje de pescadores según continuidad laboral",
+    caption  = fuente_caption
+  ) +
+  tema_informe +
+  theme(
+    axis.title = element_blank(), axis.ticks = element_blank(),
+    axis.text  = element_blank(), panel.grid = element_blank(),
+    legend.title = element_text(size = 10),
+    legend.text  = element_text(size = 9)
+  )
+
+```
+
+De los que no trabajan durante todo el año, todos se concentran en partes del segundo semestre hasta el mes de febrero.
+
 \newpage
 
-## Organización y percepción del sector
+```{r}
+#| echo: false
+
+# ============================================================
+# 1. LIMPIEZA
+# ============================================================
+datos <- datos %>%
+  mutate(
+    # otras_actividades_remuneradas: si/no
+    otras_actividades_remuneradas = trimws(as.character(otras_actividades_remuneradas)),
+    otras_actividades_remuneradas = case_when(
+      is.na(otras_actividades_remuneradas) | otras_actividades_remuneradas == "" ~ "Sin dato",
+      tolower(otras_actividades_remuneradas) %in% c("si", "sí", "s") ~ "si",
+      tolower(otras_actividades_remuneradas) %in% c("no", "n")      ~ "no",
+      TRUE ~ "Sin dato"
+    ),
+    # pesca_principal_ingreso: si/no
+    pesca_principal_ingreso = trimws(as.character(pesca_principal_ingreso)),
+    pesca_principal_ingreso = case_when(
+      is.na(pesca_principal_ingreso) | pesca_principal_ingreso == "" ~ "Sin dato",
+      tolower(pesca_principal_ingreso) %in% c("si", "sí", "s") ~ "si",
+      tolower(pesca_principal_ingreso) %in% c("no", "n")      ~ "no",
+      TRUE ~ "Sin dato"
+    )
+  )
+
+# ============================================================
+# 2. TABLAS RESUMEN
+# ============================================================
+tabla_pesca <- datos %>%
+  count(pesca_principal_ingreso, name = "Cantidad") %>%
+  mutate(
+    Porcentaje = round(Cantidad / sum(Cantidad) * 100, 1),
+    Porcentaje_formateado = paste0(Porcentaje, "%")
+  ) %>%
+  mutate(pesca_principal_ingreso = factor(
+    pesca_principal_ingreso, levels = c("si", "no", "Sin dato")
+  )) %>%
+  arrange(pesca_principal_ingreso)
+
+tabla_otras <- datos %>%
+  count(otras_actividades_remuneradas, name = "Cantidad") %>%
+  mutate(
+    Porcentaje = round(Cantidad / sum(Cantidad) * 100, 1),
+    Porcentaje_formateado = paste0(Porcentaje, "%")
+  ) %>%
+  mutate(otras_actividades_remuneradas = factor(
+    otras_actividades_remuneradas, levels = c("si", "no", "Sin dato")
+  )) %>%
+  arrange(otras_actividades_remuneradas)
+
+# ============================================================
+# 3. ROSCA 1: pesca principal ingreso
+# ============================================================
+hsize <- 2
+
+g_pesca <- ggplot(tabla_pesca, aes(x = hsize, y = Porcentaje, fill = pesca_principal_ingreso)) +
+  geom_col(color = "white", width = 1) +
+  geom_text(aes(label = Porcentaje_formateado),
+            size = 4, position = position_stack(vjust = 0.5),
+            fontface = "bold", color = "white") +
+  coord_polar(theta = "y") +
+  scale_fill_manual(
+    values = paleta_pesca,
+    name   = "Respuesta",
+    labels = c("si" = "Sí", "no" = "No", "Sin dato" = "Sin dato")
+  ) +
+  xlim(c(0.2, hsize + 0.5)) +
+  labs(title = "PESCA COMO PRINCIPAL INGRESO",
+       subtitle = "Pescadores según ingreso principal (%)") +
+  tema_informe +
+  theme(axis.title = element_blank(), axis.ticks = element_blank(),
+        axis.text = element_blank(), panel.grid = element_blank(),
+        legend.title = element_text(size = 10),
+        legend.text = element_text(size = 9))
+
+# ============================================================
+# 4. ROSCA 2: otras actividades remuneradas
+# ============================================================
+g_otras <- ggplot(tabla_otras, aes(x = hsize, y = Porcentaje, fill = otras_actividades_remuneradas)) +
+  geom_col(color = "white", width = 1) +
+  geom_text(aes(label = Porcentaje_formateado),
+            size = 4, position = position_stack(vjust = 0.5),
+            fontface = "bold", color = "white") +
+  coord_polar(theta = "y") +
+  scale_fill_manual(
+    values = paleta_pesca,
+    name   = "Respuesta",
+    labels = c("si" = "Sí", "no" = "No", "Sin dato" = "Sin dato")
+  ) +
+  xlim(c(0.2, hsize + 0.5)) +
+  labs(title = "OTRAS ACTIVIDADES",
+       subtitle = "Pescadores según actividades extra (%)") +
+  tema_informe +
+  theme(axis.title = element_blank(), axis.ticks = element_blank(),
+        axis.text = element_blank(), panel.grid = element_blank(),
+        legend.title = element_text(size = 10),
+        legend.text = element_text(size = 9))
+
+# ============================================================
+# 5. PANEL ÚNICO
+# ============================================================
+g_pesca + g_otras +
+  plot_layout(guides = "collect") +
+  plot_annotation(
+    title   = "PESCA COMO INGRESO PRINCIPAL Y PLURIACTIVIDAD",
+    caption = fuente_caption,
+    theme   = theme(
+      plot.title   = element_text(face = "bold", size = 14, hjust = 0.5),
+      plot.caption = element_text(size = 8, color = "gray50", hjust = 1)
+    )
+  ) &
+  theme(legend.position = "bottom")
+```
+
+Las actividades complementarias a la pesca se concentran en albañilería y changas, seguidas por trabajos rurales y, en menor medida, ocupaciones diversas como limpieza, gastronomía, almacén y leña. La presencia de respuestas múltiples evidencia una marcada pluriactividad entre los pescadores.
+
+\newpage
+
+```{r}
+#| echo: false
+
+# ============================================================
+# 1. LIMPIEZA Y ORDEN DE NIVELES
+# ============================================================
+# Orden lógico de los intervalos
+niveles_ganancia <- c("menos20k", "20k_40k", "40k_60k", "mas60k", "no_corresponde", "ns_nc")
+
+# Etiquetas legibles para el eje
+etiquetas_ganancia <- c(
+  "menos20k"       = "Menos de $20.000",
+  "20k_40k"        = "$20.000 – $40.000",
+  "40k_60k"        = "$40.000 – $60.000",
+  "mas60k"         = "Más de $60.000",
+  "no_corresponde" = "No corresponde",
+  "ns_nc"          = "NS/NC"
+)
+
+datos <- datos %>%
+  mutate(
+    ganancia_mensual_zafra = trimws(as.character(ganancia_mensual_zafra)),
+    ganancia_mensual_zafra = ifelse(is.na(ganancia_mensual_zafra) | ganancia_mensual_zafra == "",
+                                    "ns_nc", ganancia_mensual_zafra),
+    ganancia_mensual_zafra = factor(ganancia_mensual_zafra, levels = niveles_ganancia),
+
+    ganancia_mensual_fuera_zafra = trimws(as.character(ganancia_mensual_fuera_zafra)),
+    ganancia_mensual_fuera_zafra = ifelse(is.na(ganancia_mensual_fuera_zafra) | ganancia_mensual_fuera_zafra == "",
+                                          "ns_nc", ganancia_mensual_fuera_zafra),
+    ganancia_mensual_fuera_zafra = factor(ganancia_mensual_fuera_zafra, levels = niveles_ganancia)
+  )
+
+# ============================================================
+# 2. TABLAS RESUMEN
+# ============================================================
+tabla_zafra <- datos %>%
+  count(ganancia_mensual_zafra, name = "Cantidad") %>%
+  mutate(
+    pct = round(Cantidad / sum(Cantidad) * 100, 1)
+  )
+
+tabla_fuera <- datos %>%
+  count(ganancia_mensual_fuera_zafra, name = "Cantidad") %>%
+  mutate(
+    pct = round(Cantidad / sum(Cantidad) * 100, 1)
+  )
+
+# ============================================================
+# 3. GRÁFICO ZAFRA
+# ============================================================
+g_zafra <- ggplot(tabla_zafra, aes(x = ganancia_mensual_zafra, y = pct, fill = ganancia_mensual_zafra)) +
+  geom_col(width = 0.65, show.legend = FALSE) +
+  geom_text(aes(label = paste0(pct, "%")),
+            hjust = -0.15, size = 3.6, fontface = "bold") +
+  scale_fill_manual(values = rep(paleta_pesca, length.out = length(niveles_ganancia))) +
+  scale_x_discrete(labels = etiquetas_ganancia, drop = FALSE) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+  coord_flip() +
+  labs(
+    title    = "GANANCIA MENSUAL EN ZAFRA",
+    subtitle = "Porcentaje de pescadores por intervalo",
+    x = NULL, y = "%"
+  ) +
+  tema_informe
+
+# ============================================================
+# 4. GRÁFICO FUERA DE ZAFRA
+# ============================================================
+g_fuera <- ggplot(tabla_fuera, aes(x = ganancia_mensual_fuera_zafra, y = pct, fill = ganancia_mensual_fuera_zafra)) +
+  geom_col(width = 0.65, show.legend = FALSE) +
+  geom_text(aes(label = paste0(pct, "%")),
+            hjust = -0.15, size = 3.6, fontface = "bold") +
+  scale_fill_manual(values = rep(paleta_pesca, length.out = length(niveles_ganancia))) +
+  scale_x_discrete(labels = etiquetas_ganancia, drop = FALSE) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+  coord_flip() +
+  labs(
+    title    = "GANANCIA MENSUAL FUERA DE ZAFRA",
+    subtitle = "Porcentaje de pescadores por intervalo",
+    x = NULL, y = "%"
+  ) +
+  tema_informe
+
+# ============================================================
+# 5. PANEL ÚNICO
+# ============================================================
+g_zafra + g_fuera +
+  plot_annotation(
+    title   = "GANANCIA ZAFRA VS. FUERA DE ZAFRA",
+    caption = fuente_caption,
+    theme   = theme(
+      plot.title   = element_text(face = "bold", size = 14, hjust = 0.5),
+      plot.caption = element_text(size = 8, color = "gray50", hjust = 1)
+    )
+  )
+
+
+```
+
+```{r}
+#| echo: false
+
+# --- 1. Limpieza + filtro nper == 1 ---
+datos_nper1 <- datos %>%
+  filter(nper == 1) %>%
+  mutate(
+    ingreso_mensual_hogar = trimws(as.character(ingreso_mensual_hogar)),
+    ingreso_mensual_hogar = case_when(
+      is.na(ingreso_mensual_hogar) | ingreso_mensual_hogar == "" ~ "Sin dato",
+      ingreso_mensual_hogar %in% c("menos25k")          ~ "menos25k",
+      ingreso_mensual_hogar %in% c("25k_50k", "30k_50k") ~ "25k_50k",   # unifico
+      ingreso_mensual_hogar %in% c("50k_80k", "50k_75k") ~ "50k_80k",   # unifico
+      ingreso_mensual_hogar %in% c("75k_100k")          ~ "80k_100k",
+      ingreso_mensual_hogar %in% c("ns_nc")             ~ "ns_nc",
+      TRUE ~ "Sin dato"
+    )
+  )
+
+# --- 2. Orden de niveles ---
+niveles_ing <- c("Sin dato", "ns_nc", "80k_100k", "50k_80k", "25k_50k","menos25k")
+
+etiquetas_ing <- c(
+  "menos25k"  = "Menos de $25.000",
+  "25k_50k"   = "$25.000 – $50.000",
+  "50k_80k"   = "$50.000 – $80.000",
+  "75k_100k"  = "$80.000 – $100.000",
+  "ns_nc"     = "NS/NC",
+  "Sin dato"  = "Sin dato"
+)
+
+# --- 3. Tabla resumen ---
+tabla_ing <- datos_nper1 %>%
+  count(ingreso_mensual_hogar, name = "Cantidad") %>%
+  mutate(
+    pct = round(Cantidad / sum(Cantidad) * 100, 1)
+  ) %>%
+  # Asegurar que existan todos los niveles, incluso con 0
+  complete(ingreso_mensual_hogar = niveles_ing, fill = list(Cantidad = 0, pct = 0)) %>%
+  mutate(ingreso_mensual_hogar = factor(ingreso_mensual_hogar, levels = niveles_ing)) %>%
+  arrange(ingreso_mensual_hogar)
+
+# --- 4. Barras horizontales ---
+ggplot(tabla_ing, aes(x = ingreso_mensual_hogar, y = pct, fill = ingreso_mensual_hogar)) +
+  geom_col(width = 0.65, show.legend = FALSE) +
+  geom_text(aes(label = paste0(pct, "%")),
+            hjust = -0.15, size = 3.8, fontface = "bold") +
+  scale_fill_manual(values = rep(paleta_pesca, length.out = length(niveles_ing))) +
+  scale_x_discrete(labels = etiquetas_ing, drop = FALSE) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+  coord_flip() +
+  labs(
+    title    = "INGRESO MENSUAL DEL HOGAR",
+    subtitle = "Porcentaje de hogares por intervalo",
+    caption  = fuente_caption,
+    x = NULL, y = "%"
+  ) +
+  tema_informe
+```
+
+\newpage
+
+### Capacitación, organización y percepción del sector
+
+```{r}
+#| echo: false
+
+
+# --- 1. Limpieza: NA, vacíos y variantes -> "si" / "no" / "Sin dato" ---
+datos <- datos %>%
+  mutate(
+    interes_capacitacion = trimws(as.character(interes_capacitacion)),
+    interes_capacitacion = case_when(
+      is.na(interes_capacitacion) | interes_capacitacion == "" ~ "Sin dato",
+      tolower(interes_capacitacion) %in% c("si", "sí", "s") ~ "si",
+      tolower(interes_capacitacion) %in% c("no", "n")      ~ "no",
+      TRUE ~ "Sin dato"
+    )
+  )
+
+# --- 2. Tabla resumen ---
+tabla_cap <- datos %>%
+  count(interes_capacitacion, name = "Cantidad") %>%
+  mutate(
+    Porcentaje = round(Cantidad / sum(Cantidad) * 100, 1),
+    Porcentaje_formateado = paste0(Porcentaje, "%")
+  ) %>%
+  mutate(interes_capacitacion = factor(
+    interes_capacitacion, levels = c("si", "no", "Sin dato")
+  )) %>%
+  arrange(interes_capacitacion)
+
+# --- 3. Rosca ---
+hsize <- 2
+
+ggplot(tabla_cap, aes(x = hsize, y = Porcentaje, fill = interes_capacitacion)) +
+  geom_col(color = "white", width = 1) +
+  geom_text(aes(label = Porcentaje_formateado),
+            size = 4, position = position_stack(vjust = 0.5),
+            fontface = "bold", color = "white") +
+  coord_polar(theta = "y") +
+  scale_fill_manual(
+    values = paleta_pesca,
+    name   = "Respuesta",
+    labels = c("si" = "Sí", "no" = "No", "Sin dato" = "Sin dato")
+  ) +
+  xlim(c(0.2, hsize + 0.5)) +
+  labs(
+    title    = "INTERÉS EN CAPACITACIÓN",
+    subtitle = "Porcentaje de pescadores según interés",
+    caption  = fuente_caption
+  ) +
+  tema_informe +
+  theme(
+    axis.title = element_blank(), axis.ticks = element_blank(),
+    axis.text  = element_blank(), panel.grid = element_blank(),
+    legend.title = element_text(size = 10),
+    legend.text  = element_text(size = 9)
+  )
+
+
+```
+
+\newpage
+
+```{r}
+#| echo: false
+
+n_personas_cap <- datos_prob %>%
+  filter(temas_capacitacion != "Sin dato") %>%
+  nrow()
+
+# --- 1. Limpieza + separar menciones múltiples ---
+tabla_cap_temas <- datos %>%
+  filter(interes_capacitacion == "si") %>% 
+  mutate(
+    temas_capacitacion = trimws(as.character(temas_capacitacion))
+  ) %>%
+  separate_rows(temas_capacitacion, sep = ",") %>%
+  mutate(temas_capacitacion = trimws(temas_capacitacion)) %>%
+  filter(temas_capacitacion != "") %>%
+  count(temas_capacitacion, name = "Cantidad") %>%
+  mutate(
+    pct = round(Cantidad / n_personas_cap * 100, 1),
+    Porcentaje_formateado = paste0(pct, "%")
+  )
+
+# --- 2. Etiquetas legibles ---
+etiquetas_temas <- c(
+  "formalizacion_cap"     = "Formalización",
+  "comercializacion"      = "Comercialización",
+  "seguridad_nautica"     = "Seguridad náutica",
+  "manipulacion_pescado"  = "Manipulación de pescado",
+  "primeros_auxilios"     = "Primeros auxilios",
+  "manejo_artes"          = "Manejo de artes",
+  "buceo"                 = "Buceo",
+  "gestion_ambiental"     = "Gestión ambiental",
+  "administracion"        = "Administración",
+  "otro"                  = "Otro",
+  "Sin dato"              = "Sin dato"
+)
+
+# --- 3. Ordenar: por frecuencia desc, "Sin dato" y "Otro" al final ---
+tabla_cap_temas <- tabla_cap_temas %>%
+  mutate(
+    es_residual = temas_capacitacion %in% c("Sin dato", "otro"),
+    etiqueta = recode(temas_capacitacion, !!!etiquetas_temas)
+  ) %>%
+  arrange(es_residual, desc(pct)) %>%
+  mutate(etiqueta = factor(etiqueta, levels = rev(etiqueta)))
+
+# --- 4. Barras horizontales ---
+ggplot(tabla_cap_temas, aes(x = etiqueta, y = pct, fill = etiqueta)) +
+  geom_col(width = 0.65, show.legend = FALSE) +
+  geom_text(aes(label = Porcentaje_formateado),
+            hjust = -0.15, size = 3.6, fontface = "bold") +
+  scale_fill_manual(values = rep(paleta_pesca, length.out = nrow(tabla_cap_temas))) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+  coord_flip() +
+  labs(
+    title    = "TEMAS DE CAPACITACIÓN DE INTERÉS",
+    subtitle = paste0("Porcentaje de pescadores que mencionó cada problema (respuesta múltiple, n = ", n_personas_cap, ")"),,
+    caption  = fuente_caption,
+    x = NULL, y = "%"
+  ) +
+  tema_informe
+```
+
+En "Otro" se encuentran tres menciones más a "Administración", una a "Meteorología" y otra a "Mecánica".
+
+En cuanto a la participación en asociaciones o organizaciones sociales por parte de los pescadores, solamente se encuentran dos casos que declaran participar de sindicatos, mostrando un bajo nivel asociativo del sector.
+
+\newpage
+
+```{r}
+#| echo: false
+
+library(patchwork)
+
+# ============================================================
+# 1. LIMPIEZA
+# ============================================================
+datos <- datos %>%
+  mutate(
+    conoce_consejos_pesca = trimws(as.character(conoce_consejos_pesca)),
+    conoce_consejos_pesca = case_when(
+      is.na(conoce_consejos_pesca) | conoce_consejos_pesca == "" ~ "Sin dato",
+      tolower(conoce_consejos_pesca) %in% c("si", "sí", "s") ~ "si",
+      tolower(conoce_consejos_pesca) %in% c("no", "n")      ~ "no",
+      TRUE ~ "Sin dato"
+    ),
+
+    conoce_mesa_desarrollo_rural = trimws(as.character(conoce_mesa_desarrollo_rural)),
+    conoce_mesa_desarrollo_rural = case_when(
+      is.na(conoce_mesa_desarrollo_rural) | conoce_mesa_desarrollo_rural == "" ~ "Sin dato",
+      tolower(conoce_mesa_desarrollo_rural) %in% c("si", "sí", "s") ~ "si",
+      tolower(conoce_mesa_desarrollo_rural) %in% c("no", "n")      ~ "no",
+      TRUE ~ "Sin dato"
+    )
+  )
+
+# ============================================================
+# 2. TABLAS RESUMEN
+# ============================================================
+tabla_consejos <- datos %>%
+  count(conoce_consejos_pesca, name = "Cantidad") %>%
+  mutate(
+    Porcentaje = round(Cantidad / sum(Cantidad) * 100, 1),
+    Porcentaje_formateado = paste0(Porcentaje, "%")
+  ) %>%
+  mutate(conoce_consejos_pesca = factor(conoce_consejos_pesca,
+                                        levels = c("si", "no", "Sin dato"))) %>%
+  arrange(conoce_consejos_pesca)
+
+tabla_mesa <- datos %>%
+  count(conoce_mesa_desarrollo_rural, name = "Cantidad") %>%
+  mutate(
+    Porcentaje = round(Cantidad / sum(Cantidad) * 100, 1),
+    Porcentaje_formateado = paste0(Porcentaje, "%")
+  ) %>%
+  mutate(conoce_mesa_desarrollo_rural = factor(conoce_mesa_desarrollo_rural,
+                                               levels = c("si", "no", "Sin dato"))) %>%
+  arrange(conoce_mesa_desarrollo_rural)
+
+# ============================================================
+# 3. ROSCA 1: consejos de pesca
+# ============================================================
+hsize <- 2
+
+g_consejos <- ggplot(tabla_consejos, aes(x = hsize, y = Porcentaje, fill = conoce_consejos_pesca)) +
+  geom_col(color = "white", width = 1) +
+  geom_text(aes(label = Porcentaje_formateado),
+            size = 4, position = position_stack(vjust = 0.5),
+            fontface = "bold", color = "white") +
+  coord_polar(theta = "y") +
+  scale_fill_manual(
+    values = paleta_pesca,
+    name   = "Respuesta",
+    labels = c("si" = "Sí", "no" = "No", "Sin dato" = "Sin dato")
+  ) +
+  xlim(c(0.2, hsize + 0.5)) +
+  labs(title = "CONSEJOS DE PESCA",
+       subtitle = "Pescadores con conocimiento (%)") +
+  tema_informe +
+  theme(axis.title = element_blank(), axis.ticks = element_blank(),
+        axis.text = element_blank(), panel.grid = element_blank(),
+        legend.title = element_text(size = 10),
+        legend.text = element_text(size = 9))
+
+# ============================================================
+# 4. ROSCA 2: mesa de desarrollo rural
+# ============================================================
+g_mesa <- ggplot(tabla_mesa, aes(x = hsize, y = Porcentaje, fill = conoce_mesa_desarrollo_rural)) +
+  geom_col(color = "white", width = 1) +
+  geom_text(aes(label = Porcentaje_formateado),
+            size = 4, position = position_stack(vjust = 0.5),
+            fontface = "bold", color = "white") +
+  coord_polar(theta = "y") +
+  scale_fill_manual(
+    values = paleta_pesca,
+    name   = "Respuesta",
+    labels = c("si" = "Sí", "no" = "No", "Sin dato" = "Sin dato")
+  ) +
+  xlim(c(0.2, hsize + 0.5)) +
+  labs(title = "MESA DE DESARROLLO RURAL",
+       subtitle = "Pescadores con conocimiento (%)") +
+  tema_informe +
+  theme(axis.title = element_blank(), axis.ticks = element_blank(),
+        axis.text = element_blank(), panel.grid = element_blank(),
+        legend.title = element_text(size = 10),
+        legend.text = element_text(size = 9))
+
+# ============================================================
+# 5. PANEL ÚNICO
+# ============================================================
+g_consejos + g_mesa +
+  plot_layout(guides = "collect") +
+  plot_annotation(
+    title   = "CONOCIMIENTO DE ESPACIOS DE PARTICIPACIÓN",
+    caption = fuente_caption,
+    theme   = theme(
+      plot.title   = element_text(face = "bold", size = 14, hjust = 0.5),
+      plot.caption = element_text(size = 8, color = "gray50", hjust = 1)
+    )
+  ) &
+  theme(legend.position = "bottom")
+
+
+```
+
+Solo la quinta parte de los que conocen no encuentra útil la participación en estos espacios.
+
+\newpage
+
+```{r}
+#| echo: false
+
+
+# ============================================================
+# 1. LIMPIEZA + SEPARAR MENCIONES
+# ============================================================
+datos_prob <- datos %>%
+  mutate(
+    principales_problemas_sector = trimws(as.character(principales_problemas_sector)),
+    principales_problemas_sector = ifelse(
+      is.na(principales_problemas_sector) | principales_problemas_sector == "",
+      "Sin dato", principales_problemas_sector
+    )
+  )
+
+# Total de personas que respondieron (denominador para el % sobre personas)
+n_personas <- datos_prob %>%
+  filter(principales_problemas_sector != "Sin dato") %>%
+  nrow()
+
+# Separar y contar menciones
+tabla_prob <- datos_prob %>%
+  separate_rows(principales_problemas_sector, sep = ",") %>%
+  mutate(principales_problemas_sector = trimws(principales_problemas_sector)) %>%
+  filter(principales_problemas_sector != "") %>%
+  count(principales_problemas_sector, name = "Cantidad") %>%
+  mutate(
+    # % sobre personas (recomendado)
+    pct = round(Cantidad / n_personas * 100, 1),
+    Porcentaje_formateado = paste0(pct, "%")
+  )
+
+# ============================================================
+# 2. ETIQUETAS LEGIBLES
+# ============================================================
+etiquetas_prob <- c(
+  "infraestructura"        = "Infraestructura",
+  "precios_bajos"          = "Precios bajos",
+  "contaminacion"          = "Contaminación",
+  "clima"                  = "Clima",
+  "formalizacion"          = "Formalización",
+  "habitacional"           = "Habitacional",
+  "prefectura"             = "Prefectura",
+  "dinara"                 = "DINARA",
+  "lobos_marinos"          = "Lobos marinos",
+  "turismo"                = "Turismo",
+  "condicion_embarcacion"  = "Condición de la embarcación",
+  "sociales"               = "Sociales"
+)
+
+# ============================================================
+# 3. ORDENAR: por frecuencia desc
+# ============================================================
+tabla_prob <- tabla_prob %>%
+  mutate(etiqueta = recode(principales_problemas_sector, !!!etiquetas_prob)) %>%
+  arrange(desc(pct)) %>%
+  mutate(etiqueta = factor(etiqueta, levels = rev(etiqueta))) %>% 
+  filter(principales_problemas_sector != "Sin dato")
+
+# ============================================================
+# 4. BARRAS HORIZONTALES
+# ============================================================
+ggplot(tabla_prob, aes(x = etiqueta, y = pct, fill = etiqueta)) +
+  geom_col(width = 0.65, show.legend = FALSE) +
+  geom_text(aes(label = Porcentaje_formateado),
+            hjust = -0.15, size = 3.6, fontface = "bold") +
+  scale_fill_manual(values = rep(paleta_pesca, length.out = nrow(tabla_prob))) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+  coord_flip() +
+  labs(
+    title    = "PRINCIPALES PROBLEMAS DEL SECTOR",
+    subtitle = paste0("Porcentaje de pescadores que mencionó cada problema (respuesta múltiple, n = ", n_personas, ")"),
+    caption  = fuente_caption,
+    x = NULL, y = "%"
+  ) +
+  tema_informe
+```
+
+\newpage
+
+```{r}
+#| echo: false
+
+# ============================================================
+# 1. LIMPIEZA
+# ============================================================
+datos <- datos %>%
+  mutate(
+    problema_mas_relevante = trimws(as.character(problema_mas_relevante)),
+    problema_mas_relevante = ifelse(
+      is.na(problema_mas_relevante) | problema_mas_relevante == "",
+      "Sin dato", problema_mas_relevante
+    )
+  )
+
+# ============================================================
+# 2. ETIQUETAS LEGIBLES
+# ============================================================
+etiquetas_prob <- c(
+  "precios_bajos"     = "Precios bajos",
+  "clima"             = "Clima",
+  "contaminacion"     = "Contaminación",
+  "formalizacion"     = "Formalización",
+  "infraestructura"   = "Infraestructura",
+  "prefectura"        = "Prefectura",
+  "habitacional"      = "Habitacional",
+  "dinara"            = "DINARA",
+  "lobos_marinos"     = "Lobos marinos",
+  "turismo"           = "Turismo",
+  "Sin dato"          = "Sin dato"
+)
+
+# ============================================================
+# 3. TABLA RESUMEN
+# ============================================================
+tabla_prob_rel <- datos %>% 
+  filter(problema_mas_relevante != "Sin dato") %>% 
+  count(problema_mas_relevante, name = "Cantidad") %>%
+  mutate(
+    pct = round(Cantidad / sum(Cantidad) * 100, 1),
+    Porcentaje_formateado = paste0(pct, "%"),
+    etiqueta = recode(problema_mas_relevante, !!!etiquetas_prob)
+  )
+
+# ============================================================
+# 4. ORDENAR: reales por frecuencia desc, "Sin dato" al final
+# ============================================================
+tabla_prob_rel <- tabla_prob_rel %>%
+  mutate(es_sin_dato = etiqueta == "Sin dato") %>%
+  arrange(es_sin_dato, desc(pct)) %>%
+  mutate(etiqueta = factor(etiqueta, levels = rev(etiqueta)))
+
+# ============================================================
+# 5. BARRAS HORIZONTALES
+# ============================================================
+ggplot(tabla_prob_rel, aes(x = etiqueta, y = pct, fill = etiqueta)) +
+  geom_col(width = 0.65, show.legend = FALSE) +
+  geom_text(aes(label = Porcentaje_formateado),
+            hjust = -0.15, size = 3.8, fontface = "bold") +
+  scale_fill_manual(values = rep(paleta_pesca, length.out = nrow(tabla_prob_rel))) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+  coord_flip() +
+  labs(
+    title    = "PROBLEMA MÁS RELEVANTE DEL SECTOR",
+    subtitle = "Porcentaje de pescadores según el problema señalado como principal",
+    caption  = fuente_caption,
+    x = NULL, y = "%"
+  ) +
+  tema_informe
+
+
+```
+
+Para cada uno de estos problemas se preguntó a los pescadores que solución darían. A continuación se presenta un análisis descriptivo de lo recabado.
+
+*Intermediación y comercialización.*
+
+Es una de las preocupaciones más mencionadas. Los pescadores identifican a los intermediarios como el principal eslabón que captura el valor de su trabajo, y proponen tanto eliminarlos como buscar canales alternativos:
+
+"Sacar los intermediarios."
+
+"Buscar mejores mercados para mejorar precios."
+
+"Intervención del Estado, hay un monopolio: Empresa LAS. Oligopolio. Asimetría porque tienen muchas barcas."
+
+*Precio y rentabilidad.*
+
+Directamente vinculado al punto anterior, aparece el reclamo por mejores precios y estabilidad:
+
+"Que seba, hace años se paga lo mismo."
+
+"Estabilidad en el precio."
+
+"Costos suben."
+
+*Formalización y trámites.*
+
+Una demanda recurrente es simplificar los procedimientos y mejorar el acceso a la información, sin perder de vista la necesidad de regularizar la actividad:
+
+"Simplificar para permiso, menos vueltas."
+
+"Más rápido los trámites, y más información."
+
+"Abrir ventanilla."
+
+*Infraestructura.*
+
+Las propuestas se orientan a obras concretas que mejoren las condiciones de trabajo: muelles, caminería, accesos y servicios básicos:
+
+"Construir un muelle."
+
+"Agua para consumo y muelle."
+
+"Mejora de entrada, hormigón."
+
+*Control ambiental.*
+
+Frente a la contaminación, las soluciones apuntan a mayor fiscalización y a responsabilizar a todos los actores, no solo a los pescadores:
+
+"Control agroquímicos de los campos o prohibición."
+
+"Tachos, para los restos de los pescados."
+
+"Que la gente de las cámaras de frío no tiren el pescado, no son los pescadores que tiran al arroyo."
+
+*Control y fiscalización.*
+
+Algunas respuestas se centran en mejorar y equiparar el control de la actividad:
+
+"Que se pueda hacer registros cerca y control parejo para todas las embarcaciones."
+
+"Mejorar el control."
+
+*Vivienda e ingreso.*
+
+Aparecen demandas vinculadas a las condiciones de vida:
+
+"Alguna vivienda, para dejar de pagar alquiler."
+
+"Apoyo de materiales."
+
+"Teniendo dinero para comprar."
+
+*Gestión con DINARA.*
+
+Se mencionan facilidades para la formalización y la necesidad de permisos accesibles:
+
+"Que den más facilidades para la formalización."
+
+"Falta de facilidades para la formalización."
+
+*Convivencia con turismo y fauna.*
+
+Respuestas puntuales pero significativas por su contenido simbólico:
+
+"Respetar el espacio de trabajo." (turismo)
+
+"No hay, es el hábitat de ellos también." (lobos marinos)
+
+**Tres ejes ordenan el conjunto de las propuestas:**
+
+1.  Eje económico-comercial (intermediación, precio): el problema más sentido y el que más soluciones concentra. El reclamo apunta a romper la asimetría de poder en la cadena de comercialización.
+
+2.  Eje institucional-regulatorio (formalización, DINARA, prefectura): convive una doble demanda: simplificar los trámites y mejorar el control de la actividad, lo que sugiere que el problema no es la regulación en sí, sino cómo se implementa.
+
+3.  Eje territorial-ambiental (infraestructura, contaminación, turismo): las soluciones son concretas y localizadas, y expresan una preocupación por las condiciones materiales del trabajo y por el cuidado del ambiente del que depende la actividad.
+
+\newpage
+
+Finalmente se pregunta a los pescadores qué es lo que más valoran de su profesión. Se presenta un análisis al respecto.
+
+*Eje 1 — Autonomía e independencia*
+
+Es, sin duda, el valor más mencionado. Aparece bajo distintas formulaciones que remiten a la misma idea: la posibilidad de organizar el propio trabajo, no tener jefe, decidir cuándo y cómo salir a pescar.
+
+"Ser independiente."
+
+"Trabajar para mí mismo, libertad."
+
+"Trabajo independiente."
+
+"Ser libre de tu vida."
+
+La independencia aquí no es solo una condición laboral: es un valor identitario, lo que define al oficio frente a otras ocupaciones.
+
+*Eje 2 — Libertad y tranquilidad*
+
+Estrechamente ligado al anterior, pero con un matiz más emocional y existencial. Aparecen dos palabras que se repiten una y otra vez: libertad y tranquilidad.
+
+"Libertad."
+
+"Tranquilidad."
+
+"Paz y tranquilidad."
+
+"Tranquilidad y libertad."
+
+Es llamativo el peso de estos términos, casi como un estribillo que atraviesa las respuestas. Sugiere que el oficio ofrece algo que va más allá del ingreso: un modo de vida asociado al ritmo propio, al contacto con el entorno y a la ausencia de presiones externas.
+
+*Eje 3 — Gusto por la actividad y vínculo con la naturaleza*
+
+Muchos pescadores valoran simplemente hacer lo que les gusta, con un vínculo explícito con el entorno natural:
+
+"Le gusta pescar."
+
+"Es lo que le gusta y puede vivir."
+
+"La naturaleza."
+
+"El entorno con la naturaleza."
+
+Este eje combina vocación (hacer lo que a uno le gusta) y pertenencia territorial (el río, el mar, el entorno como parte del trabajo).
+
+*Eje 4 — Ser patrón y sostener el ingreso*
+
+Un grupo importante menciona el valor de ser patrón (tener embarcación propia) y de poder vivir de la pesca:
+
+"Ser patrón."
+
+"El ser patrón."
+
+"Poder vivir de la pesca."
+
+"El ingreso."
+
+"Que hay trabajo y comida todos los días."
+
+Acá la valoración es material y de estatus: no se trata solo de libertad, sino de autonomía económica y de ser dueño de los medios de producción.
+
+*Eje 5 — El oficio como forma de vida*
+
+Algunas respuestas sintetizan todo lo anterior y expresan que la pesca no es solo un trabajo, sino una forma de vida:
+
+"Es la forma de vida."
+
+"Que es la forma de vivir."
+
+"El arte como tal."
+
+Es la formulación más densa simbólicamente: el oficio como identidad, no como ocupación transitoria.
+
+*Menciones negativas o ambivalentes*
+
+Hay dos respuestas que rompen el tono positivo general y merecen señalarse aparte:
+
+"No, que es sacrificado."
+
+"Sacrificio."
+
+Estas voces introducen el costo físico y personal del oficio, y son importantes para no romantizar el análisis: la libertad y la tranquilidad conviven con un trabajo duro, incierto y expuesto a condiciones adversas.
+
+*Lectura transversal*
+
+Tres ideas ordenan el conjunto:
+
+-   Autonomía como núcleo identitario: ser independiente, ser patrón, trabajar para uno mismo. Es lo que distingue a la pesca de un empleo asalariado.
+
+-   Bienestar subjetivo: libertad, tranquilidad, paz. No es solo una libertad formal, es una experiencia cotidiana de vivir sin presiones externas.
+
+-   Vocación y pertenencia: gusto por la actividad y vínculo con el entorno natural y el territorio.
+
+Por último, se recaban algunas observaciones generales, donde vale la pena destacar las menciones a la merma percibida sobre de la cantidad de pescadoen los últimos 5 años, las malas estado de la bajadas en varios puntos y lo díficil que resulta mantener el monotributo fuera de zafra.
 
 ## Embarcaciones
 
