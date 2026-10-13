@@ -11,6 +11,8 @@ format:
     classoption: justified
     fig-width: 7
     fig-height: 5
+    tbl-cap-location: top
+    number-sections: true
 theme: paper
 code-fold: true
 editor: visual
@@ -37,7 +39,7 @@ Aquellos ciudadanos que tengan dudas o requieran información adicional, pueden 
 
 # Aspectos metodológicos
 
-La selección de los entrevistados fue no probabilistica y se realizó mediante identificación directa y, en un segundo paso, por la técnica de bola de nieve que permitió llegar a los pescadores a través de la referencia de sus pares anteriormente contactados. Las dimensiones incluidas en la encuesta fueron las siguientes: Se localizaron 78 personas personas que trabajan en la pesca, pertenecientes a 53 hogares.
+La selección de los entrevistados fue no probabilistica y se realizó mediante identificación directa y, en un segundo paso, por la técnica de bola de nieve que permitió llegar a los pescadores a través de la referencia de sus pares anteriormente contactados. Las entrevistas se realizaron en el lugar de trabajo o en los hogares de los pescadores. Las dimensiones incluidas en la encuesta fueron las siguientes: Se localizaron 78 personas personas que trabajan en la pesca, pertenecientes a 53 hogares.
 
 La encuesta se dividió en dos módulos: vivienda, hogares y personas por un lado y por otro, unidades de producción (embarcaciones). Las dimensiones principales fueron: ubicación y tenencia de la vivienda; calidad de la vivienda y servicios básicos; composición del hogar; datos básicos de las personas; educación y salud; arraigo; perfil laboral e ingresos de la pesca; organización, participación y capacitación; percepción de desafíos y problemas. En el módulo relativo a la unidad de producción se identifican las siguientes dimensiones: identificación técnica y formalización; propulsión y seguridad; artes de pesca; esfuerzo y captura y comercialización y precios.
 
@@ -62,9 +64,9 @@ library(janitor)
 library(scales)      
 library(knitr)       
 library(kableExtra)  
+library(patchwork)
 
-
-ruta_archivo <- "C:/Users/wramirez/Desktop/INSTITUTO DEPARTAMENTAL DE ESTADISTICAS/Censo pescadores/Censo pescadores 2026/censo_pescadores_sj/base_pescadores_original_limpia.xlsx"
+ruta_archivo <- "C:/Users/wramirez/Desktop/INSTITUTO DEPARTAMENTAL DE ESTADISTICAS/Censo pescadores/Censo pescadores 2026/censo_pescadores_sj/base_pescadores.xlsx"
 
 hogares       <- read_excel(ruta_archivo, sheet = "_10_de_formulario_0") %>% clean_names()
 personas_solo <- read_excel(ruta_archivo, sheet = "personas_pesca_1")    %>% clean_names()
@@ -143,10 +145,15 @@ grafico_barras_estilo <- function(tabla, var, titulo, subtitulo = NULL) {
 }
 ```
 
-El relevamiento cubrió hogares y personas que trabajan en la pesca artesanal en el departamento.
+En la tabla inferior se puede observar la distribución de los hogares y de la cantidad de personas por localidad que trabajan en la pesca artesanal[^1]. En total se relevaron 53 hogares de pescadores artesanales, en los cuales residen 159 personas de los que se identificaron a 78 que trabajan en la pesca artesanal. El promedio es de 3 personas por hogar. Hay que señalar que dos pares de hogares comparten vivienda.
+
+[^1]: Más adelante se profundiza sobre los "desmalladores", otro grupo personas ocupadas en la actividad productiva
+
+La mayor concentración de hogares y personas se encuentran en Arazatí y Penino respectivamente que reúnen en ambas categorías alrededor de las dos terceras partes de las unidades relevadas. Luego se encuentran Boca del Cufré , Kiyú y Ordeig, otras y por últimos Colonia Wilson. Hay cuatro hogares que comparten viviendas
 
 ```{r}
 #| echo: false
+#| warning: false
 
 recode_localidad <- function(x) {
   recode(x,
@@ -191,20 +198,24 @@ tabla_localidad <- bind_rows(tabla_localidad, fila_total)
 
 # 5. Mostramos la tabla con estilo, con la fila de Total en negrita
 tabla_localidad %>%
-  kbl(caption = "Hogares y personas de pescadores por localidad") %>%
+  kbl(caption = "Hogares y personas dedicadas a la pesca por localidad") %>%
   kable_styling(full_width = FALSE, position = "left") %>%
   row_spec(nrow(tabla_localidad), bold = TRUE, extra_css = "border-top: 1px solid #333;")
+
 ```
 
 \newpage
 
-## Caracterización demográfica
+## Caracterización demográfica, educación y salud
+
+En los siguientes gráficos observamos algunas características demográficas de las personas de declararon trabajar como pescadores artesanales.
 
 ```{r}
 #| echo: false
 # Sexo de las personas que pescan
 tabla_frecuencias(personas_solo, "sexo") %>%
   grafico_barras_estilo("sexo", "Sexo de las personas que pescan")
+
 ```
 
 ```{r}
@@ -261,6 +272,10 @@ tabla_frecuencias(
   grafico_barras_estilo("cobertura_salud", "Cobertura de salud")
 ```
 
+El 77% son varones y el 23% mujeres. De las mujeres, el 70% tiednen 45 años o menos. Según la distribución por edades, se observa que el intervalo modal está entre los 40 y los 54 años, grupo que representa el 40% de los pescadores. El 27% está entre 25 y 39 años, el 16% entre 55 y 64 años y el resto se distribuye en proporciones casi iguales en los extremos de la distribución. Resumiendo, las tres cuartas partes de los/las pescadores/as tienen menos de 55 años.
+
+Por educación formal completada, se observa que 87 % asistió hasta Ciclo Básico de Educación Secundaria y de estos, el 84% solamente hizo Primaria. Un 13% alcanzó a realizar Enseñanza Media Superior o educación terciaria. En cuanto a la cobertura de salud, se constató que el 84% se atiende en los servicios de ASSE y un 16% tiene cobertura privada.
+
 ```{r}
 #| echo: false
 
@@ -277,18 +292,28 @@ tabla_frecuencias(
 
 \newpage
 
+En el gráfico anterior se observa la la distribución porcentual por tiempo de residencia en el lugar de trabajo. Cómo se ve, casi todos tienen un tiempo de permanencia en sus respectivas localidades superior a los dos años. Un 1,3% dijo que está en el lugar hace un año o menos y un porcentaje similar no vive en la zona donde trabaja.
+
 ## Hogar y vivienda
 
-En este capítulo se abordan las condiciones habitacionales y la composición de los hogares de pescadores.
+En este capítulo se abordan las condiciones habitacionales y la composición de los hogares de los pescadores.
 
 ### Vivienda
+
+En el siguiente gráfico se observa la forma de tenencia de los terrenos por hogares de los pescadores.
 
 ```{r}
 #| echo: false
 
 tabla_frecuencias(hogares, "tenencia_terreno") %>%
-  grafico_barras_estilo("tenencia_terreno", "Tenencia del terreno")
+  grafico_barras_estilo("tenencia_terreno", "Tenencia del terreno por hogares")
+
+
 ```
+
+Como se observa, más del 41% de los hogares dicen ser propietarios del terreno, un 32% ocupantes, un 17% dicen que residen sobre un terreno prestado y un 9,4% son arrendatarios. De la categoría ocpuantes, hay que señalar que el 75% ocupan predios públicos mientras que el resto dice estar ocupando predios privados. La mayor cantidad de ocuantes, las dos terceras partes, están en Arazatí y Boca del Cufré.
+
+El gráfico siguiente muestra las condiciones de materialidad de la vivienda de los 53 hogares de pescadores.
 
 ```{r}
 #| echo: false
@@ -359,6 +384,8 @@ grafico_en_paneles(
 )
 ```
 
+En el gráfico superior, se observa que más del 62% tienen paredes de bloque o ladrillo mientras que el resto se describe como de materiales de menor calidad. En cuanto a los pisos, 86% tienen hormigón o cerámica y respecto a los techos, el 83% son de chapa, un 11% de planchada y un 6% de desecho u otro. Si se considera la materialidad de algunos de los tres componentes, se puede observar que más de un 30% tiene al menos paredes en precarias.
+
 ```{r}
 #| echo: false
 
@@ -399,7 +426,11 @@ grafico_en_paneles(
 )
 ```
 
+En cuanto a servicios básicos, gráfico superior, la gran mayoría cuenta con energía eléctrica de UTE, un 2% explota energía solar y otro 2% asegura no tener ninguna de estas fuentes energéticas. La evacuación de las aguas servidas en las tres cuarta parte de los casos se hace hacia pozo negro, casi una quinta parte a "otro" destino y el 6% a saneamiento. Con relación del agua de consumo y de uso familiar, 77% dice utilizar agua de OSE, una quinta parte "otra" fuente y un 4% se abastece desde "pozo". Entre quienes dicen que se abastecen de "otra" fuente, algunos entrevistados afirmaron que recogen agua de lluvia y otros que traen en bidones o le acercan agua familiares.
+
 ### Composición del hogar
+
+Los hogares tienen un tamaño promedio de 3 personas, lo cual es 0,5% mayor que el tamaño promedio de los hogares uruguayos y los del departamento.
 
 ```{r}
 #| echo: false
@@ -408,20 +439,26 @@ promedio_personas_hogar <- round(mean(hogares$n_personas_hogar, na.rm = TRUE), 1
 total_personas_pescan   <- sum(hogares$n_personas_pescan, na.rm = TRUE)
 n_menor_no_escolarizado <- sum(hogares$menor_no_escolarizado == "si", na.rm = TRUE)
 n_hogares_total         <- n_distinct(hogares$id_hogar)
+conyuge<-sum(hogares$tiene_conyuge == "si")
+discapacidad <-sum(hogares$hay_discapacidad=="si")
 ```
 
 ```{r}
 #| echo: false
 
-tabla_frecuencias(hogares, "hay_discapacidad") %>%
-  grafico_barras_estilo("hay_discapacidad", "Hogares con alguna persona con discapacidad")
+tabla_frecuencias(hogares, "menor_no_escolarizado") %>%
+  grafico_barras_estilo("menor_no_escolarizado", "Porcentaje de hogares con menores no escolarizados")
 ```
 
 \newpage
 
+En 37 de los hogares (70%), la persona entrevistada convive con su cónyuge. En dos, se informó la presencia de personas con discapacidad. Y a su vez se relevaron 14 menores de 18 años que no se encontraban escolarizados (ver gráfico arriba).
+
 ## Actividad pesquera
 
 ### Trayectoria y rol
+
+En el siguiente gráfico se observa los años de trayectoria que tienen los pescadores.
 
 ```{r}
 #| echo: false
@@ -488,6 +525,8 @@ ggplot(trayectoria, aes(x = hsize, y = Porcentaje, fill = Tramos_antiguedad)) +
 
 ```
 
+Como se ve, la mitad tiene una extensa trayectoria en el rubro: al menos 25 años. Más de una cuarta parte tiene de 10 a 25 años y una quinta parte, menos de 10 años. De un 4% no se obtuvo datos.Como se ve, se trata en su gran mayoría de una población plenamente incorporada e involucrada a este sector de producción.
+
 ```{r}
 #| echo: false
 datos <- datos %>%
@@ -551,7 +590,11 @@ ggplot(roles_resumen, aes(x = Rol, y = Porcentaje, fill = Rol)) +
 
 ```
 
+En cuanto al rol en la pesca (gráfico superior), se observa que el 77% son patrones, un 11,5% marineros, un 4% trabaja en el procesamiento del pescado y el resto se distribuye en otros roles o no sin información.
+
 ### Embarcaciones y permisos
+
+En los gráficos siguientes vemos la situación respecto a la propiedad de las embarcaciones y la formalización de las mismas.
 
 ```{r}
 #| echo: false
@@ -646,9 +689,13 @@ g_emb + g_lib +
   theme(legend.position = "bottom")
 ```
 
-tolal 62 embarcaciones.de los que tienen embarcacion propia, todos declran tener 1, excepto seis casos que declaran 2 cada uno.39% no tienen permiso de pesca
+Un 72% de los pescadores dijeron ser propietarios de sus embarcaciones, un 17% dijo no serlo, mientras que un 11,5% no informó al respecto. El total se relevaron 62 embarcaciones. De quienes tienen embarcación propia, la gran mayoría informó tener sólo una, excepto seis casos que afirman tener dos cada uno. Al ser consultados si contaban con permiso de pesca se constató que un **39%** de estas embarcaciones, están trabajando sin la habilitación correspondiente.
+
+En cuanto a la libreta de prefectura, un 55% de los pescadores dijo tenerla; casi una cuarta parte (23%), dijo estar embarcándose sin libreta y un 11,5% no aportó información al respecto. En general se observa un alto porcentaje de no regularización en estos aspectos.
 
 ### Formalización laboral
+
+En cuanto a la formalización laboral, la información se presenta en los gráficos que siguen.
 
 ```{r}
 #| echo: false
@@ -708,7 +755,7 @@ ggplot(tabla_bps, aes(x = hsize, y = Porcentaje, fill = aporta_bps)) +
   )
 ```
 
-forma predominante de aporte monotributo, 3 monotributo social, 1 empleado formal,
+Un 64% informó que no hace aportes al BPS, un 31% sí los hace y un 5% no no aportó información al respecto. Entre quienes aportan, la forma predominante es el monotributo (80%).
 
 ```{r}
 #| echo: false
@@ -756,6 +803,8 @@ ggplot(tabla_rel, aes(x = relacion_laboral, y = pct, fill = relacion_laboral)) +
   ) +
   tema_informe
 ```
+
+En cuanto a la relación laboral, se observa que un 56% trabajan por cuenta propia; un 5% son asalariados dependientes; un 3% dicen ser familiares no remunerados, mientras que un 36% no aportó información al respecto.
 
 ### Fuente de ingresos
 
@@ -937,7 +986,9 @@ g_pesca + g_otras +
   theme(legend.position = "bottom")
 ```
 
-Las actividades complementarias a la pesca se concentran en albañilería y changas, seguidas por trabajos rurales y, en menor medida, ocupaciones diversas como limpieza, gastronomía, almacén y leña. La presencia de respuestas múltiples evidencia una marcada pluriactividad entre los pescadores.
+El 88,5% de los pescadores aseguró que su principal fuente de ingreso es la pesca, un 6% dijo que su ingreso principal provenía de otra actividad y el resto no dio información. Las actividades complementarias a la pesca se concentran en albañilería y changas, seguidas por trabajos rurales y, en menor medida, ocupaciones diversas como limpieza, gastronomía, almacén y leña. La presencia de respuestas múltiples evidencia una marcada pluriactividad entre los pescadores.
+
+En el gráfico siguiente se observa, la distribución de los intervalos de ingreso (ganancia resultante una vez pagado todos los costos), según zafra y fuera de zafra de acuerdo a lo que marcan los pescadores.
 
 \newpage
 
@@ -1040,6 +1091,8 @@ g_zafra + g_fuera +
 
 ```
 
+En zafra, la mayoría, el 56%, dijo tener una ganancia de entre 20.000 y 40.000 pesos. El resto se distribuyó así: una quinta parte entre 40.000 y 60.000, un 6% afirmó ganar más de 60.000 pesos y un 11,5% dijo ganar menos de 20.000 pesos; más de 6% no respondió a esta pregunta. Fuera de zafra, más de las dos terceras parte, aseguró que ganaba menos de 20.000 pesos; un 17% entre 20.000 y 40.000 y un 4%, entre 40.000 y 60.000 pesos.
+
 ```{r}
 #| echo: false
 
@@ -1104,6 +1157,8 @@ ggplot(tabla_ing, aes(x = ingreso_mensual_hogar, y = pct, fill = ingreso_mensual
 
 ### Capacitación, organización y percepción del sector
 
+Se preguntó a los pescadores, qué interés tenían en recibir alguna capacitación y otros aspectos referidos a organización, participación de instancias colectivas y percepción de problemas del sector.
+
 ```{r}
 #| echo: false
 
@@ -1164,6 +1219,8 @@ ggplot(tabla_cap, aes(x = hsize, y = Porcentaje, fill = interes_capacitacion)) +
 ```
 
 \newpage
+
+Un 60% respondió tener interés en recibir capacitaciones, un 36% dijo no estar interesado y un 4% no informó al respecto.
 
 ```{r}
 #| echo: false
@@ -1350,7 +1407,7 @@ g_consejos + g_mesa +
 
 ```
 
-Solo la quinta parte de los que conocen no encuentra útil la participación en estos espacios.
+Se preguntó en particular qué conocimiento tenían sobre dos ámbitos de participación: Consejos de Pesca y Mesa de Desarrollo Rural. Cómo vemos la gran mayoría desconoce ambos espacios: el 70% y el 73% respectivamente. Un 28% conoce los Consejos de Pesca y un 23% la Mesa de Desarrollo Rural. Adentrándonos en detalles sobre estos últimos, sólo la quinta parte de los que conocen no encuentra útil la participación en estos espacios.
 
 \newpage
 
