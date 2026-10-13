@@ -64,9 +64,11 @@ library(janitor)
 library(scales)      
 library(knitr)       
 library(kableExtra)  
+library(patchwork)
 
+base_pescadores<- read_excel("base_pescadores.xlsx")
 
-base_pescadores_original_limpia <- read_excel("base_pescadores_original_limpia.xlsx")
+embarcaciones <- read_excel("C:/Users/gobernanza/Desktop/IDE/Censo pescadores/embarcacion_censo_pescadores.xlsx")
 
 hogares       <- read_excel(ruta_archivo, sheet = "_10_de_formulario_0") %>% clean_names()
 personas_solo <- read_excel(ruta_archivo, sheet = "personas_pesca_1")    %>% clean_names()
@@ -1045,46 +1047,36 @@ g_zafra + g_fuera +
 ```{r}
 #| echo: false
 
-# --- 1. Limpieza + filtro nper == 1 ---
-datos_nper1 <- datos %>%
-  filter(nper == 1) %>%
+# --- 1. Limpieza ---
+datos_ingreso <- datos %>%
   mutate(
     ingreso_mensual_hogar = trimws(as.character(ingreso_mensual_hogar)),
     ingreso_mensual_hogar = case_when(
       is.na(ingreso_mensual_hogar) | ingreso_mensual_hogar == "" ~ "Sin dato",
-      ingreso_mensual_hogar %in% c("menos25k")          ~ "menos25k",
+      ingreso_mensual_hogar %in% c("menos25k")           ~ "menos25k",
       ingreso_mensual_hogar %in% c("25k_50k", "30k_50k") ~ "25k_50k",   # unifico
       ingreso_mensual_hogar %in% c("50k_80k", "50k_75k") ~ "50k_80k",   # unifico
-      ingreso_mensual_hogar %in% c("75k_100k")          ~ "80k_100k",
-      ingreso_mensual_hogar %in% c("ns_nc")             ~ "ns_nc",
+      ingreso_mensual_hogar %in% c("75k_100k")           ~ "80k_100k",
+      ingreso_mensual_hogar %in% c("ns_nc")              ~ "ns_nc",
       TRUE ~ "Sin dato"
     )
   )
 
-# --- 2. Orden de niveles ---
-niveles_ing <- c("Sin dato", "ns_nc", "80k_100k", "50k_80k", "25k_50k","menos25k")
+
+# --- 3. Orden de niveles ---
+niveles_ing <- c("Sin dato", "ns_nc", "80k_100k", "50k_80k", "25k_50k", "menos25k")
 
 etiquetas_ing <- c(
   "menos25k"  = "Menos de $25.000",
   "25k_50k"   = "$25.000 – $50.000",
   "50k_80k"   = "$50.000 – $80.000",
-  "75k_100k"  = "$80.000 – $100.000",
+  "80k_100k"  = "$80.000 – $100.000",
   "ns_nc"     = "NS/NC",
   "Sin dato"  = "Sin dato"
 )
 
-# --- 3. Tabla resumen ---
-tabla_ing <- datos_nper1 %>%
-  count(ingreso_mensual_hogar, name = "Cantidad") %>%
-  mutate(
-    pct = round(Cantidad / sum(Cantidad) * 100, 1)
-  ) %>%
-  # Asegurar que existan todos los niveles, incluso con 0
-  complete(ingreso_mensual_hogar = niveles_ing, fill = list(Cantidad = 0, pct = 0)) %>%
-  mutate(ingreso_mensual_hogar = factor(ingreso_mensual_hogar, levels = niveles_ing)) %>%
-  arrange(ingreso_mensual_hogar)
 
-# --- 4. Barras horizontales ---
+# --- 5. Barras horizontales ---
 ggplot(tabla_ing, aes(x = ingreso_mensual_hogar, y = pct, fill = ingreso_mensual_hogar)) +
   geom_col(width = 0.65, show.legend = FALSE) +
   geom_text(aes(label = paste0(pct, "%")),
@@ -1692,17 +1684,179 @@ Estas voces introducen el costo físico y personal del oficio, y son importantes
 
 Tres ideas ordenan el conjunto:
 
--   Autonomía como núcleo identitario: ser independiente, ser patrón, trabajar para uno mismo. Es lo que distingue a la pesca de un empleo asalariado.
+- Autonomía como núcleo identitario: ser independiente, ser patrón, trabajar para uno mismo. Es lo que distingue a la pesca de un empleo asalariado.
 
--   Bienestar subjetivo: libertad, tranquilidad, paz. No es solo una libertad formal, es una experiencia cotidiana de vivir sin presiones externas.
+- Bienestar subjetivo: libertad, tranquilidad, paz. No es solo una libertad formal, es una experiencia cotidiana de vivir sin presiones externas.
 
--   Vocación y pertenencia: gusto por la actividad y vínculo con el entorno natural y el territorio.
+- Vocación y pertenencia: gusto por la actividad y vínculo con el entorno natural y el territorio.
 
 Por último, se recaban algunas observaciones generales, donde vale la pena destacar las menciones a la merma percibida sobre de la cantidad de pescadoen los últimos 5 años, las malas estado de la bajadas en varios puntos y lo díficil que resulta mantener el monotributo fuera de zafra.
 
 ## Embarcaciones
 
+```{r}
+#| echo: false
+
+# Puerto base
+embarcaciones <- embarcaciones %>%
+  mutate(puerto_base = recode(puerto_base,
+                              "arazati"     = "Arazatí",
+                              "penino"      = "Penino",
+                              "boca_cufre"  = "Boca del Cufré",
+                              "kiyu_ordeig" = "Kiyú-Ordeig",
+                              "otro"        = "Otro"
+  ))
+
+tabla_puerto <- tabla_frecuencias(embarcaciones, "puerto_base")
+
+grafico_barras_estilo(tabla_puerto, "puerto_base",
+                      "PUERTO BASE DE LA EMBARCACIÓN",
+                      "Distribución de embarcaciones según puerto base")
+```
+
 ### Características de la embarcación
+
+el 100% declara tener motror y "motorizada fuera de borda".
+
+```{r}
+#| echo: false
+
+embarcaciones <- embarcaciones %>%
+  mutate(material_casco = recode(material_casco,
+                                 "fibra,madera" = "Fibra y madera",
+                                 "fibra"        = "Fibra",
+                                 "madera"       = "Madera"
+  ))
+
+tabla_material_casco <- tabla_frecuencias(embarcaciones, "material_casco")
+
+grafico_barras_estilo(tabla_material_casco, "material_casco",
+                      "MATERIAL DEL CASCO",
+                      "Distribución de embarcaciones según material del casco")
+```
+
+```{r}
+#| echo: false
+
+niveles_estado <- c("nueva_buen_estado", "antigua_mantenimiento", "antigua_mal_estado")
+etiquetas_estado <- c("Nueva / buen estado", "Antigua, con mantenimiento", "Antigua, mal estado")
+
+tabla_estado <- tabla_frecuencias_ordenada(embarcaciones, "estado_embarcacion",
+                                           niveles_estado, etiquetas_estado)
+
+grafico_barras_estilo(tabla_estado, "estado_embarcacion",
+                      "ESTADO DE LA EMBARCACIÓN",
+                      "Distribución de embarcaciones según su estado")
+```
+
+```{r}
+#| echo: false
+
+embarcaciones <- embarcaciones %>%
+  mutate(tenencia_embarcacion = recode(tenencia_embarcacion,
+                                       "propia"     = "Propia",
+                                       "compartida" = "Compartida",
+                                       "alquilada"  = "Alquilada"
+  ))
+
+tabla_tenencia <- embarcaciones %>%
+  count(tenencia_embarcacion, name = "Cantidad") %>%
+  mutate(`Porcentaje (%)` = round(Cantidad / sum(Cantidad) * 100, 1))
+
+fila_total <- tibble(
+  tenencia_embarcacion = "Total",
+  Cantidad = sum(tabla_tenencia$Cantidad),
+  `Porcentaje (%)` = 100
+)
+
+tabla_tenencia <- bind_rows(tabla_tenencia, fila_total)
+
+tabla_tenencia %>%
+  rename(Tenencia = tenencia_embarcacion) %>%
+  kbl(align = "lcc") %>%
+  kable_styling(full_width = FALSE, position = "center") %>%
+  row_spec(nrow(tabla_tenencia), bold = TRUE, background = "#f0f0f0")
+```
+
+```{r}
+#| echo: false
+
+embarcaciones <- embarcaciones %>%
+  mutate(usa_remos = recode(usa_remos,
+                            "si" = "Sí",
+                            "no" = "No"
+  ))
+
+tabla_remos <- tabla_frecuencias(embarcaciones, "usa_remos")
+
+grafico_barras_estilo(tabla_remos, "usa_remos",
+                      "USO DE REMOS")
+```
+
+```{r}
+#| echo: false
+
+# 1. LIMPIEZA 
+
+datos_equip <- embarcaciones %>%
+  mutate(
+    equipamiento_seguridad = trimws(as.character(equipamiento_seguridad)),
+    equipamiento_seguridad = ifelse(
+      is.na(equipamiento_seguridad) | equipamiento_seguridad == "",
+      "Sin dato", equipamiento_seguridad
+    )
+  )
+
+# Total de embarcaciones que respondieron 
+n_embarcaciones <- datos_equip %>%
+  filter(equipamiento_seguridad != "Sin dato") %>%
+  nrow()
+
+# Separar y contar menciones
+tabla_equip <- datos_equip %>%
+  separate_rows(equipamiento_seguridad, sep = ",") %>%
+  mutate(equipamiento_seguridad = trimws(equipamiento_seguridad)) %>%
+  filter(equipamiento_seguridad != "") %>%
+  count(equipamiento_seguridad, name = "Cantidad") %>%
+  mutate(
+    pct = round(Cantidad / n_embarcaciones * 100, 1),
+    Porcentaje_formateado = paste0(pct, "%")
+  )
+
+# 2. ETIQUETAS LEGIBLES
+
+etiquetas_equip <- c(
+  "chalecos"     = "Chalecos salvavidas",
+  "radio"        = "Radio",
+  "luces"        = "Luces",
+  "bengalas"     = "Bengalas",
+  "nav_nocturna" = "Navegación nocturna",
+  "motor"        = "Motor auxiliar"
+)
+
+# 3. ORDENAR: por frecuencia 
+tabla_equip <- tabla_equip %>%
+  mutate(etiqueta = recode(equipamiento_seguridad, !!!etiquetas_equip)) %>%
+  arrange(desc(pct)) %>%
+  mutate(etiqueta = factor(etiqueta, levels = rev(etiqueta))) %>%
+  filter(equipamiento_seguridad != "Sin dato")
+
+# 4. BARRAS HORIZONTALES
+ggplot(tabla_equip, aes(x = etiqueta, y = pct, fill = etiqueta)) +
+  geom_col(width = 0.65, show.legend = FALSE) +
+  geom_text(aes(label = Porcentaje_formateado),
+            hjust = -0.15, size = 3.6, fontface = "bold") +
+  scale_fill_manual(values = rep(paleta_pesca, length.out = nrow(tabla_equip))) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+  coord_flip() +
+  labs(
+    title    = "EQUIPAMIENTO DE SEGURIDAD",
+    subtitle = paste0("Porcentaje de embarcaciones que cuenta con cada equipo (respuesta múltiple, n = ", n_embarcaciones, ")"),
+    caption  = fuente_caption,
+    x = NULL, y = "%"
+  ) +
+  tema_informe
+```
 
 ### Formalización y permisos
 
