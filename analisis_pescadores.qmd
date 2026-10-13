@@ -39,13 +39,9 @@ Aquellos ciudadanos que tengan dudas o requieran información adicional, pueden 
 
 # Aspectos metodológicos
 
-<<<<<<< HEAD
-La selección de los entrevistados fue no probabilistica y se realizó mediante identificación directa y, en un segundo paso, por la técnica de bola de nieve que permitió llegar a los pescadores a través de la referencia de sus pares anteriormente contactados. Las entrevistas se realizaron en el lugar de trabajo o en los hogares de los pescadores. Las dimensiones incluidas en la encuesta fueron las siguientes: Se localizaron 78 personas personas que trabajan en la pesca, pertenecientes a 53 hogares.
-=======
 La selección de los entrevistados fue no probabilistica y se realizó mediante identificación directa y, en un segundo paso, por la técnica de bola de nieve que permitió llegar a los pescadores a través de la referencia de sus pares anteriormente contactados.
 
 Se localizaron 78 personas personas que trabajan en la pesca, pertenecientes a 53 hogares.
->>>>>>> b21388c13ecd29860c5398d871512b772463ce01
 
 La encuesta se dividió en dos módulos: vivienda, hogares y personas por un lado y por otro, unidades de producción (embarcaciones). Las dimensiones principales fueron: ubicación y tenencia de la vivienda; calidad de la vivienda y servicios básicos; composición del hogar; datos básicos de las personas; educación y salud; arraigo; perfil laboral e ingresos de la pesca; organización, participación y capacitación; percepción de desafíos y problemas. En el módulo relativo a la unidad de producción se identifican las siguientes dimensiones: identificación técnica y formalización; propulsión y seguridad; artes de pesca; esfuerzo y captura y comercialización y precios.
 
@@ -72,13 +68,9 @@ library(knitr)
 library(kableExtra)  
 library(patchwork)
 
-<<<<<<< HEAD
-ruta_archivo <- "C:/Users/wramirez/Desktop/INSTITUTO DEPARTAMENTAL DE ESTADISTICAS/Censo pescadores/Censo pescadores 2026/censo_pescadores_sj/base_pescadores.xlsx"
-=======
-base_pescadores<- read_excel("base_pescadores.xlsx")
-
-embarcaciones <- read_excel("C:/Users/gobernanza/Desktop/IDE/Censo pescadores/embarcacion_censo_pescadores.xlsx")
->>>>>>> b21388c13ecd29860c5398d871512b772463ce01
+# Rutas, los excel deben estar en la carpeta del proyecto. No cambiar estas rutas, corren así como están.
+ruta_archivo  <- "base_pescadores.xlsx"
+embarcaciones <- read_excel("embarcacion_censo_pescadores.xlsx")
 
 hogares       <- read_excel(ruta_archivo, sheet = "_10_de_formulario_0") %>% clean_names()
 personas_solo <- read_excel(ruta_archivo, sheet = "personas_pesca_1")    %>% clean_names()
@@ -595,7 +587,7 @@ ggplot(roles_resumen, aes(x = Rol, y = Porcentaje, fill = Rol)) +
   labs(
     title = "DISTRIBUCIÓN POR ROL PRINCIPAL EN LA PESCA",
     subtitle = "Porcentaje de personas según rol jerarquizado",
-    caption = fuente_caption, x = NULL, y = "%"
+    caption = fuente_caption, x = NULL, y = NULL
   ) +
   tema_informe
 
@@ -811,7 +803,7 @@ ggplot(tabla_rel, aes(x = relacion_laboral, y = pct, fill = relacion_laboral)) +
     title    = "DISTRIBUCIÓN POR RELACIÓN LABORAL",
     subtitle = "Porcentaje de pescadores según relación laboral",
     caption  = fuente_caption,
-    x = NULL, y = "%"
+    x = NULL, y = NULL
   ) +
   tema_informe
 ```
@@ -1083,7 +1075,7 @@ g_fuera <- ggplot(tabla_fuera, aes(x = ganancia_mensual_fuera_zafra, y = pct, fi
   labs(
     title    = "GANANCIA MENSUAL FUERA DE ZAFRA",
     subtitle = "Porcentaje de pescadores por intervalo",
-    x = NULL, y = "%"
+    x = NULL, y = NULL
   ) +
   tema_informe
 
@@ -1136,6 +1128,14 @@ etiquetas_ing <- c(
   "Sin dato"  = "Sin dato"
 )
 
+# --- 4. Tabla resumen (un registro por hogar) ---
+tabla_ing <- datos_ingreso %>%
+  distinct(id_hogar, .keep_all = TRUE) %>%
+  count(ingreso_mensual_hogar, name = "Cantidad") %>%
+  mutate(
+    pct = round(Cantidad / sum(Cantidad) * 100, 1),
+    ingreso_mensual_hogar = factor(ingreso_mensual_hogar, levels = niveles_ing)
+  )
 
 # --- 5. Barras horizontales ---
 ggplot(tabla_ing, aes(x = ingreso_mensual_hogar, y = pct, fill = ingreso_mensual_hogar)) +
@@ -1150,9 +1150,10 @@ ggplot(tabla_ing, aes(x = ingreso_mensual_hogar, y = pct, fill = ingreso_mensual
     title    = "INGRESO MENSUAL DEL HOGAR",
     subtitle = "Porcentaje de hogares por intervalo",
     caption  = fuente_caption,
-    x = NULL, y = "%"
+    x = NULL, y = NULL
   ) +
   tema_informe
+
 ```
 
 \newpage
@@ -1227,7 +1228,7 @@ Un 60% respondió tener interés en recibir capacitaciones, un 36% dijo no estar
 ```{r}
 #| echo: false
 
-n_personas_cap <- datos_prob %>%
+n_personas_cap <- datos%>%
   filter(temas_capacitacion != "Sin dato") %>%
   nrow()
 
@@ -1282,7 +1283,7 @@ ggplot(tabla_cap_temas, aes(x = etiqueta, y = pct, fill = etiqueta)) +
     title    = "TEMAS DE CAPACITACIÓN DE INTERÉS",
     subtitle = paste0("Porcentaje de pescadores que mencionó cada problema (respuesta múltiple, n = ", n_personas_cap, ")"),,
     caption  = fuente_caption,
-    x = NULL, y = "%"
+    x = NULL, y = NULL
   ) +
   tema_informe
 ```
@@ -1560,7 +1561,7 @@ ggplot(tabla_prob_rel, aes(x = etiqueta, y = pct, fill = etiqueta)) +
     title    = "PROBLEMA MÁS RELEVANTE DEL SECTOR",
     subtitle = "Porcentaje de pescadores según el problema señalado como principal",
     caption  = fuente_caption,
-    x = NULL, y = "%"
+    x = NULL, y = NULL
   ) +
   tema_informe
 
@@ -1665,7 +1666,7 @@ Respuestas puntuales pero significativas por su contenido simbólico:
 
 Finalmente se pregunta a los pescadores qué es lo que más valoran de su profesión. Se presenta un análisis al respecto.
 
-*Eje 1 — Autonomía e independencia*
+*Eje 1 --- Autonomía e independencia*
 
 Es, sin duda, el valor más mencionado. Aparece bajo distintas formulaciones que remiten a la misma idea: la posibilidad de organizar el propio trabajo, no tener jefe, decidir cuándo y cómo salir a pescar.
 
@@ -1679,7 +1680,7 @@ Es, sin duda, el valor más mencionado. Aparece bajo distintas formulaciones que
 
 La independencia aquí no es solo una condición laboral: es un valor identitario, lo que define al oficio frente a otras ocupaciones.
 
-*Eje 2 — Libertad y tranquilidad*
+*Eje 2 --- Libertad y tranquilidad*
 
 Estrechamente ligado al anterior, pero con un matiz más emocional y existencial. Aparecen dos palabras que se repiten una y otra vez: libertad y tranquilidad.
 
@@ -1693,7 +1694,7 @@ Estrechamente ligado al anterior, pero con un matiz más emocional y existencial
 
 Es llamativo el peso de estos términos, casi como un estribillo que atraviesa las respuestas. Sugiere que el oficio ofrece algo que va más allá del ingreso: un modo de vida asociado al ritmo propio, al contacto con el entorno y a la ausencia de presiones externas.
 
-*Eje 3 — Gusto por la actividad y vínculo con la naturaleza*
+*Eje 3 --- Gusto por la actividad y vínculo con la naturaleza*
 
 Muchos pescadores valoran simplemente hacer lo que les gusta, con un vínculo explícito con el entorno natural:
 
@@ -1707,7 +1708,7 @@ Muchos pescadores valoran simplemente hacer lo que les gusta, con un vínculo ex
 
 Este eje combina vocación (hacer lo que a uno le gusta) y pertenencia territorial (el río, el mar, el entorno como parte del trabajo).
 
-*Eje 4 — Ser patrón y sostener el ingreso*
+*Eje 4 --- Ser patrón y sostener el ingreso*
 
 Un grupo importante menciona el valor de ser patrón (tener embarcación propia) y de poder vivir de la pesca:
 
@@ -1723,7 +1724,7 @@ Un grupo importante menciona el valor de ser patrón (tener embarcación propia)
 
 Acá la valoración es material y de estatus: no se trata solo de libertad, sino de autonomía económica y de ser dueño de los medios de producción.
 
-*Eje 5 — El oficio como forma de vida*
+*Eje 5 --- El oficio como forma de vida*
 
 Algunas respuestas sintetizan todo lo anterior y expresan que la pesca no es solo un trabajo, sino una forma de vida:
 
@@ -1749,11 +1750,11 @@ Estas voces introducen el costo físico y personal del oficio, y son importantes
 
 Tres ideas ordenan el conjunto:
 
-- Autonomía como núcleo identitario: ser independiente, ser patrón, trabajar para uno mismo. Es lo que distingue a la pesca de un empleo asalariado.
+-   Autonomía como núcleo identitario: ser independiente, ser patrón, trabajar para uno mismo. Es lo que distingue a la pesca de un empleo asalariado.
 
-- Bienestar subjetivo: libertad, tranquilidad, paz. No es solo una libertad formal, es una experiencia cotidiana de vivir sin presiones externas.
+-   Bienestar subjetivo: libertad, tranquilidad, paz. No es solo una libertad formal, es una experiencia cotidiana de vivir sin presiones externas.
 
-- Vocación y pertenencia: gusto por la actividad y vínculo con el entorno natural y el territorio.
+-   Vocación y pertenencia: gusto por la actividad y vínculo con el entorno natural y el territorio.
 
 Por último, se recaban algunas observaciones generales, donde vale la pena destacar las menciones a la merma percibida sobre de la cantidad de pescadoen los últimos 5 años, las malas estado de la bajadas en varios puntos y lo díficil que resulta mantener el monotributo fuera de zafra.
 
@@ -1918,7 +1919,7 @@ ggplot(tabla_equip, aes(x = etiqueta, y = pct, fill = etiqueta)) +
     title    = "EQUIPAMIENTO DE SEGURIDAD",
     subtitle = paste0("Porcentaje de embarcaciones que cuenta con cada equipo (respuesta múltiple, n = ", n_embarcaciones, ")"),
     caption  = fuente_caption,
-    x = NULL, y = "%"
+    x = NULL, y = NULL
   ) +
   tema_informe
 ```
