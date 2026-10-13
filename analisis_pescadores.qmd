@@ -37,7 +37,9 @@ Aquellos ciudadanos que tengan dudas o requieran información adicional, pueden 
 
 # Aspectos metodológicos
 
-La selección de los entrevistados fue no probabilistica y se realizó mediante identificación directa y, en un segundo paso, por la técnica de bola de nieve que permitió llegar a los pescadores a través de la referencia de sus pares anteriormente contactados. Las dimensiones incluidas en la encuesta fueron las siguientes: Se localizaron 78 personas personas que trabajan en la pesca, pertenecientes a 53 hogares.
+La selección de los entrevistados fue no probabilistica y se realizó mediante identificación directa y, en un segundo paso, por la técnica de bola de nieve que permitió llegar a los pescadores a través de la referencia de sus pares anteriormente contactados.
+
+Se localizaron 78 personas personas que trabajan en la pesca, pertenecientes a 53 hogares.
 
 La encuesta se dividió en dos módulos: vivienda, hogares y personas por un lado y por otro, unidades de producción (embarcaciones). Las dimensiones principales fueron: ubicación y tenencia de la vivienda; calidad de la vivienda y servicios básicos; composición del hogar; datos básicos de las personas; educación y salud; arraigo; perfil laboral e ingresos de la pesca; organización, participación y capacitación; percepción de desafíos y problemas. En el módulo relativo a la unidad de producción se identifican las siguientes dimensiones: identificación técnica y formalización; propulsión y seguridad; artes de pesca; esfuerzo y captura y comercialización y precios.
 
@@ -64,7 +66,7 @@ library(knitr)
 library(kableExtra)  
 
 
-ruta_archivo <- "C:/Users/wramirez/Desktop/INSTITUTO DEPARTAMENTAL DE ESTADISTICAS/Censo pescadores/Censo pescadores 2026/censo_pescadores_sj/base_pescadores_original_limpia.xlsx"
+base_pescadores_original_limpia <- read_excel("base_pescadores_original_limpia.xlsx")
 
 hogares       <- read_excel(ruta_archivo, sheet = "_10_de_formulario_0") %>% clean_names()
 personas_solo <- read_excel(ruta_archivo, sheet = "personas_pesca_1")    %>% clean_names()
