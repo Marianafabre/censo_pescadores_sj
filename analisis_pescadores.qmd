@@ -72,13 +72,13 @@ library(knitr)
 library(kableExtra)  
 library(patchwork)
 
-<<<<<<< HEAD
-ruta_archivo <- "C:/Users/wramirez/Desktop/INSTITUTO DEPARTAMENTAL DE ESTADISTICAS/Censo pescadores/Censo pescadores 2026/censo_pescadores_sj/base_pescadores.xlsx"
-=======
+
+
+
 base_pescadores<- read_excel("base_pescadores.xlsx")
 
 embarcaciones <- read_excel("C:/Users/gobernanza/Desktop/IDE/Censo pescadores/embarcacion_censo_pescadores.xlsx")
->>>>>>> b21388c13ecd29860c5398d871512b772463ce01
+
 
 hogares       <- read_excel(ruta_archivo, sheet = "_10_de_formulario_0") %>% clean_names()
 personas_solo <- read_excel(ruta_archivo, sheet = "personas_pesca_1")    %>% clean_names()
@@ -284,9 +284,9 @@ tabla_frecuencias(
   grafico_barras_estilo("cobertura_salud", "Cobertura de salud")
 ```
 
-El 77% son varones y el 23% mujeres. De las mujeres, el 70% tiednen 45 años o menos. Según la distribución por edades, se observa que el intervalo modal está entre los 40 y los 54 años, grupo que representa el 40% de los pescadores. El 27% está entre 25 y 39 años, el 16% entre 55 y 64 años y el resto se distribuye en proporciones casi iguales en los extremos de la distribución. Resumiendo, las tres cuartas partes de los/las pescadores/as tienen menos de 55 años.
+El 77% son varones y el 23% mujeres. De las mujeres, el 70% tienen 45 años o menos. Según la distribución por edades, se observa que el intervalo modal está entre los 40 y los 54 años, grupo que representa el 40% de los pescadores. El 27% está entre 25 y 39 años, el 16% entre 55 y 64 años y el resto se distribuye en proporciones casi iguales en los extremos de la distribución. Resumiendo, las tres cuartas partes de los/las pescadores/as tienen menos de 55 años.
 
-Por educación formal completada, se observa que 87 % asistió hasta Ciclo Básico de Educación Secundaria y de estos, el 84% solamente hizo Primaria. Un 13% alcanzó a realizar Enseñanza Media Superior o educación terciaria. En cuanto a la cobertura de salud, se constató que el 84% se atiende en los servicios de ASSE y un 16% tiene cobertura privada.
+Por educación formal completada, se observa que 87 % asistió hasta Ciclo Básico de Educación Secundaria y de éstos, el 84% solamente hizo Primaria. Un 13% alcanzó a realizar Enseñanza Media Superior o educación terciaria. En cuanto a la cobertura de salud, se constató que el 84% se atiende en los servicios de ASSE y un 16% tiene cobertura privada.
 
 ```{r}
 #| echo: false
@@ -323,7 +323,7 @@ tabla_frecuencias(hogares, "tenencia_terreno") %>%
 
 ```
 
-Como se observa, más del 41% de los hogares dicen ser propietarios del terreno, un 32% ocupantes, un 17% dicen que residen sobre un terreno prestado y un 9,4% son arrendatarios. De la categoría ocpuantes, hay que señalar que el 75% ocupan predios públicos mientras que el resto dice estar ocupando predios privados. La mayor cantidad de ocuantes, las dos terceras partes, están en Arazatí y Boca del Cufré.
+Como se observa, más del 41,5% de los hogares dicen ser propietarios del terreno, un 32% ocupantes, un 17% dicen que residen sobre un terreno prestado y un 9% son arrendatarios. De la categoría ocpuantes, hay que señalar que el 75% ocupan predios públicos mientras que el resto dice estar ocupando predios privados. La mayor cantidad de ocuantes, las dos terceras partes, están en Arazatí y Boca del Cufré.
 
 El gráfico siguiente muestra las condiciones de materialidad de la vivienda de los 53 hogares de pescadores.
 
@@ -879,7 +879,7 @@ ggplot(tabla_trabajo, aes(x = hsize, y = Porcentaje, fill = trabaja_todo_ano)) +
 
 ```
 
-De los que no trabajan durante todo el año, todos se concentran en partes del segundo semestre hasta el mes de febrero.
+En el gráfico anterior se ve que un 83% de los pescadores dicen que trabajan en la actividad durante todo el año, un 13% dice que no y 4% no informó. De quienes no trabajan durante todo el año, todos se concentran en partes del segundo semestre hasta el mes de febrero.
 
 \newpage
 
@@ -1154,7 +1154,7 @@ ggplot(tabla_ing, aes(x = ingreso_mensual_hogar, y = pct, fill = ingreso_mensual
   ) +
   tema_informe
 ```
-
+En cuanto al ingreso del hogar, el 60% informó que el mismo estaba entre 25.000 y 50.000 pesos, un 30% dijo que tenían un ingreso menor a 25.000 pesos y un 10% no aportó información.
 \newpage
 
 ### Capacitación, organización y percepción del sector
@@ -1222,7 +1222,7 @@ ggplot(tabla_cap, aes(x = hsize, y = Porcentaje, fill = interes_capacitacion)) +
 
 \newpage
 
-Un 60% respondió tener interés en recibir capacitaciones, un 36% dijo no estar interesado y un 4% no informó al respecto.
+Un 60% respondió tener interés en recibir capacitaciones, un 36% dijo no estar interesado y un 4% no informó al respecto. 
 
 ```{r}
 #| echo: false
@@ -1287,7 +1287,7 @@ ggplot(tabla_cap_temas, aes(x = etiqueta, y = pct, fill = etiqueta)) +
   tema_informe
 ```
 
-En "Otro" se encuentran tres menciones más a "Administración", una a "Meteorología" y otra a "Mecánica".
+A los interesados en recibir capacitaciones, se les indicó que podían elegir hasta tres de ubn menú de opciones ya establecido. El tema más mencionado fue comercialización, elegido por el 36% de los pescadores; en segundo lugar formalización, mencionado por el 32%; en tercer lugar, 28%, el interés se volcó por seguridad naútica y en cuarto lugar, manipulación del pescado, mencionado por el 23% de los pescadores. También otros temas como manejo de artes de pesca y primeros auxilios fueron mencionados por casi una quinta parte de los entrevistas como temas de interés para capacitarse. Con porcentajes menores de menciones aparecen buceo, administración y gestión ambiental. En "Otro" se encuentran tres menciones más a "Administración", una a "Meteorología" y otra a "Mecánica".
 
 En cuanto a la participación en asociaciones o organizaciones sociales por parte de los pescadores, solamente se encuentran dos casos que declaran participar de sindicatos, mostrando un bajo nivel asociativo del sector.
 
@@ -1412,7 +1412,7 @@ g_consejos + g_mesa +
 Se preguntó en particular qué conocimiento tenían sobre dos ámbitos de participación: Consejos de Pesca y Mesa de Desarrollo Rural. Cómo vemos la gran mayoría desconoce ambos espacios: el 70% y el 73% respectivamente. Un 28% conoce los Consejos de Pesca y un 23% la Mesa de Desarrollo Rural. Adentrándonos en detalles sobre estos últimos, sólo la quinta parte de los que conocen no encuentra útil la participación en estos espacios.
 
 \newpage
-
+Se pidió a los pescadores que señalaran cuáles son problemas que enfrenta el sector. Para ello se les entregó una tarjeta que contenía un listado de posibles dificultades y se les solicitó que seleccionaran hasta tres.
 ```{r}
 #| echo: false
 
@@ -1491,7 +1491,7 @@ ggplot(tabla_prob, aes(x = etiqueta, y = pct, fill = etiqueta)) +
   ) +
   tema_informe
 ```
-
+Como se observa en el gráfico anterior, el 62% de los pescadores mencionó porecios bajos, un 43% marcó infraestructura, un 40% contaminación. Porcentajes menores pero también significativos mencionaron como problemas aspectos relativos al clima, la formalización, dificultades de vivienda y problemas con prefectura. Menos del 10% de los pescadores, también mencionaron "condición de la embarcación", la presencia de "lobos marinos" y conflictos con la actividad turística.
 \newpage
 
 ```{r}
@@ -1567,91 +1567,45 @@ ggplot(tabla_prob_rel, aes(x = etiqueta, y = pct, fill = etiqueta)) +
 
 ```
 
-Para cada uno de estos problemas se preguntó a los pescadores que solución darían. A continuación se presenta un análisis descriptivo de lo recabado.
+En la pregunta siguiente se solicitó a cada pescador, que de los tres problemas identificados, seleccionara aquel que considerara prioratitario por lo que este gráfico suma 100 . La cuarta parte, sostuvo que el problema principal es el relativo a los bajos precios, un 15% jerarquizó el tema de la formalización y un porcentaje igual problemas de infraestructura. Un 13% seleccionó como problema principal el derivado de la contaminación y luego aparecen en ese orden temas tales como clima, vivienda y prefectura con 7,5%; Dinara con 6% de los pescadores que la mencionan como fuente de problema y lobos marinos y turismo con 2% cada uno. 
 
 *Intermediación y comercialización.*
 
-Es una de las preocupaciones más mencionadas. Los pescadores identifican a los intermediarios como el principal eslabón que captura el valor de su trabajo, y proponen tanto eliminarlos como buscar canales alternativos:
-
-"Sacar los intermediarios."
-
-"Buscar mejores mercados para mejorar precios."
-
-"Intervención del Estado, hay un monopolio: Empresa LAS. Oligopolio. Asimetría porque tienen muchas barcas."
+Para cada uno de los problemas jerarquizados se preguntó a los pescadores que solución darían. A continuación se presenta un análisis descriptivo de lo recabado.
+Los pescadores identifican a los intermediarios como el principal eslabón que captura el valor de su trabajo, y proponen tanto eliminarlos como buscar canales alternativos: "Sacar los intermediarios"; "Buscar mejores mercados para mejorar precios"; "Intervención del Estado, hay un monopolio: (mencionan empresa) Oligopolio. Asimetría porque tienen muchas barcas."
 
 *Precio y rentabilidad.*
 
-Directamente vinculado al punto anterior, aparece el reclamo por mejores precios y estabilidad:
-
-"Que seba, hace años se paga lo mismo."
-
-"Estabilidad en el precio."
-
-"Costos suben."
+Directamente vinculado al punto anterior, aparece el reclamo por mejores precios y estabilidad "Que sepa, hace años se paga lo mismo"; "Estabilidad en el precio";"Costos suben"
 
 *Formalización y trámites.*
 
-Una demanda recurrente es simplificar los procedimientos y mejorar el acceso a la información, sin perder de vista la necesidad de regularizar la actividad:
-
-"Simplificar para permiso, menos vueltas."
-
-"Más rápido los trámites, y más información."
-
-"Abrir ventanilla."
+Una demanda recurrente es simplificar los procedimientos y mejorar el acceso a la información, sin perder de vista la necesidad de regularizar la actividad: "Simplificar para permiso, menos vueltas";"Más rápido los trámites, y más información";"Abrir ventanilla"
 
 *Infraestructura.*
 
-Las propuestas se orientan a obras concretas que mejoren las condiciones de trabajo: muelles, caminería, accesos y servicios básicos:
-
-"Construir un muelle."
-
-"Agua para consumo y muelle."
-
-"Mejora de entrada, hormigón."
+Las propuestas se orientan a obras concretas que mejoren las condiciones de trabajo: muelles, caminería, accesos y servicios básicos: "Construir un muelle"; "Agua para consumo y muelle";"Mejora de entrada, hormigón"
 
 *Control ambiental.*
 
-Frente a la contaminación, las soluciones apuntan a mayor fiscalización y a responsabilizar a todos los actores, no solo a los pescadores:
-
-"Control agroquímicos de los campos o prohibición."
-
-"Tachos, para los restos de los pescados."
-
-"Que la gente de las cámaras de frío no tiren el pescado, no son los pescadores que tiran al arroyo."
+Frente a la contaminación, las soluciones apuntan a mayor fiscalización y a responsabilizar a todos los actores, no solo a los pescadores: "Control agroquímicos de los campos o prohibición"; "Tachos, para los restos de los pescados"; "Que la gente de las cámaras de frío no tiren el pescado, no son los pescadores que tiran al arroyo".
 
 *Control y fiscalización.*
 
-Algunas respuestas se centran en mejorar y equiparar el control de la actividad:
-
-"Que se pueda hacer registros cerca y control parejo para todas las embarcaciones."
-
-"Mejorar el control."
+Algunas respuestas se centran en mejorar y equiparar el control de la actividad: "Que se pueda hacer registros cerca y control parejo para todas las embarcaciones"; "Mejorar el control".
 
 *Vivienda e ingreso.*
 
-Aparecen demandas vinculadas a las condiciones de vida:
-
-"Alguna vivienda, para dejar de pagar alquiler."
-
-"Apoyo de materiales."
-
-"Teniendo dinero para comprar."
+Aparecen demandas vinculadas a las condiciones de vida: "Alguna vivienda, para dejar de pagar alquiler";"Apoyo de materiales";"Teniendo dinero para comprar."
 
 *Gestión con DINARA.*
 
-Se mencionan facilidades para la formalización y la necesidad de permisos accesibles:
-
-"Que den más facilidades para la formalización."
-
-"Falta de facilidades para la formalización."
+Se mencionan facilidades para la formalización y la necesidad de permisos accesibles: "Que den más facilidades para la formalización"; "Falta de facilidades para la formalización".
 
 *Convivencia con turismo y fauna.*
 
-Respuestas puntuales pero significativas por su contenido simbólico:
-
-"Respetar el espacio de trabajo." (turismo)
-
-"No hay, es el hábitat de ellos también." (lobos marinos)
+Respuestas puntuales pero significativas por su contenido simbólico: "Respetar el espacio de trabajo"(turismo); 
+"No hay, es el hábitat de ellos también" (lobos marinos)
 
 **Tres ejes ordenan el conjunto de las propuestas:**
 
@@ -1667,83 +1621,30 @@ Finalmente se pregunta a los pescadores qué es lo que más valoran de su profes
 
 *Eje 1 — Autonomía e independencia*
 
-Es, sin duda, el valor más mencionado. Aparece bajo distintas formulaciones que remiten a la misma idea: la posibilidad de organizar el propio trabajo, no tener jefe, decidir cuándo y cómo salir a pescar.
-
-"Ser independiente."
-
-"Trabajar para mí mismo, libertad."
-
-"Trabajo independiente."
-
-"Ser libre de tu vida."
-
+Es, sin duda, el valor más mencionado. Aparece bajo distintas formulaciones que remiten a la misma idea: la posibilidad de organizar el propio trabajo, no tener jefe, decidir cuándo y cómo salir a pescar.Lo expresan así: "Ser independiente"; 
+"Trabajar para mí mismo, libertad"; "Trabajo independiente"; "Ser libre de tu vida"
 La independencia aquí no es solo una condición laboral: es un valor identitario, lo que define al oficio frente a otras ocupaciones.
 
 *Eje 2 — Libertad y tranquilidad*
 
-Estrechamente ligado al anterior, pero con un matiz más emocional y existencial. Aparecen dos palabras que se repiten una y otra vez: libertad y tranquilidad.
-
-"Libertad."
-
-"Tranquilidad."
-
-"Paz y tranquilidad."
-
-"Tranquilidad y libertad."
-
-Es llamativo el peso de estos términos, casi como un estribillo que atraviesa las respuestas. Sugiere que el oficio ofrece algo que va más allá del ingreso: un modo de vida asociado al ritmo propio, al contacto con el entorno y a la ausencia de presiones externas.
+Estrechamente ligado al anterior, pero con un matiz más emocional y existencial. Aparecen dos palabras que se repiten una y otra vez: libertad y tranquilidad. De esta manera: "Libertad"; "Tranquilidad"; "Paz y tranquilidad"; "Tranquilidad y libertad".Es llamativo el peso de estos términos, casi como un estribillo que atraviesa las respuestas. Sugiere que el oficio ofrece algo que va más allá del ingreso: un modo de vida asociado al ritmo propio, al contacto con el entorno y a la ausencia de presiones externas.
 
 *Eje 3 — Gusto por la actividad y vínculo con la naturaleza*
 
-Muchos pescadores valoran simplemente hacer lo que les gusta, con un vínculo explícito con el entorno natural:
-
-"Le gusta pescar."
-
-"Es lo que le gusta y puede vivir."
-
-"La naturaleza."
-
-"El entorno con la naturaleza."
-
-Este eje combina vocación (hacer lo que a uno le gusta) y pertenencia territorial (el río, el mar, el entorno como parte del trabajo).
+Muchos pescadores valoran simplemente hacer lo que les gusta, con un vínculo explícito con el entorno natural: "Me gusta pescar"; 
+"Es lo que me gusta y puedo vivir"; "La naturaleza";"El entorno con la naturaleza." Este eje combina vocación (hacer lo que a uno le gusta) y pertenencia territorial (el río, el mar, el entorno como parte del trabajo).
 
 *Eje 4 — Ser patrón y sostener el ingreso*
 
-Un grupo importante menciona el valor de ser patrón (tener embarcación propia) y de poder vivir de la pesca:
-
-"Ser patrón."
-
-"El ser patrón."
-
-"Poder vivir de la pesca."
-
-"El ingreso."
-
-"Que hay trabajo y comida todos los días."
-
-Acá la valoración es material y de estatus: no se trata solo de libertad, sino de autonomía económica y de ser dueño de los medios de producción.
+Un grupo importante menciona el valor de ser patrón (tener embarcación propia) y de poder vivir de la pesca: "Ser patrón";"El ser patrón"; "Poder vivir de la pesca"; "El ingreso"; "Que hay trabajo y comida todos los días".Acá la valoración es material y de estatus: no se trata solo de libertad, sino de autonomía económica y de ser dueño de los medios de producción.
 
 *Eje 5 — El oficio como forma de vida*
 
-Algunas respuestas sintetizan todo lo anterior y expresan que la pesca no es solo un trabajo, sino una forma de vida:
-
-"Es la forma de vida."
-
-"Que es la forma de vivir."
-
-"El arte como tal."
-
-Es la formulación más densa simbólicamente: el oficio como identidad, no como ocupación transitoria.
+Algunas respuestas sintetizan todo lo anterior y expresan que la pesca no es solo un trabajo, sino una forma de vida: "Es la forma de vida"; "Que es la forma de vivir";"El arte como tal". Es la formulación más densa simbólicamente: el oficio como identidad, no como ocupación transitoria.
 
 *Menciones negativas o ambivalentes*
 
-Hay dos respuestas que rompen el tono positivo general y merecen señalarse aparte:
-
-"No, que es sacrificado."
-
-"Sacrificio."
-
-Estas voces introducen el costo físico y personal del oficio, y son importantes para no romantizar el análisis: la libertad y la tranquilidad conviven con un trabajo duro, incierto y expuesto a condiciones adversas.
+Hay dos respuestas que rompen el tono positivo general y merecen señalarse aparte: "No, que es sacrificado";"Sacrificio". Estas voces introducen el costo físico y personal del oficio, y son importantes para no romantizar el análisis: la libertad y la tranquilidad conviven con un trabajo duro, incierto y expuesto a condiciones adversas.
 
 *Lectura transversal*
 
@@ -1755,7 +1656,7 @@ Tres ideas ordenan el conjunto:
 
 - Vocación y pertenencia: gusto por la actividad y vínculo con el entorno natural y el territorio.
 
-Por último, se recaban algunas observaciones generales, donde vale la pena destacar las menciones a la merma percibida sobre de la cantidad de pescadoen los últimos 5 años, las malas estado de la bajadas en varios puntos y lo díficil que resulta mantener el monotributo fuera de zafra.
+Por último, se recaban algunas observaciones generales, donde vale la pena destacar las menciones a la merma percibida sobre la cantidad de pescado en los últimos 5 años, el mal estado de la bajadas en varios puntos y lo díficil que resulta mantener el monotributo fuera de zafra.
 
 ## Embarcaciones
 
