@@ -54,8 +54,6 @@ library(knitr)
 library(kableExtra)  
 
 
-ruta_archivo <- "C:/Users/gobernanza/Desktop/IDE/Censo pescadores/base_pescadores.xlsx"
-
 hogares       <- read_excel(ruta_archivo, sheet = "_10_de_formulario_0") %>% clean_names()
 personas_solo <- read_excel(ruta_archivo, sheet = "personas_pesca_1")    %>% clean_names()
 
