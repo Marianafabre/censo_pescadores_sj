@@ -39,13 +39,9 @@ Aquellos ciudadanos que tengan dudas o requieran información adicional, pueden 
 
 # Aspectos metodológicos
 
-<<<<<<< HEAD
-La selección de los entrevistados fue no probabilistica y se realizó mediante identificación directa y, en un segundo paso, por la técnica de bola de nieve que permitió llegar a los pescadores a través de la referencia de sus pares anteriormente contactados. Las entrevistas se realizaron en el lugar de trabajo o en los hogares de los pescadores. Las dimensiones incluidas en la encuesta fueron las siguientes: Se localizaron 78 personas personas que trabajan en la pesca, pertenecientes a 53 hogares.
-=======
 La selección de los entrevistados fue no probabilistica y se realizó mediante identificación directa y, en un segundo paso, por la técnica de bola de nieve que permitió llegar a los pescadores a través de la referencia de sus pares anteriormente contactados.
 
 Se localizaron 78 personas personas que trabajan en la pesca, pertenecientes a 53 hogares.
->>>>>>> b21388c13ecd29860c5398d871512b772463ce01
 
 La encuesta se dividió en dos módulos: vivienda, hogares y personas por un lado y por otro, unidades de producción (embarcaciones). Las dimensiones principales fueron: ubicación y tenencia de la vivienda; calidad de la vivienda y servicios básicos; composición del hogar; datos básicos de las personas; educación y salud; arraigo; perfil laboral e ingresos de la pesca; organización, participación y capacitación; percepción de desafíos y problemas. En el módulo relativo a la unidad de producción se identifican las siguientes dimensiones: identificación técnica y formalización; propulsión y seguridad; artes de pesca; esfuerzo y captura y comercialización y precios.
 
@@ -73,12 +69,9 @@ library(kableExtra)
 library(patchwork)
 
 
-
-
-base_pescadores<- read_excel("base_pescadores.xlsx")
-
-embarcaciones <- read_excel("C:/Users/gobernanza/Desktop/IDE/Censo pescadores/embarcacion_censo_pescadores.xlsx")
-
+# Rutas, los excel deben estar en la carpeta del proyecto. No cambiar estas rutas, corren así como están.
+ruta_archivo  <- "base_pescadores.xlsx"
+embarcaciones <- read_excel("embarcacion_censo_pescadores.xlsx")
 
 hogares       <- read_excel(ruta_archivo, sheet = "_10_de_formulario_0") %>% clean_names()
 personas_solo <- read_excel(ruta_archivo, sheet = "personas_pesca_1")    %>% clean_names()
@@ -595,7 +588,7 @@ ggplot(roles_resumen, aes(x = Rol, y = Porcentaje, fill = Rol)) +
   labs(
     title = "DISTRIBUCIÓN POR ROL PRINCIPAL EN LA PESCA",
     subtitle = "Porcentaje de personas según rol jerarquizado",
-    caption = fuente_caption, x = NULL, y = "%"
+    caption = fuente_caption, x = NULL, y = NULL
   ) +
   tema_informe
 
@@ -811,7 +804,7 @@ ggplot(tabla_rel, aes(x = relacion_laboral, y = pct, fill = relacion_laboral)) +
     title    = "DISTRIBUCIÓN POR RELACIÓN LABORAL",
     subtitle = "Porcentaje de pescadores según relación laboral",
     caption  = fuente_caption,
-    x = NULL, y = "%"
+    x = NULL, y = NULL
   ) +
   tema_informe
 ```
@@ -1083,7 +1076,7 @@ g_fuera <- ggplot(tabla_fuera, aes(x = ganancia_mensual_fuera_zafra, y = pct, fi
   labs(
     title    = "GANANCIA MENSUAL FUERA DE ZAFRA",
     subtitle = "Porcentaje de pescadores por intervalo",
-    x = NULL, y = "%"
+    x = NULL, y = NULL
   ) +
   tema_informe
 
@@ -1136,6 +1129,14 @@ etiquetas_ing <- c(
   "Sin dato"  = "Sin dato"
 )
 
+# --- 4. Tabla resumen (un registro por hogar) ---
+tabla_ing <- datos_ingreso %>%
+  distinct(id_hogar, .keep_all = TRUE) %>%
+  count(ingreso_mensual_hogar, name = "Cantidad") %>%
+  mutate(
+    pct = round(Cantidad / sum(Cantidad) * 100, 1),
+    ingreso_mensual_hogar = factor(ingreso_mensual_hogar, levels = niveles_ing)
+  )
 
 # --- 5. Barras horizontales ---
 ggplot(tabla_ing, aes(x = ingreso_mensual_hogar, y = pct, fill = ingreso_mensual_hogar)) +
@@ -1150,12 +1151,13 @@ ggplot(tabla_ing, aes(x = ingreso_mensual_hogar, y = pct, fill = ingreso_mensual
     title    = "INGRESO MENSUAL DEL HOGAR",
     subtitle = "Porcentaje de hogares por intervalo",
     caption  = fuente_caption,
-    x = NULL, y = "%"
+    x = NULL, y = NULL
   ) +
   tema_informe
+
 ```
-En cuanto al ingreso del hogar, el 60% informó que el mismo estaba entre 25.000 y 50.000 pesos, un 30% dijo que tenían un ingreso menor a 25.000 pesos y un 10% no aportó información.
-\newpage
+
+En cuanto al ingreso del hogar, el 60% informó que el mismo estaba entre 25.000 y 50.000 pesos, un 30% dijo que tenían un ingreso menor a 25.000 pesos y un 10% no aportó información. \newpage
 
 ### Capacitación, organización y percepción del sector
 
@@ -1222,16 +1224,16 @@ ggplot(tabla_cap, aes(x = hsize, y = Porcentaje, fill = interes_capacitacion)) +
 
 \newpage
 
-Un 60% respondió tener interés en recibir capacitaciones, un 36% dijo no estar interesado y un 4% no informó al respecto. 
+Un 60% respondió tener interés en recibir capacitaciones, un 36% dijo no estar interesado y un 4% no informó al respecto.
 
 ```{r}
 #| echo: false
 
-n_personas_cap <- datos_prob %>%
+n_personas_cap <- datos%>%
   filter(temas_capacitacion != "Sin dato") %>%
   nrow()
 
-# --- 1. Limpieza + separar menciones múltiples ---
+# --- 1. Limpieza 
 tabla_cap_temas <- datos %>%
   filter(interes_capacitacion == "si") %>% 
   mutate(
@@ -1246,7 +1248,7 @@ tabla_cap_temas <- datos %>%
     Porcentaje_formateado = paste0(pct, "%")
   )
 
-# --- 2. Etiquetas legibles ---
+# --- 2. Etiquetas 
 etiquetas_temas <- c(
   "formalizacion_cap"     = "Formalización",
   "comercializacion"      = "Comercialización",
@@ -1261,7 +1263,8 @@ etiquetas_temas <- c(
   "Sin dato"              = "Sin dato"
 )
 
-# --- 3. Ordenar: por frecuencia desc, "Sin dato" y "Otro" al final ---
+# --- 3. Ordenar: por frecuencia 
+
 tabla_cap_temas <- tabla_cap_temas %>%
   mutate(
     es_residual = temas_capacitacion %in% c("Sin dato", "otro"),
@@ -1270,7 +1273,7 @@ tabla_cap_temas <- tabla_cap_temas %>%
   arrange(es_residual, desc(pct)) %>%
   mutate(etiqueta = factor(etiqueta, levels = rev(etiqueta)))
 
-# --- 4. Barras horizontales ---
+# --- 4. Gráfico
 ggplot(tabla_cap_temas, aes(x = etiqueta, y = pct, fill = etiqueta)) +
   geom_col(width = 0.65, show.legend = FALSE) +
   geom_text(aes(label = Porcentaje_formateado),
@@ -1280,9 +1283,9 @@ ggplot(tabla_cap_temas, aes(x = etiqueta, y = pct, fill = etiqueta)) +
   coord_flip() +
   labs(
     title    = "TEMAS DE CAPACITACIÓN DE INTERÉS",
-    subtitle = paste0("Porcentaje de pescadores que mencionó cada problema (respuesta múltiple, n = ", n_personas_cap, ")"),,
+    subtitle = paste0("Porcentaje de pescadores que mencionó cada problema (respuesta múltiple, n = ", n_personas_cap, ")"),
     caption  = fuente_caption,
-    x = NULL, y = "%"
+    x = NULL, y = NULL
   ) +
   tema_informe
 ```
@@ -1412,7 +1415,9 @@ g_consejos + g_mesa +
 Se preguntó en particular qué conocimiento tenían sobre dos ámbitos de participación: Consejos de Pesca y Mesa de Desarrollo Rural. Cómo vemos la gran mayoría desconoce ambos espacios: el 70% y el 73% respectivamente. Un 28% conoce los Consejos de Pesca y un 23% la Mesa de Desarrollo Rural. Adentrándonos en detalles sobre estos últimos, sólo la quinta parte de los que conocen no encuentra útil la participación en estos espacios.
 
 \newpage
+
 Se pidió a los pescadores que señalaran cuáles son problemas que enfrenta el sector. Para ello se les entregó una tarjeta que contenía un listado de posibles dificultades y se les solicitó que seleccionaran hasta tres.
+
 ```{r}
 #| echo: false
 
@@ -1491,8 +1496,8 @@ ggplot(tabla_prob, aes(x = etiqueta, y = pct, fill = etiqueta)) +
   ) +
   tema_informe
 ```
-Como se observa en el gráfico anterior, el 62% de los pescadores mencionó porecios bajos, un 43% marcó infraestructura, un 40% contaminación. Porcentajes menores pero también significativos mencionaron como problemas aspectos relativos al clima, la formalización, dificultades de vivienda y problemas con prefectura. Menos del 10% de los pescadores, también mencionaron "condición de la embarcación", la presencia de "lobos marinos" y conflictos con la actividad turística.
-\newpage
+
+Como se observa en el gráfico anterior, el 62% de los pescadores mencionó porecios bajos, un 43% marcó infraestructura, un 40% contaminación. Porcentajes menores pero también significativos mencionaron como problemas aspectos relativos al clima, la formalización, dificultades de vivienda y problemas con prefectura. Menos del 10% de los pescadores, también mencionaron "condición de la embarcación", la presencia de "lobos marinos" y conflictos con la actividad turística. \newpage
 
 ```{r}
 #| echo: false
@@ -1560,19 +1565,18 @@ ggplot(tabla_prob_rel, aes(x = etiqueta, y = pct, fill = etiqueta)) +
     title    = "PROBLEMA MÁS RELEVANTE DEL SECTOR",
     subtitle = "Porcentaje de pescadores según el problema señalado como principal",
     caption  = fuente_caption,
-    x = NULL, y = "%"
+    x = NULL, y = NULL
   ) +
   tema_informe
 
 
 ```
 
-En la pregunta siguiente se solicitó a cada pescador, que de los tres problemas identificados, seleccionara aquel que considerara prioratitario por lo que este gráfico suma 100 . La cuarta parte, sostuvo que el problema principal es el relativo a los bajos precios, un 15% jerarquizó el tema de la formalización y un porcentaje igual problemas de infraestructura. Un 13% seleccionó como problema principal el derivado de la contaminación y luego aparecen en ese orden temas tales como clima, vivienda y prefectura con 7,5%; Dinara con 6% de los pescadores que la mencionan como fuente de problema y lobos marinos y turismo con 2% cada uno. 
+En la pregunta siguiente se solicitó a cada pescador, que de los tres problemas identificados, seleccionara aquel que considerara prioratitario por lo que este gráfico suma 100 . La cuarta parte, sostuvo que el problema principal es el relativo a los bajos precios, un 15% jerarquizó el tema de la formalización y un porcentaje igual problemas de infraestructura. Un 13% seleccionó como problema principal el derivado de la contaminación y luego aparecen en ese orden temas tales como clima, vivienda y prefectura con 7,5%; Dinara con 6% de los pescadores que la mencionan como fuente de problema y lobos marinos y turismo con 2% cada uno.
 
 *Intermediación y comercialización.*
 
-Para cada uno de los problemas jerarquizados se preguntó a los pescadores que solución darían. A continuación se presenta un análisis descriptivo de lo recabado.
-Los pescadores identifican a los intermediarios como el principal eslabón que captura el valor de su trabajo, y proponen tanto eliminarlos como buscar canales alternativos: "Sacar los intermediarios"; "Buscar mejores mercados para mejorar precios"; "Intervención del Estado, hay un monopolio: (mencionan empresa) Oligopolio. Asimetría porque tienen muchas barcas."
+Para cada uno de los problemas jerarquizados se preguntó a los pescadores que solución darían. A continuación se presenta un análisis descriptivo de lo recabado. Los pescadores identifican a los intermediarios como el principal eslabón que captura el valor de su trabajo, y proponen tanto eliminarlos como buscar canales alternativos: "Sacar los intermediarios"; "Buscar mejores mercados para mejorar precios"; "Intervención del Estado, hay un monopolio: (mencionan empresa) Oligopolio. Asimetría porque tienen muchas barcas."
 
 *Precio y rentabilidad.*
 
@@ -1604,8 +1608,7 @@ Se mencionan facilidades para la formalización y la necesidad de permisos acces
 
 *Convivencia con turismo y fauna.*
 
-Respuestas puntuales pero significativas por su contenido simbólico: "Respetar el espacio de trabajo"(turismo); 
-"No hay, es el hábitat de ellos también" (lobos marinos)
+Respuestas puntuales pero significativas por su contenido simbólico: "Respetar el espacio de trabajo"(turismo); "No hay, es el hábitat de ellos también" (lobos marinos)
 
 **Tres ejes ordenan el conjunto de las propuestas:**
 
@@ -1619,26 +1622,23 @@ Respuestas puntuales pero significativas por su contenido simbólico: "Respetar 
 
 Finalmente se pregunta a los pescadores qué es lo que más valoran de su profesión. Se presenta un análisis al respecto.
 
-*Eje 1 — Autonomía e independencia*
+*Eje 1 --- Autonomía e independencia*
 
-Es, sin duda, el valor más mencionado. Aparece bajo distintas formulaciones que remiten a la misma idea: la posibilidad de organizar el propio trabajo, no tener jefe, decidir cuándo y cómo salir a pescar.Lo expresan así: "Ser independiente"; 
-"Trabajar para mí mismo, libertad"; "Trabajo independiente"; "Ser libre de tu vida"
-La independencia aquí no es solo una condición laboral: es un valor identitario, lo que define al oficio frente a otras ocupaciones.
+Es, sin duda, el valor más mencionado. Aparece bajo distintas formulaciones que remiten a la misma idea: la posibilidad de organizar el propio trabajo, no tener jefe, decidir cuándo y cómo salir a pescar.Lo expresan así: "Ser independiente"; "Trabajar para mí mismo, libertad"; "Trabajo independiente"; "Ser libre de tu vida" La independencia aquí no es solo una condición laboral: es un valor identitario, lo que define al oficio frente a otras ocupaciones.
 
-*Eje 2 — Libertad y tranquilidad*
+*Eje 2 --- Libertad y tranquilidad*
 
 Estrechamente ligado al anterior, pero con un matiz más emocional y existencial. Aparecen dos palabras que se repiten una y otra vez: libertad y tranquilidad. De esta manera: "Libertad"; "Tranquilidad"; "Paz y tranquilidad"; "Tranquilidad y libertad".Es llamativo el peso de estos términos, casi como un estribillo que atraviesa las respuestas. Sugiere que el oficio ofrece algo que va más allá del ingreso: un modo de vida asociado al ritmo propio, al contacto con el entorno y a la ausencia de presiones externas.
 
-*Eje 3 — Gusto por la actividad y vínculo con la naturaleza*
+*Eje 3 --- Gusto por la actividad y vínculo con la naturaleza*
 
-Muchos pescadores valoran simplemente hacer lo que les gusta, con un vínculo explícito con el entorno natural: "Me gusta pescar"; 
-"Es lo que me gusta y puedo vivir"; "La naturaleza";"El entorno con la naturaleza." Este eje combina vocación (hacer lo que a uno le gusta) y pertenencia territorial (el río, el mar, el entorno como parte del trabajo).
+Muchos pescadores valoran simplemente hacer lo que les gusta, con un vínculo explícito con el entorno natural: "Me gusta pescar"; "Es lo que me gusta y puedo vivir"; "La naturaleza";"El entorno con la naturaleza." Este eje combina vocación (hacer lo que a uno le gusta) y pertenencia territorial (el río, el mar, el entorno como parte del trabajo).
 
-*Eje 4 — Ser patrón y sostener el ingreso*
+*Eje 4 --- Ser patrón y sostener el ingreso*
 
 Un grupo importante menciona el valor de ser patrón (tener embarcación propia) y de poder vivir de la pesca: "Ser patrón";"El ser patrón"; "Poder vivir de la pesca"; "El ingreso"; "Que hay trabajo y comida todos los días".Acá la valoración es material y de estatus: no se trata solo de libertad, sino de autonomía económica y de ser dueño de los medios de producción.
 
-*Eje 5 — El oficio como forma de vida*
+*Eje 5 --- El oficio como forma de vida*
 
 Algunas respuestas sintetizan todo lo anterior y expresan que la pesca no es solo un trabajo, sino una forma de vida: "Es la forma de vida"; "Que es la forma de vivir";"El arte como tal". Es la formulación más densa simbólicamente: el oficio como identidad, no como ocupación transitoria.
 
@@ -1819,14 +1819,228 @@ ggplot(tabla_equip, aes(x = etiqueta, y = pct, fill = etiqueta)) +
     title    = "EQUIPAMIENTO DE SEGURIDAD",
     subtitle = paste0("Porcentaje de embarcaciones que cuenta con cada equipo (respuesta múltiple, n = ", n_embarcaciones, ")"),
     caption  = fuente_caption,
-    x = NULL, y = "%"
+    x = NULL, y = NULL
   ) +
   tema_informe
 ```
 
 ### Formalización y permisos
 
+```{r}
+
+#| echo: false
+
+niveles_permiso <- c("si", "en_tramite", "vencido", "nunca")
+etiquetas_permiso <- c("Sí", "En trámite", "Vencido", "Nunca tuvo")
+
+tabla_permiso <- tabla_frecuencias_ordenada(embarcaciones, "permiso_dinara",
+                                            niveles_permiso, etiquetas_permiso)
+
+grafico_barras_estilo(tabla_permiso, "permiso_dinara",
+                      "PERMISO DE DINARA",
+                      "¿Cuenta con permiso de DINARA?")
+
+```
+
+Aquellos que nunca tuvieron persmiso se le consultó si tienen interes en formalizarse, el total de ellos manifestó estarlo.
+
+```{r}
+#| echo: false
+
+temas_necesidad <- c(
+  "Información"                                                                    = "Información y asesoramiento",
+  "No sabe, necesitan información"                                                 = "Información y asesoramiento",
+  "Contacten y asesoramiento"                                                      = "Información y asesoramiento",
+  
+  "Otorgar los permisos"                                                           = "Permisos y cupos",
+  "Permisos para poder registrarse"                                                = "Permisos y cupos",
+  "Que abran los cupos"                                                            = "Permisos y cupos",
+  "Dinara le retiro el permiso"                                                    = "Permisos y cupos",
+  "Que le den el permiso , no se lo dan despues de seis meses de vencidoMontevideo" = "Permisos y cupos",
+  "Renobaracion"                                                                   = "Permisos y cupos",
+  
+  "Tramites burocraticos dinara, no hay cupo"                                      = "Trámites y simplificación",
+  "Iniciarlo"                                                                      = "Trámites y simplificación",
+  "Iniciar"                                                                        = "Trámites y simplificación",
+  "Los papeles"                                                                    = "Trámites y simplificación",
+  "Hacer el tramite"                                                               = "Trámites y simplificación",
+  "Simlificar"                                                                     = "Trámites y simplificación",
+  "Dar mas facilidades para formalizarse"                                          = "Trámites y simplificación",
+  "Facilidades para formlizarse"                                                   = "Trámites y simplificación",
+  "Abrir ventanilla"                                                               = "Trámites y simplificación",
+  
+  "Qe hagan llamados para inscripsion"                                             = "Convocatoria / difusión"
+)
+
+tabla_necesidad <- embarcaciones %>%
+  filter(!is.na(necesidad_formalizarse)) %>%
+  mutate(necesidad_formalizarse = trimws(necesidad_formalizarse)) %>%
+  mutate(tema = recode(necesidad_formalizarse, !!!temas_necesidad)) %>%
+  count(tema, name = "Cantidad") %>%
+  mutate(`Porcentaje (%)` = round(Cantidad / sum(Cantidad) * 100, 1)) %>%
+  arrange(desc(Cantidad))
+
+tabla_necesidad %>%
+  rename(Tema = tema) %>%
+  kbl(align = "lcc") %>%
+  kable_styling(full_width = FALSE, position = "center")
+```
+
 ### Actividad pesquera: zona, esfuerzo y artes
+
+#### Zona
+
+```{r}
+
+#| echo: false
+
+datos_zona <- embarcaciones %>%
+  mutate(
+    zona_habilitada = ifelse(is.na(zona_habilitada), "Sin dato", zona_habilitada)
+  )
+
+n_sin_dato_zona <- datos_zona %>%
+  filter(zona_habilitada == "Sin dato") %>%
+  nrow()
+
+tabla_zona <- datos_zona %>%
+  filter(zona_habilitada != "Sin dato") %>%
+  separate_rows(zona_habilitada, sep = ",") %>%
+  count(zona_habilitada, name = "Cantidad") %>%
+  mutate(zona_habilitada = recode(zona_habilitada,
+                                  "zona_d" = "Zona D",
+                                  "zona_e" = "Zona E"
+  ))
+
+tabla_zona <- bind_rows(
+  tabla_zona,
+  tibble(zona_habilitada = "Sin dato", Cantidad = n_sin_dato_zona)
+)
+
+tabla_zona %>%
+  rename(Zona = zona_habilitada) %>%
+  kbl(align = "lc", caption = "Zona habilitada de pesca") %>%
+  kable_styling(full_width = FALSE, position = "center")
+```
+
+```{r}
+#| echo: false
+
+
+datos_permiso_si <- embarcaciones %>%
+  filter(permiso_dinara == "si") %>%
+  mutate(combustible_descuento = recode(combustible_descuento,
+                                        "si" = "Sí",
+                                        "no" = "No"
+  ))
+
+tabla_combustible <- tabla_frecuencias(datos_permiso_si, "combustible_descuento")
+
+grafico_barras_estilo(tabla_combustible, "combustible_descuento",
+                      "ACCESO A COMBUSTIBLE CON DESCUENTO",
+                      "Entre quienes cuentan con permiso de DINARA")
+```
+
+```{r}
+
+#| echo: false
+
+temas_motivo <- c(
+  "No ha tramitado"                                              = "Trámite / documentación pendiente",
+  "No ha hecho tramite"                                          = "Trámite / documentación pendiente",
+  "Falta tramite"                                                = "Trámite / documentación pendiente",
+  "Falta regularizar"                                            = "Trámite / documentación pendiente",
+  "No tiene permiso total"                                       = "Trámite / documentación pendiente",
+  "Documentacion"                                                = "Trámite / documentación pendiente",
+  "Ducumentacion"                                                = "Trámite / documentación pendiente",
+  
+  "Se tiene que afiluar a BPS"                                   = "Situación con BPS",
+  "Problema con BPS"                                             = "Situación con BPS",
+  "No aporta BPS"                                                = "Situación con BPS",
+  
+  "Por falta de dinero para incoorparar el motor o dar de alta"  = "Motivo económico / motor",
+  "Por motor"                                                    = "Motivo económico / motor",
+  
+  "No le interesa"                                               = "Desinterés"
+)
+
+tabla_motivo <- embarcaciones %>%
+  filter(!is.na(motivo_no_descuento)) %>%
+  mutate(motivo_no_descuento = trimws(motivo_no_descuento)) %>%
+  mutate(tema = recode(motivo_no_descuento, !!!temas_motivo)) %>%
+  count(tema, name = "Cantidad") %>%
+  arrange(desc(Cantidad))
+
+tabla_motivo %>%
+  rename(Tema = tema) %>%
+  kbl(align = "lcc", caption = "Motivo por el que no accede al descuento de combustible") %>%
+  kable_styling(full_width = FALSE, position = "center")
+```
+
+```{r}
+#| echo: false
+
+datos_permiso_si <- embarcaciones %>%
+  filter(permiso_dinara == "si") %>%
+  mutate(reporta_dinara_prefectura = recode(reporta_dinara_prefectura,
+                                            "si" = "Sí",
+                                            "no" = "No"
+  ))
+
+tabla_reporta <- tabla_frecuencias(datos_permiso_si, "reporta_dinara_prefectura")
+
+grafico_barras_estilo(tabla_reporta, "reporta_dinara_prefectura",
+                      "REPORTE A DINARA Y PREFECTURA",
+                      "Entre quienes cuentan con permiso de DINARA")
+```
+
+#### Artes
+
+100% usa trasmallo
+
+del total de embarcaciones, sólo 3 de ellas declaran usar línea de mano
+
+```{r}
+
+#| echo: false
+
+embarcaciones <- embarcaciones %>%
+  mutate(red_largo_tramo = case_when(
+    is.na(red_largo_m)  ~ "Sin dato",
+    red_largo_m <= 100   ~ "Hasta 100 m",
+    red_largo_m <= 400   ~ "101-400 m",
+    red_largo_m == 500   ~ "500 m",
+    red_largo_m <= 800   ~ "501-800 m",
+    TRUE                 ~ "Más de 800 m"
+  ))
+
+niveles_red <- c("Sin dato", "Hasta 100 m", "101-400 m", "500 m", "501-800 m", "Más de 800 m")
+
+tabla_red_largo <- tabla_frecuencias_ordenada(embarcaciones, "red_largo_tramo", niveles_red)
+
+grafico_barras_estilo(tabla_red_largo, "red_largo_tramo",
+                      "LARGO TOTAL DE REDES UTILIZADAS",
+                      "Tramos de longitud total de red (m)")
+```
+
+```{r}
+#| echo: false
+
+embarcaciones <- embarcaciones %>%
+  mutate(usa_palangre = recode(usa_palangre,
+                               "si" = "Sí",
+                               "no" = "No"
+  ))
+
+tabla_palangre <- embarcaciones %>%
+  count(usa_palangre, name = "Cantidad") %>%
+  mutate(`Porcentaje (%)` = round(Cantidad / sum(Cantidad) * 100, 1))
+
+tabla_palangre %>%
+  rename(`Usa palangre` = usa_palangre) %>%
+  kbl(align = "lcc", caption = "Uso de palangre") %>%
+  kable_styling(full_width = FALSE, position = "center")
+```
 
 ### Producción, comercialización y descarte
 
