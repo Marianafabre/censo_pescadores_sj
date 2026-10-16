@@ -2066,34 +2066,6 @@ grafico_barras_estilo(tabla_red_largo, "red_largo_tramo",
 #| echo: false
 
 embarcaciones <- embarcaciones %>%
-  mutate(usa_palangre = recode(usa_palangre,
-                               "si" = "Sí",
-                               "no" = "No"
-  ))
-
-tabla_palangre <- embarcaciones %>%
-  count(usa_palangre, name = "Cantidad") %>%
-  mutate(`Porcentaje (%)` = round(Cantidad / sum(Cantidad) * 100, 1))
-
-fila_total <- tibble(
-  usa_palangre = "Total",
-  Cantidad = sum(tabla_palangre$Cantidad),
-  `Porcentaje (%)` = 100
-)
-
-tabla_palangre <- bind_rows(tabla_palangre, fila_total)
-
-tabla_palangre %>%
-  rename(`Usa palangre` = usa_palangre) %>%
-  kbl(align = "lcc", caption = "Uso de palangre") %>%
-  kable_styling(full_width = FALSE, position = "center") %>%
-  row_spec(nrow(tabla_palangre), bold = TRUE, background = "#f2f2f2")
-```
-
-```{r}
-#| echo: false
-
-embarcaciones <- embarcaciones %>%
   mutate(luz_malla_tramo = case_when(
     is.na(red_luz_malla_cm) ~ "Sin dato",
     red_luz_malla_cm < 8    ~ "Menos de 8 cm",
