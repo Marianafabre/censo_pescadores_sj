@@ -1650,11 +1650,11 @@ Hay dos respuestas que rompen el tono positivo general y merecen señalarse apar
 
 Tres ideas ordenan el conjunto:
 
-- Autonomía como núcleo identitario: ser independiente, ser patrón, trabajar para uno mismo. Es lo que distingue a la pesca de un empleo asalariado.
+-   Autonomía como núcleo identitario: ser independiente, ser patrón, trabajar para uno mismo. Es lo que distingue a la pesca de un empleo asalariado.
 
-- Bienestar subjetivo: libertad, tranquilidad, paz. No es solo una libertad formal, es una experiencia cotidiana de vivir sin presiones externas.
+-   Bienestar subjetivo: libertad, tranquilidad, paz. No es solo una libertad formal, es una experiencia cotidiana de vivir sin presiones externas.
 
-- Vocación y pertenencia: gusto por la actividad y vínculo con el entorno natural y el territorio.
+-   Vocación y pertenencia: gusto por la actividad y vínculo con el entorno natural y el territorio.
 
 Por último, se recaban algunas observaciones generales, donde vale la pena destacar las menciones a la merma percibida sobre la cantidad de pescado en los últimos 5 años, el mal estado de la bajadas en varios puntos y lo díficil que resulta mantener el monotributo fuera de zafra.
 
@@ -2051,7 +2051,7 @@ Entre quienes cuentan con permiso de Dinara, el 95% informaron que reportaban cu
 
 Se preguntó sobre el uso de artes de pesca. Los pescadores informaron que el 100% de las embarcaciones usa trasmallo; nueve de ellos (15%) usan además palangre y tres (5%), utilizan línea de mano. Ninguno informó usar otro tipo de artes. Entre quienes usan palangre la cantidad de anzuelos utilizados va desde aquellos que solo cuentan decenas, la mayoría, hasta dos embarcaciones que utilizan mil o más.
 
-En el gráfico inerior..
+En el gráfico siguiente se informa sobre el largo total de las redes utilizadas.
 
 ```{r}
 
@@ -2074,6 +2074,8 @@ tabla_red_largo <- tabla_frecuencias_ordenada(embarcaciones, "red_largo_tramo", 
 grafico_barras_estilo(tabla_red_largo, "red_largo_tramo",
                       "LARGO TOTAL DE REDES UTILIZADAS")
 ```
+
+La mitad de las embarcaciones usan un total de 500 metros de redes; un 15% usan de 501 a 800 metros; un 8% usan más de 800 metros de redes; es decir, casi las tres cuartas partes usan 500 metros o más de redes. Después se observa un 5% que usan entre 101 metros y 400 y un 20% que usan 100 metros o menos.
 
 ```{r}
 #| echo: false
@@ -2103,6 +2105,8 @@ tabla_palangre %>%
   row_spec(nrow(tabla_palangre), bold = TRUE, background = "#f2f2f2")
 ```
 
+La distribución respecto a la luz de malla que usaban en sus redes fue la siguiente:
+
 ```{r}
 #| echo: false
 
@@ -2123,6 +2127,8 @@ grafico_barras_estilo(tabla_luz_malla, "luz_malla_tramo",
 
 
 ```
+
+Casi la mitad (un 47%) dio usar redes con luz de malla de entre 8 y 14 centímetros; un 28% luz de malla inferior a 8 cm; un 22% más de 14 cm y un 3% no aportó información.
 
 ### Producción, comercialización y descarte
 
