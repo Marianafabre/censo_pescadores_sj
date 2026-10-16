@@ -1650,11 +1650,11 @@ Hay dos respuestas que rompen el tono positivo general y merecen señalarse apar
 
 Tres ideas ordenan el conjunto:
 
--   Autonomía como núcleo identitario: ser independiente, ser patrón, trabajar para uno mismo. Es lo que distingue a la pesca de un empleo asalariado.
+- Autonomía como núcleo identitario: ser independiente, ser patrón, trabajar para uno mismo. Es lo que distingue a la pesca de un empleo asalariado.
 
--   Bienestar subjetivo: libertad, tranquilidad, paz. No es solo una libertad formal, es una experiencia cotidiana de vivir sin presiones externas.
+- Bienestar subjetivo: libertad, tranquilidad, paz. No es solo una libertad formal, es una experiencia cotidiana de vivir sin presiones externas.
 
--   Vocación y pertenencia: gusto por la actividad y vínculo con el entorno natural y el territorio.
+- Vocación y pertenencia: gusto por la actividad y vínculo con el entorno natural y el territorio.
 
 Por último, se recaban algunas observaciones generales, donde vale la pena destacar las menciones a la merma percibida sobre la cantidad de pescado en los últimos 5 años, el mal estado de la bajadas en varios puntos y lo díficil que resulta mantener el monotributo fuera de zafra.
 
@@ -1895,10 +1895,19 @@ tabla_necesidad <- embarcaciones %>%
   mutate(`Porcentaje (%)` = round(Cantidad / sum(Cantidad) * 100, 1)) %>%
   arrange(desc(Cantidad))
 
+fila_total <- tibble(
+  tema = "Total",
+  Cantidad = sum(tabla_necesidad$Cantidad),
+  `Porcentaje (%)` = 100
+)
+
+tabla_necesidad <- bind_rows(tabla_necesidad, fila_total)
+
 tabla_necesidad %>%
   rename(Tema = tema) %>%
-  kbl(align = "lcc") %>%
-  kable_styling(full_width = FALSE, position = "center")
+  kbl(align = "lcc", caption = "Necesidades mencionadas para formalizarse") %>%
+  kable_styling(full_width = FALSE, position = "center") %>%
+  row_spec(nrow(tabla_necesidad), bold = TRUE, background = "#f0f0f0")
 ```
 
 En cuanto a las dificultades que encuentran para formalizarse, tabla superior, un 45% reclamó simplificar los trámites, un 30% dijo que estaban a la espera que Dinara habilitara el registro y una quinta parte demanda asesoramiento e información.
@@ -1909,40 +1918,38 @@ En cuanto a las dificultades que encuentran para formalizarse, tabla superior, u
 
 Como se observa en la imagen inferior, la Dinara distribuye las zonas de pesca del Río de la Plata con una codificación señalada con las letras D y E. Al departamento de San José y parte de Colonia, le corresponde la leta D y a Montevideo y Canelones la letra E.
 
-![](images/zonas_pesca_rp.png)
+![](zonas_pesca.jpeg)
 
 ```{r}
 
 #| echo: false
 #| warning: false
 
-datos_zona <- embarcaciones %>%
-  mutate(
-    zona_habilitada = ifelse(is.na(zona_habilitada), "Sin dato", zona_habilitada)
-  )
-
-n_sin_dato_zona <- datos_zona %>%
-  filter(zona_habilitada == "Sin dato") %>%
-  nrow()
-
-tabla_zona <- datos_zona %>%
-  filter(zona_habilitada != "Sin dato") %>%
-  separate_rows(zona_habilitada, sep = ",") %>%
-  count(zona_habilitada, name = "Cantidad") %>%
-  mutate(zona_habilitada = recode(zona_habilitada,
-                                  "zona_d" = "Zona D",
-                                  "zona_e" = "Zona E"
+embarcaciones <- embarcaciones %>%
+  mutate(zona_habilitada = case_when(
+    zona_habilitada == "zona_d"        ~ "Zona D",
+    zona_habilitada == "zona_e"        ~ "Zona E",
+    zona_habilitada == "zona_d,zona_e" ~ "Zona D y E",
+    TRUE ~ "Sin dato"
   ))
 
-tabla_zona <- bind_rows(
-  tabla_zona,
-  tibble(zona_habilitada = "Sin dato", Cantidad = n_sin_dato_zona)
+tabla_zona <- embarcaciones %>%
+  count(zona_habilitada, name = "Cantidad") %>%
+  mutate(`Porcentaje (%)` = round(Cantidad / sum(Cantidad) * 100, 1))
+
+fila_total <- tibble(
+  zona_habilitada = "Total",
+  Cantidad = sum(tabla_zona$Cantidad),
+  `Porcentaje (%)` = 100
 )
+
+tabla_zona <- bind_rows(tabla_zona, fila_total)
 
 tabla_zona %>%
   rename(Zona = zona_habilitada) %>%
-  kbl(align = "lc", caption = "Zona habilitada de pesca") %>%
-  kable_styling(full_width = FALSE, position = "center")
+  kbl(align = "lcc", caption = "Zona habilitada de pesca") %>%
+  kable_styling(full_width = FALSE, position = "center") %>%
+  row_spec(nrow(tabla_zona), bold = TRUE, background = "#f0f0f0")
 ```
 
 Como se ve en la tabla superior,
@@ -1993,17 +2000,28 @@ temas_motivo <- c(
   "No le interesa"                                               = "Desinterés"
 )
 
+
 tabla_motivo <- embarcaciones %>%
   filter(!is.na(motivo_no_descuento)) %>%
   mutate(motivo_no_descuento = trimws(motivo_no_descuento)) %>%
   mutate(tema = recode(motivo_no_descuento, !!!temas_motivo)) %>%
   count(tema, name = "Cantidad") %>%
+  mutate(`Porcentaje (%)` = round(Cantidad / sum(Cantidad) * 100, 1)) %>%
   arrange(desc(Cantidad))
+
+fila_total <- tibble(
+  tema = "Total",
+  Cantidad = sum(tabla_motivo$Cantidad),
+  `Porcentaje (%)` = 100
+)
+
+tabla_motivo <- bind_rows(tabla_motivo, fila_total)
 
 tabla_motivo %>%
   rename(Tema = tema) %>%
   kbl(align = "lcc", caption = "Motivo por el que no accede al descuento de combustible") %>%
-  kable_styling(full_width = FALSE, position = "center")
+  kable_styling(full_width = FALSE, position = "center") %>%
+  row_spec(nrow(tabla_motivo), bold = TRUE, background = "#f0f0f0")
 ```
 
 Siete no acceden a combustible con descuento porque tienen trámites pendientes que representan más del 50%; tres por situación relativa con el Banco de Previsión Social (BPS), dos por motivos económicos relativo a la unidad de propulsión y uno por desinterés.
@@ -2054,8 +2072,7 @@ niveles_red <- c("Sin dato", "Hasta 100 m", "101-400 m", "500 m", "501-800 m", "
 tabla_red_largo <- tabla_frecuencias_ordenada(embarcaciones, "red_largo_tramo", niveles_red)
 
 grafico_barras_estilo(tabla_red_largo, "red_largo_tramo",
-                      "LARGO TOTAL DE REDES UTILIZADAS",
-                      "Tramos de longitud total de red (m)")
+                      "LARGO TOTAL DE REDES UTILIZADAS")
 ```
 
 ```{r}
@@ -2071,10 +2088,40 @@ tabla_palangre <- embarcaciones %>%
   count(usa_palangre, name = "Cantidad") %>%
   mutate(`Porcentaje (%)` = round(Cantidad / sum(Cantidad) * 100, 1))
 
+fila_total <- tibble(
+  usa_palangre = "Total",
+  Cantidad = sum(tabla_palangre$Cantidad),
+  `Porcentaje (%)` = 100
+)
+
+tabla_palangre <- bind_rows(tabla_palangre, fila_total)
+
 tabla_palangre %>%
   rename(`Usa palangre` = usa_palangre) %>%
   kbl(align = "lcc", caption = "Uso de palangre") %>%
-  kable_styling(full_width = FALSE, position = "center")
+  kable_styling(full_width = FALSE, position = "center") %>%
+  row_spec(nrow(tabla_palangre), bold = TRUE, background = "#f2f2f2")
+```
+
+```{r}
+#| echo: false
+
+embarcaciones <- embarcaciones %>%
+  mutate(luz_malla_tramo = case_when(
+    is.na(red_luz_malla_cm) ~ "Sin dato",
+    red_luz_malla_cm < 8    ~ "Menos de 8 cm",
+    red_luz_malla_cm <= 14  ~ "8 a 14 cm",
+    TRUE                    ~ "Más de 14 cm"
+  ))
+
+niveles_luz <- c("Sin dato", "Menos de 8 cm", "8 a 14 cm", "Más de 14 cm")
+
+tabla_luz_malla <- tabla_frecuencias_ordenada(embarcaciones, "luz_malla_tramo", niveles_luz)
+
+grafico_barras_estilo(tabla_luz_malla, "luz_malla_tramo",
+                      "LUZ DE MALLA DE LA RED")
+
+
 ```
 
 ### Producción, comercialización y descarte
