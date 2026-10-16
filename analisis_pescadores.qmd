@@ -1860,6 +1860,7 @@ A aquellos que nunca tuvieron permiso (16) se les consultó si tienen interés e
 
 ```{r}
 #| echo: false
+#| warning: false
 
 temas_necesidad <- c(
   "Información"                                                                    = "Información y asesoramiento",
@@ -1915,13 +1916,14 @@ En cuanto a las dificultades que encuentran para formalizarse, tabla superior, u
 
 #### Zona
 
-Como se observa en gráfico inferior, la Dinara distribuye las zonas de pesca del Río de la Plata con una codificación señalada con letras D y E. Al departamento de San José y parte de Colonia, le corresponde la leta D y a Montevideo y Canelones la letra E.
+Como se observa en la imagen inferior, la Dinara distribuye las zonas de pesca del Río de la Plata con una codificación señalada con las letras D y E. Al departamento de San José y parte de Colonia, le corresponde la leta D y a Montevideo y Canelones la letra E.
 
 ![](zonas_pesca.jpeg)
 
 ```{r}
 
 #| echo: false
+#| warning: false
 
 embarcaciones <- embarcaciones %>%
   mutate(zona_habilitada = case_when(
@@ -1952,6 +1954,8 @@ tabla_zona %>%
 
 Como se ve en la tabla superior,
 
+En el gráfico inferior, se ve la distribución de las embarcaciones que cuentan con permiso de Dinara y que tienen acceso a combustible con descuento.
+
 ```{r}
 #| echo: false
 
@@ -1970,9 +1974,12 @@ grafico_barras_estilo(tabla_combustible, "combustible_descuento",
                       "Entre quienes cuentan con permiso de DINARA")
 ```
 
+El 35% no acceden al beneficio y la razón queda expuesta en la tabla siguiente en números absolutos.
+
 ```{r}
 
 #| echo: false
+#| warning: false
 
 temas_motivo <- c(
   "No ha tramitado"                                              = "Trámite / documentación pendiente",
@@ -2017,6 +2024,10 @@ tabla_motivo %>%
   row_spec(nrow(tabla_motivo), bold = TRUE, background = "#f0f0f0")
 ```
 
+Siete no acceden a combustible con descuento porque tienen trámites pendientes que representan más del 50%; tres por situación relativa con el Banco de Previsión Social (BPS), dos por motivos económicos relativo a la unidad de propulsión y uno por desinterés.
+
+Se preguntó también si regularmente reportaban a Dinara y Prefectura los partes de pesca y despachos.
+
 ```{r}
 #| echo: false
 
@@ -2034,11 +2045,13 @@ grafico_barras_estilo(tabla_reporta, "reporta_dinara_prefectura",
                       "Entre quienes cuentan con permiso de DINARA")
 ```
 
+Entre quienes cuentan con permiso de Dinara, el 95% informaron que reportaban cuando correspondía, mientras que el resto respondió negativamente.
+
 #### Artes
 
-100% usa trasmallo
+Se preguntó sobre el uso de artes de pesca. Los pescadores informaron que el 100% de las embarcaciones usa trasmallo; nueve de ellos (15%) usan además palangre y tres (5%), utilizan línea de mano. Ninguno informó usar otro tipo de artes. Entre quienes usan palangre la cantidad de anzuelos utilizados va desde aquellos que solo cuentan decenas, la mayoría, hasta dos embarcaciones que utilizan mil o más.
 
-del total de embarcaciones, sólo 3 de ellas declaran usar línea de mano
+En el gráfico siguiente se informa sobre el largo total de las redes utilizadas.
 
 ```{r}
 
@@ -2062,6 +2075,10 @@ grafico_barras_estilo(tabla_red_largo, "red_largo_tramo",
                       "LARGO TOTAL DE REDES UTILIZADAS")
 ```
 
+La mitad de las embarcaciones usan un total de 500 metros de redes; un 15% usan de 501 a 800 metros; un 8% usan más de 800 metros de redes; es decir, casi las tres cuartas partes usan 500 metros o más de redes. Después se observa un 5% que usan entre 101 metros y 400 y un 20% que usan 100 metros o menos.
+
+La distribución respecto a la luz de malla que usaban en sus redes fue la siguiente:
+
 ```{r}
 #| echo: false
 
@@ -2082,6 +2099,8 @@ grafico_barras_estilo(tabla_luz_malla, "luz_malla_tramo",
 
 
 ```
+
+Casi la mitad (un 47%) dio usar redes con luz de malla de entre 8 y 14 centímetros; un 28% luz de malla inferior a 8 cm; un 22% más de 14 cm y un 3% no aportó información.
 
 ### Producción, comercialización y descarte
 
