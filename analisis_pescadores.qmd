@@ -219,6 +219,10 @@ tabla_localidad %>%
 
 \newpage
 
+![Distribution de hogares por localidad](hogares_localidad.jpg "Distribución de hogares por localidad")
+
+\newpage
+
 ### Viviendas
 
 En primer lugar se podrá visualizar la forma de tenencia de los terrenos donde están las viviendas de los hogares con personas que trabajan en la pesca.
@@ -2073,7 +2077,7 @@ Entre quienes cuentan con permiso de Dinara, el 95% informaron que reportaban cu
 
 La Dinara distribuye las zonas de pesca del Río de la Plata con una codificación señalada con las letras D y E. Al departamento de San José y parte de Colonia, le corresponde la letra D y a Montevideo y Canelones la letra E.
 
-![](zonas_pesca.jpeg)
+![Zonas de pesca establecidas por DINARA](zonas_pesca.jpeg)
 
 Como se observa en la siguiente tabla, el 38% de los pescadores tienen habilitada la zona D, el 18% las zonas D y E y un 5% la zona E. Casi la cuarta parte no brindó información al respecto.
 
