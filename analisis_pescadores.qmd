@@ -357,7 +357,7 @@ En cuanto a servicios básicos, en el gráfico superior se observa que la gran m
 
 ### Composición de los hogares
 
-Los hogares tienen un tamaño promedio de 3 personas, lo cual es 0,5% mayor que el tamaño promedio de los hogares uruguayos y los del departamento.
+Los hogares tienen un tamaño promedio de 3 personas, lo cual es 0,5 puntos porcentuales mayor que el tamaño promedio de los hogares uruguayos y los del departamento.
 
 En 37 de los hogares (70%), la persona entrevistada convive con su cónyuge. En dos hogares, se informó la presencia de personas con discapacidad.
 
@@ -710,7 +710,7 @@ g_emb + g_lib +
 
 En total se relevaron 62 embarcaciones. De quienes tienen embarcación propia, la gran mayoría informó tener sólo una, excepto seis casos que afirman tener dos cada uno
 
-Un 72% de los que trabajan en la pesca dijeron ser propietarios de sus embarcaciones, un 17% dijo no serlo, mientras que un 11,5% no informó al respecto.
+Un 72% de las personas que trabajan en la pesca dijeron ser propietarios de sus embarcaciones, un 17% dijo no serlo, mientras que un 11,5% no informó al respecto.
 
 En cuanto a la libreta de prefectura, un 65% de los pescadores dijo tenerla; casi una cuarta parte (23%), dijo estar embarcándose sin libreta y un 11,5% no aportó información al respecto.
 
@@ -2075,7 +2075,7 @@ La Dinara distribuye las zonas de pesca del Río de la Plata con una codificaci�
 
 ![](zonas_pesca.jpeg)
 
-Como se observa en la siguiente tabla,
+Como se observa en la siguiente tabla, el 38% de los pescadores tienen habilitada la zona D, el 18% las zonas D y E y un 5% la zona E. Casi la cuarta parte no brindó información al respecto.
 
 ```{r}
 #| echo: false
@@ -3080,4 +3080,24 @@ A nivel de cada embarcación, la diferencia también es notoria: el promedio de 
 
 # Conclusiones
 
-....
+1\) Más del 60% de los hogares y las personas que trabajan en la pesca artesanal en el departamento ubican su lugar de residencia en la zona de Arazatí y en el barrio Penino de Ciudad del Plata.
+
+2\) La mitad de los pescadores artesanales tienen una condición de tenencia precaria de los terrenos donde residen, ubicándose la mayor parte de estos en predios fiscales en calidad de ocupantes y otro grupo en terrenos prestados.
+
+3\) En cuanto a la materialidad de las viviendas, casi un 40% de los hogares ocupan unidades con algún grado de precariedad.
+
+4\) Con relación a los servicios, se observa que aproximadamente una cuarta parte de los pescadores artesanales no tiene acceso a agua segura lo que se refleja en los reclamos registrados en formato cualitativo. Con respecto a la evacuación de aguas servidas, más de las tres cuartas parte vierte en pozo negro y casi una quinta parte de forma totalmente precaria.
+
+5\) El sector tiene una significativa particpación en la actividad productiva de mujeres, que representan más de la quinta parte de los pescadores artesanales del departamento de San José. En relación a las edades, dos tercios de pescadores/as tienen entre 25 y 55 años, siendo el intervalo de mayor concentración entre 40 y 54 años.
+
+6\) Con respecto a nivel educativo, la actividad concentra trabajadores cuya trayectoria en gran parte no supera los niveles iniciales de educación formal: casi las tres cuarta parte de los pescadores dice haber alcanzado Primaria. Si se le suma el primer ciclo de Educación Secundaria se completa el 88% de la población de estudio.
+
+7\) Se constata que se trata de un sector con significativa informalidad en distintas dimensiones. Con relación a la previsión social, el 64% no realiza aportes al BPS. Con respecto a la actividad propiamente dicha, alrededor de un 38% no tiene permiso de Dinara y un 23% de las embarcaciones ingresa sin el permiso correspondiente de prefectura. Es de destacar sí, que entre quienes nubnca han tenido permiso de Dinar, el 100% manifiesta interés en regularizar.
+
+8\) Una quinta parte de los pescadores actualmente no están pudiendo acceder al descuento de combustible que contempla al sector por una variedad de situaciones explicitadas en el desarrollo del informe, lo que les impide acceder a un beneficio importante para reducir costos operativos. Ofrecer algún tipo de acompañamiento, podría facilitar la regularización de algunos casos.
+
+9\) Al momento de identificar los principales problemas del sector, cuatro aspectos aparecen como los más destacados: los bajos precios que reciben por el producto, la formalización, dificultades de infraestructura como ausencia y precariedad de muelle y la contaminación que incide en los volúmenes de pesca.
+
+10\) Lo anterior es consistente con algunos de los interés manifestados en materia de capacitación: comercialización y formalización. También se recogió un significativo interés en capacitaciones relativas a la seguridad náutica y manipulación del producto.
+
+*(Por más consideraciones al respecto, léase los hallazgos de carácter cualitativo en la página 29)*
