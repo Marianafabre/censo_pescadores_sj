@@ -33,7 +33,7 @@ booktabs: true
 
 El presente informe fue elaborado por el Instituto Departamental de Estadísticas de la Intendencia de San José en base a los datos del Censo a Pescadores Artesanales del Departamento de San José -2026.
 
-El mencionado Censo fue realizado por iniciativa de la Dirección de Desarrollo con el apoyo del Instituto Departamental de Estadísticas (IDE). El Instituto se encargó del entrenamiento del equipo de encuestadores, diseño del instrumento de recolección, de la prueba del formulario y del procesamiento, análisis y elaboración del informe final.
+El mencionado Censo fue realizado por iniciativa de la Dirección de Desarrollo con el apoyo del Instituto Departamental de Estadísticas. El Instituto se encargó del entrenamiento del equipo de encuestadores, diseño del instrumento de recolección, de la prueba del formulario y del procesamiento, análisis y elaboración del informe final.
 
 Para el diseño del censo, se tuvo en cuenta un trabajo desarrollado en forma parcial en 2007, antecedentes nacionales e internacionales y se mantuvieron entrevistas on line con integrantes del Núcleo Interdisciplinario para el Estudio de la Pesca en Uruguay (NIEPU) de la Universidad de la República, y pescadores con experiencia en la costa del Río de la Plata en el departamento de San José.
 
@@ -45,13 +45,13 @@ Aquellos ciudadanos que tengan dudas o requieran información adicional, pueden 
 
 La estrategia de abordaje consistió en "barridas" por principales puntos de pesca del departamento apuntando principalmente a relevar los hogares de pescadores. y se realizó mediante identificación directa y, en un segundo paso, por la técnica de bola de nieve que permitió llegar a los pescadores a través de la referencia de sus pares anteriormente contactados.
 
-Se localizaron 78 personas que trabajan en la pesca, pertenecientes a 53 hogares y 62 embarcaciones.
+Se localizaron 78 personas que trabajan en la pesca artesanal, pertenecientes a 53 hogares.
 
 La encuesta se dividió en dos módulos: vivienda, hogares y personas por un lado y por otro, unidades de producción (embarcaciones). Las dimensiones principales fueron: ubicación y tenencia de la vivienda; calidad de la vivienda y servicios básicos; composición del hogar; datos básicos de las personas; educación y salud; arraigo; perfil laboral e ingresos de la pesca; organización, participación y capacitación; percepción de desafíos y problemas. En el módulo relativo a la unidad de producción se identifican las siguientes dimensiones: identificación técnica y formalización; propulsión y seguridad; artes de pesca; esfuerzo y captura, comercialización y precios y finalmente, tripulación.
 
 El trabajo de campo, realizado por un equipo perteneciente a la Dirección de Desarrollo, se aplicó entre el 26 de junio y el 8 de setiembre de 2026.
 
-La información se presenta en tablas y gráficos con su correspondiente lectura. En caso de surgir interés en nuevos cruces de las variables relevadas, el equipo técnico del IDE queda a disposición para su procesamiento. Al final se presenta un capítulo de conclusiones. Los datos fueron procesados con el programa R y el documento fue producido en el entorno Quarto.
+La información se presenta en tablas y gráficos con su correspondiente lectura. Al final se presenta un capítulo de conclusiones. Los datos fueron procesados con el programa R y el documento fue producido en el entorno Quarto.
 
 \newpage
 
@@ -216,6 +216,10 @@ tabla_localidad %>%
   row_spec(nrow(tabla_localidad), bold = TRUE, extra_css = "border-top: 1px solid #333;")
 
 ```
+
+\newpage
+
+![Distribution de hogares por localidad](hogares_localidad.jpg "Distribución de hogares por localidad")
 
 \newpage
 
@@ -1614,60 +1618,10 @@ ggplot(tabla_prob_rel, aes(x = etiqueta, y = pct, fill = etiqueta)) +
   ) +
   tema_informe
 
-# ============================================================
-# 1. Limpieza rápida de ambas variables
-# ============================================================
-# (Asumo que la columna de localidad se llama 'localidad')
-datos_cruce <- datos %>%
-  mutate(
-    # Normalizar localidad
-    Localidad = trimws(tolower(as.character(localidad))),
-    Localidad = paste0(toupper(substr(Localidad, 1, 1)), substr(Localidad, 2, nchar(Localidad))), # Primera mayúscula
-    
-    # Normalizar problema (por si había guiones bajos)
-    Problema = recode(problema_mas_relevante,
-                      "precios_bajos"   = "Precios bajos",
-                      "clima"           = "Clima",
-                      "contaminacion"   = "Contaminación",
-                      "formalizacion"   = "Formalización",
-                      "infraestructura" = "Infraestructura",
-                      "prefectura"      = "Prefectura",
-                      "habitacional"    = "Habitacional",
-                      "dinara"          = "DINARA",
-                      "lobos_marinos"   = "Lobos marinos",
-                      "turismo"         = "Turismo"
-    )
-  ) %>%
-  filter(!is.na(Localidad), Localidad != "", !is.na(Problema), Problema != "")
-
-# ============================================================
-# 2. Tabla cruzada (conteo absoluto y porcentaje por localidad)
-# ============================================================
-tabla_cruce <- datos_cruce %>%
-  count(Localidad, Problema) %>%
-  group_by(Localidad) %>%
-  mutate(
-    pct_localidad = round(n / sum(n) * 100, 1),
-    etiqueta = paste0(pct_localidad, "%")
-  ) %>%
-  ungroup()
-
 
 ```
 
 La cuarta parte, sostuvo que el problema principal es el relativo a los bajos precios, un 15% jerarquizó el tema de la formalización y un porcentaje igual problemas de infraestructura. Un 13% seleccionó como problema principal el derivado de la contaminación y luego aparecen en ese orden temas tales como clima, vivienda y prefectura con 7,5%; Dinara con 6% de los pescadores que la mencionan como fuente de problema y lobos marinos y turismo con 2% cada uno.
-
-Según localidad los problemas principales más mencionados fueron:
-
-- Arazatí: Es la única localidad donde la Formalización aparece como la principal preocupación (25%), seguida por el Clima (10,7%) y los Precios bajos (10,7%).
-
-- Kiyú-Ordeig: Casi la mitad de los pescadores (44,4%) señaló los Precios bajos como su principal preocupación.
-
-- Peñino: Este puerto presenta una mirada más vinculada a lo estructural y lo institucional. La Infraestructura (19%), seguida por las demandas hacia DINARA (14,3%) y los Precios bajos (14,3%), demuestran que el foco está puesto en las condiciones materiales para operar y en la regulación estatal.
-
-- Boca del Cufré: La principal queja son los Precios bajos (21,4%), pero llama la atención que un 14,3% señale a la Prefectura como el problema más relevante. Esto indica un conflicto específico con la autoridad portuaria o los controles en esa zona.
-
-- Otras localidades: En "Otra" (agrupación de respuestas sueltas), prima la Contaminación (40%). En Colonia Wilson, el único registro válido apunta a los Lobos marinos, un conflicto muy localizado con la fauna.
 
 \newpage
 
@@ -1761,9 +1715,9 @@ Por último, se recaban algunas observaciones generales, donde vale la pena dest
 
 ## Embarcaciones
 
-En este apartado, se incorpora el relevamiento sobre las embarcaciones utilizadas para la pesca artesanal del departamento de San José.
+En este apartado, se incorpora el análisis de la pesca artesanal del departamento de San José por las embarcaciones.
 
-Según los hogares relevados, se informó sobre la existencia de 62 embarcaciones, obteniendo información sobre 60 de las mismas (hay dos casos no relevados por no respuesta).
+En este capítulo se tiene información de 60 embarcaciones, dos menos de las que fueran informadas en la primera enumeración por los pescadores entrevistados.
 
 A continuación vemos los puertos bases de las embarcaciones relevadas.
 
@@ -1965,6 +1919,8 @@ En el gráfico superior, se ve que un 62% de las embarcaciones cuentan con el pe
 
 A aquellos que nunca tuvieron permiso (16) se les consultó si tienen interés en formalizarse y el total de manifestó tenerlo.
 
+\newpage
+
 En cuanto a las dificultades que encuentran para formalizarse, tabla inferior, un 45% reclamó simplificar los trámites, un 30% dijo que estaban a la espera que Dinara habilitara el registro y una quinta parte demanda asesoramiento e información.
 
 ```{r}
@@ -2019,8 +1975,6 @@ tabla_necesidad %>%
   row_spec(nrow(tabla_necesidad), bold = TRUE, background = "#f0f0f0")
 ```
 
-\newpage
-
 En el gráfico inferior, se ve la distribución de las embarcaciones que cuentan con permiso de Dinara y que tienen acceso a combustible con descuento.
 
 ```{r}
@@ -2041,7 +1995,7 @@ grafico_barras_estilo(tabla_combustible, "combustible_descuento",
                       "Entre quienes cuentan con permiso de DINARA")
 ```
 
-El 35% no acceden al beneficio y la razón queda expuesta en la página siguiente en números absolutos.
+El 35% no acceden al beneficio y la razón queda expuesta en la página siguiente en números absolutos y porcentajes.
 
 \newpage
 
@@ -2123,7 +2077,7 @@ Entre quienes cuentan con permiso de Dinara, el 95% informaron que reportaban cu
 
 La Dinara distribuye las zonas de pesca del Río de la Plata con una codificación señalada con las letras D y E. Al departamento de San José y parte de Colonia, le corresponde la letra D y a Montevideo y Canelones la letra E.
 
-![](zonas_pesca.jpeg)
+![Zonas de pesca establecidas por DINARA](zonas_pesca.jpeg)
 
 Como se observa en la siguiente tabla, el 38% de los pescadores tienen habilitada la zona D, el 18% las zonas D y E y un 5% la zona E. Casi la cuarta parte no brindó información al respecto.
 
@@ -2444,7 +2398,6 @@ La zafra de pesca en la zona no responde a un único bloque estacional, sino que
 
 ```{r}
 #| echo: false
-#| warning: false
 
 
 # ============================================================
@@ -2498,7 +2451,7 @@ ggplot(datos_long, aes(x = temporada, y = kg, fill = temporada)) +
   tema_informe
 ```
 
-El volumen de captura muestra una estacionalidad extrema. Mientras que en fuera de zafra la mediana de captura es de 1000 kg por embarcación, en zafra esta cifra sube abruptamente a 6000kg. Esta marcada suba en el volumen extraído explica por qué los pescadores deben buscar otras fuentes de ingreso o trabajar muchos menos días en los meses de veda. Asimismo, la altísima dispersión (con casos que superan los 20.000 kg y otros de apenas unos cientos) refleja una gran heterogeneidad en la capacidad de pesca de la flota, probablemente asociada al tamaño de las embarcaciones y a las artes de pesca utilizadas.
+El volumen de captura muestra una estacionalidad extrema. Mientras que en zafra la mediana de captura es de `r format(resumen_captura$zafra_mediana, big.mark = ".")` kg por embarcación, fuera de zafra esta cifra cae abruptamente a `r format(resumen_captura$fuera_mediana, big.mark = ".")` kg. Esta caída de más del 80% en el volumen extraído explica por qué los pescadores deben buscar otras fuentes de ingreso o trabajar muchos menos días en los meses de veda. Asimismo, la altísima dispersión (con casos que superan los 20.000 kg y otros de apenas unos cientos) refleja una gran heterogeneidad en la capacidad de pesca de la flota, probablemente asociada al tamaño de las embarcaciones y a las artes de pesca utilizadas.
 
 \newpage
 
@@ -2773,7 +2726,7 @@ La comercialización del pescado se realiza mayoritariamente en su formato enter
 
 \newpage
 
-Para terminar este apartado se preguntó sobre los precios de venta y se estimo el ingreso bruto mensual por barca.
+Para terminar este apartado se preguntó sobre los precios de venta.
 
 ```{r}
 #| echo: false
@@ -2817,187 +2770,9 @@ ggplot(datos_precio, aes(x = precio_kg)) +
     x = "Precio por kg ($)", y = "Cantidad de pescadores"
   ) +
   tema_informe  
-
 ```
 
 El precio de venta del pescado por kilogramo presenta una alta concentración en torno a los 30 pesos, siendo este el valor más frecuente (la mediana). Sin embargo, se observa una importante dispersión que va desde los 20 pesos hasta los 50 pesos por kg. Esta variabilidad de precios para un mismo producto refleja la falta de un precio de referencia estable y la vulnerabilidad de los pescadores frente a los intermediarios (como se desprende de las entrevistas). La moda en 30 pesos indica que, a pesar de los reclamos por 'precios bajos', la mayoría de las transacciones se realizan en un rango acotado que muchas veces puede no cubrir los costos de salida.
-
-\newpage
-
-```{r}
-#| echo: false
-#| warning: false
-
-
-# ============================================================
-# 1. Crear la variable de Ingreso Bruto Mensual
-# ============================================================
-datos_ingreso <- embarcaciones %>%
-  mutate(
-    # Aseguramos que sean numéricos
-    precio_num = as.numeric(gsub(",", ".", as.character(precio_kg))),
-    captura_zafra = as.numeric(gsub(",", ".", as.character(captura_media_zafra_kg))),
-    captura_fuera = as.numeric(gsub(",", ".", as.character(captura_media_fuera_zafra_kg))),
-    
-    # Creamos el ingreso bruto mensual
-    ingreso_zafra = precio_num * captura_zafra,
-    ingreso_fuera = precio_num * captura_fuera
-  )
-
-# ============================================================
-# 2. Pasar a formato largo para el gráfico
-# ============================================================
-datos_long <- datos_ingreso %>%
-  select(ingreso_zafra, ingreso_fuera) %>%
-  pivot_longer(cols = everything(), names_to = "temporada", values_to = "ingreso") %>%
-  filter(!is.na(ingreso), ingreso > 0) %>% # Quitamos NAs y ceros (porque log(0) no existe)
-  mutate(
-    temporada = recode(temporada, 
-                       "ingreso_zafra" = "Zafra", 
-                       "ingreso_fuera" = "Fuera de zafra")
-  )
-
-# ============================================================
-# 3. Boxplot Comparativo (Escala Logarítmica)
-# ============================================================
-ggplot(datos_long, aes(x = temporada, y = ingreso, fill = temporada)) +
-  geom_boxplot(width = 0.5, show.legend = FALSE, outlier.shape = NA) +
-  # Agregamos los puntos para ver la dispersión real
-  geom_jitter(width = 0.1, alpha = 0.4, size = 2, color = "gray30") +
-  scale_fill_manual(values = paleta_pesca[c(2, 4)]) +
-  # Escala logarítmica con formato de pesos para leer mejor
-  scale_y_log10(labels = scales::dollar_format(prefix = "$", big.mark = ".")) + 
-  labs(
-    title    = "INGRESO BRUTO MENSUAL ESTIMADO POR EMBARCACIÓN",
-    subtitle = "Cálculo: Precio por kg × Captura media mensual (escala logarítmica)",
-    caption  = fuente_caption,
-    x = NULL, y = "Pesos ($)"
-  ) +
-  tema_informe
-
-
-
-# ============================================================
-# 1. Creamos los ingresos 
-# ============================================================
-datos_ingreso <- embarcaciones %>%
-  mutate(
-    precio_num = as.numeric(gsub(",", ".", as.character(precio_kg))),
-    captura_zafra = as.numeric(gsub(",", ".", as.character(captura_media_zafra_kg))),
-    captura_fuera = as.numeric(gsub(",", ".", as.character(captura_media_fuera_zafra_kg))),
-    ingreso_zafra = precio_num * captura_zafra,
-    ingreso_fuera = precio_num * captura_fuera
-  )
-
-# ============================================================
-# 2. Función para calcular las medidas resumen
-# ============================================================
-calc_resumen <- function(x) {
-  data.frame(
-    n       = sum(!is.na(x)),
-    Media   = round(mean(x, na.rm = TRUE), 0),
-    Mediana = round(median(x, na.rm = TRUE), 0),
-    Min     = min(x, na.rm = TRUE),
-    P25     = round(quantile(x, 0.25, na.rm = TRUE), 0),
-    P75     = round(quantile(x, 0.75, na.rm = TRUE), 0),
-    Max     = max(x, na.rm = TRUE)
-  )
-}
-
-# ============================================================
-# 3. Aplicar a Ingresos Brutos
-# ============================================================
-resumen_ingresos <- bind_rows(
-  Zafra = calc_resumen(datos_ingreso$ingreso_zafra),
-  Fuera_de_Zafra = calc_resumen(datos_ingreso$ingreso_fuera),
-  .id = "Temporada"
-)
-
-
-
-# ============================================================
-# 4. Aplicar a Precio y Captura (por separado)
-# ============================================================
-resumen_componentes <- bind_rows(
-  Precio_kg      = calc_resumen(datos_ingreso$precio_num),
-  Captura_Zafra  = calc_resumen(datos_ingreso$captura_zafra),
-  Captura_Fuera  = calc_resumen(datos_ingreso$captura_fuera),
-  .id = "Variable"
-)
-
-
-
-```
-
-La estimación del ingreso bruto mensual por embarcación (calculado como el producto entre el precio y la captura mensual) muestra una brecha estacional extrema. Durante la zafra, la mediana del ingreso se ubica en 180.000 pesos, lo que significa que la mitad de los pescadores factura por encima de ese monto y la otra mitad por debajo. El 75% de la flota factura hasta 274.750 pesos, aunque existen casos excepcionales que superan el millón de pesos.
-
-Fuera de la zafra, la realidad cambia drásticamente: la mediana cae a 30.000 pesos, lo que representa una caída del 83% en los ingresos brutos respecto a la temporada alta. El límite superior del 75% de los pescadores apenas alcanza los 70.000 pesos, y el piso de ingresos desciende hasta los 2.530 pesos mensuales.
-
-\newpage
-
-```{r}
-#| echo: false
-#| warning: false
-
-# ============================================================
-# 1. Crear la variable de ingreso bruto (si no la tenés creada)
-# ============================================================
-datos_puerto <- embarcaciones %>%
-  mutate(
-    precio_num = as.numeric(gsub(",", ".", as.character(precio_kg))),
-    captura_zafra = as.numeric(gsub(",", ".", as.character(captura_media_zafra_kg))),
-    ingreso_zafra = precio_num * captura_zafra,
-    # Asumimos que la columna se llama puerto_base. 
-    # Si tiene otro nombre (ej. 'localidad'), cambialo acá:
-    Puerto = as.factor(trimws(puerto_base)) 
-  )
-
-# ============================================================
-# 2. Calcular las medidas por Puerto
-# ============================================================
-resumen_puerto <- datos_puerto %>%
-  filter(!is.na(ingreso_zafra), !is.na(Puerto), Puerto != "") %>%
-  group_by(Puerto) %>%
-  summarise(
-    n       = n(),
-    Media   = round(mean(ingreso_zafra), 0),
-    Mediana = round(median(ingreso_zafra), 0),
-    Min     = min(ingreso_zafra),
-    Max     = max(ingreso_zafra),
-    .groups = "drop"
-  ) %>%
-  arrange(desc(Mediana)) # Ordenar de mayor a menor mediana
-
-# ============================================================
-# 3. Gráfico Boxplot por Puerto
-# ============================================================
-# Primero filtramos datos válidos para el gráfico
-datos_grafico <- datos_puerto %>%
-  filter(!is.na(ingreso_zafra), ingreso_zafra > 0, !is.na(Puerto), Puerto != "")
-
-# Reordenamos el factor Puerto para que el gráfico salga ordenado por mediana
-datos_grafico$Puerto <- factor(datos_grafico$Puerto, 
-                               levels = resumen_puerto$Puerto)
-
-ggplot(datos_grafico, aes(x = Puerto, y = ingreso_zafra, fill = Puerto)) +
-  geom_boxplot(width = 0.5, show.legend = FALSE, outlier.shape = NA) +
-  geom_jitter(width = 0.1, alpha = 0.4, size = 2, color = "gray30") +
-  scale_fill_manual(values = rep(paleta_pesca, length.out = length(unique(datos_grafico$Puerto)))) +
-  # Escala logarítmica con formato de moneda
-  scale_y_log10(labels = scales::dollar_format(prefix = "$", big.mark = ".")) +
-  labs(
-    title    = "INGRESO BRUTO MENSUAL EN ZAFRA POR PUERTO BASE",
-    subtitle = "Distribución del ingreso estimado (Precio × Captura) en escala logarítmica",
-    caption  = fuente_caption,
-    x = NULL, y = "Ingreso bruto mensual ($)"
-  ) +
-  tema_informe
-
-```
-
-El análisis del ingreso bruto estimado (precio × captura) revela una fuerte heterogeneidad territorial entre los puertos de la zona. El Puerto de Peñino se destaca muy por encima del resto: sus embarcaciones registran una mediana de 348.750 pesos mensuales en zafra y un promedio de 421.833 pesos, con picos que alcanzan el millón de pesos. Esto sugiere la presencia de una flota de mayor porte o con acceso a caladeros de mayor volumen (coincide que el equipo de encuestadores se encontró con una zafra de pesca en Penino).
-
-En un segundo escalón se ubican Kiyú-Ordeig (mediana de 207.500 pesos) y Boca del Cufré (mediana de 180.000 pesos), mostrando niveles de facturación sólidos pero considerablemente menores. Por su parte, Arazatí presenta los ingresos más bajos de la muestra, con una mediana de 120.000 pesos y un promedio de 148.784 pesos, lo que refleja una flota más pequeña o con menores volúmenes de captura.
 
 \newpage
 
@@ -3327,26 +3102,6 @@ A nivel de cada embarcación, la diferencia también es notoria: el promedio de 
 
 9\) Al momento de identificar los principales problemas del sector, cuatro aspectos aparecen como los más destacados: los bajos precios que reciben por el producto, la formalización, dificultades de infraestructura como ausencia y precariedad de muelle y la contaminación que incide en los volúmenes de pesca.
 
-10\) Lo anterior es consistente con algunos de los interés manifestados en materia de capacitación: comercialización y formalización. También se recogió un significativo interés en capacitaciones relativas a la seguridad náutica y manipulación del producto *(Por más consideraciones al respecto, léase los hallazgos de carácter cualitativo en la página 29).*
+10\) Lo anterior es consistente con algunos de los interés manifestados en materia de capacitación: comercialización y formalización. También se recogió un significativo interés en capacitaciones relativas a la seguridad náutica y manipulación del producto. .
 
-11\) La flota artesanal relevada está compuesta por 60 embarcaciones. La mayoría (77%) combina fibra y madera en su casco, y en su totalidad operan con motor fuera de borda de baja o media potencia (en su mayoría Yamaha o Mercury). En cuanto a su estado, el 53% son nuevas o están en buen estado y un 43% son antiguas pero con buen mantenimiento. Respecto a la tenencia, el 95% son propias, lo que confirma el carácter de trabajadores autónomos o cuentapropistas del sector.
-
-12\) En cuanto a la seguridad de la flota, la gran mayoría cuenta con equipamiento básico obligatorio: el 97% tiene chalecos salvavidas, el 80% luces de navegación y el 72% radio y navegación nocturna. Sin embargo, solo el 10% cuenta con motor auxiliar, lo que evidencia una vulnerabilidad ante fallas mecánicas en alta mar.
-
-13\) La operativa se concentra en los puertos base de Arazatí (32%), Penino (30%) y Boca del Cufré (20%). En zafra, el 90% de los pescadores opera exclusivamente en su puerto base o localidad, mostrando un fuerte arraigo. Sin embargo, fuera de zafra, la dependencia cae al 73% y un 15% migra hacia otros departamentos (como Colonia) en busca de mejores capturas, configurando una movilidad territorial forzada por la estacionalidad.
-
-14\) En materia de formalización y permisos, se constata una significativa brecha. Si bien el 62% de las embarcaciones cuenta con el permiso de pesca de DINARA, un 38% opera en la informalidad: un 27% nunca tuvo el permiso, un 8% lo tiene vencido y un 3% lo está tramitando. Un dato alentador es que la totalidad (100%) de quienes nunca tuvieron permiso manifestó su interés en regularizarse, reclamando principalmente la simplificación de trámites, la apertura de cupos y mayor asesoramiento.
-
-15\) El acceso a beneficios operativos, como el descuento en el combustible, sigue siendo esquivo para una parte del sector. El 35% de quienes tienen permiso de DINARA no pueden acceder a este beneficio. Las razones principales son trabas burocráticas (trámites o documentación pendiente, 53,8%) y conflictos con la situación previsional (BPS, 23,1%). Esto evidencia que la informalidad y la carga administrativa no solo afectan la legalidad de la actividad, sino que impactan directamente en los costos de producción, marcando la necesidad de acompañamiento técnico para la regularización.
-
-16\) La zafra no es un bloque único, sino que presenta una marcada bimodalidad a lo largo del año, con picos muy fuertes en verano (diciembre y enero, con más del 84% de las menciones) y un segundo bloque en invierno (julio y agosto, con más del 52%). Esto explica por qué el 83% de los pescadores afirma trabajar todo el año, alternando las especies objetivo según la temporada.
-
-17\) El esfuerzo y volumen de pesca se desploma fuera de temporada. En zafra, la mediana de captura es de 6.000 kg mensuales por embarcación, mientras que fuera de zafra cae abruptamente a 1.000 kg (una merma del 80%). Esto es consistente con la reducción de los días de trabajo (de 20 días en zafra a 10 fuera de ella).
-
-18\) La actividad es estrictamente multiespecífica, pero altamente dependiente de pocas especies comerciales: el sábalo (80%), el bagre (50%) y la corvina (50%) son las principales capturas. Sin embargo, al preguntar por la rentabilidad, el sábalo (50%) y la corvina (43%) concentran casi toda la preferencia. Esta dependencia de solo dos especies expone al sector a una gran vulnerabilidad frente a cambios biológicos o de mercado.
-
-19\) En cuanto a la comercialización, existe una asimetría estructural muy marcada: el 100% de los pescadores le vende a un intermediario y solo un marginal 17% logra colocar algo de su producción directo al público. La venta se hace mayoritariamente en formato entero (100%), con bajo nivel de valor agregado (filete en un 22% y eviscerado en un 8%). Esta falta de canales alternativos explica la insatisfacción con los precios.
-
-20\) El destino principal del descarte es la devolución al agua (82%). Muy marginalmente se usa como carnada (5%) o para consumo familiar (3%). Esto indica que gran parte del volumen capturado no tiene aprovechamiento comercial y podría trabajarse mediante la formalización de plantas de procesamiento o mesas de fileteo para capturar un mayor margen.
-
-21\) La tripulación es reducida y de tipo familiar o de dupla: el 57% opera con 2 personas y el 38% con 3 personas. La contratación de desmalladores es una tarea tercerizada que genera empleo zafral: en temporada alta se contratan 113 personas en total, pero fuera de zafra la cifra cae a 28. Esto significa que desaparecen 85 puestos de trabajo (una caída del 75%), evidenciando la precariedad estructural del empleo en el sector.
+*(Por más consideraciones al respecto, léase los hallazgos de carácter cualitativo en la página 29)*
