@@ -1875,7 +1875,7 @@ Se observa que el 95%, o sea 57 embarcaciones son propias; dos de propiedad comp
 
 \newpage
 
-Se consulto sobre el equipamiento de seguridad a bordo de las embarcaciones.
+Se consultó sobre el equipamiento de seguridad a bordo de las embarcaciones.
 
 ```{r}
 #| echo: false
@@ -1948,7 +1948,7 @@ Según la información aportada, el 97% de las embarcaciones cuenta con chalecos
 
 ### Formalización y permisos
 
-Se relevo sobre la situación de formalización y permisos de las embarcaciones.
+Se relevó la situación de formalización y permisos de las embarcaciones.
 
 ```{r}
 #| echo: false
@@ -2119,7 +2119,7 @@ grafico_barras_estilo(tabla_reporta, "reporta_dinara_prefectura",
                       "Entre quienes cuentan con permiso de DINARA")
 ```
 
-Entre quienes cuentan con permiso de Dinara, el 95% informaron que reportaban cuando correspondía, mientras que el resto respondió negativamente.
+Entre quienes cuentan con permiso de Dinara, el 95% informó que reportaban cuando correspondía, mientras que el resto respondió negativamente.
 
 \newpage
 
@@ -2506,7 +2506,7 @@ El volumen de captura muestra una estacionalidad extrema. Mientras que en fuera 
 
 \newpage
 
-A continuación se presentan datos sobre las especies más pescadas y el destino de los descartes.
+A continuación se presentan datos sobre las especies más capturadas y el destino de los descartes.
 
 ```{r}
 #| echo: false
@@ -3219,7 +3219,7 @@ g_barra
 
 ```
 
-Al consultar si la embarcación contrata desmalladores (personal encargado de limpiar y preparar el pescado a bordo o en tierra), la mayoría de los pescadores (cerca del 60%) respondió que no contrata este servicio. Esto refleja que el desmallado y la preparación del pescado suelen ser tareas asumidas por los propios tripulantes de la embarcación o por el núcleo familiar, antes que una actividad tercerizada. La contratación de desmalladores queda restringida a un poco más de un tercio de la flota, probablemente aquellas embarcaciones de mayor porte o con volúmenes de captura más altos
+Al consultar si la embarcación contrata desmalladores (personal para limpiar y preparar el pescado a bordo o en tierra), la mayoría de los pescadores (cerca del 60%) respondió que no lo hace. Esto refleja que el desmallado y la preparación del pescado suelen ser tareas asumidas por los propios tripulantes de la embarcación o por el núcleo familiar, antes que una actividad tercerizada. La contratación de desmalladores queda restringida a un poco más de un tercio de la flota, probablemente aquellas embarcaciones de mayor porte o con volúmenes de captura más altos
 
 ```{r}
 #| echo: false
@@ -3335,7 +3335,7 @@ A nivel de cada embarcación, la diferencia también es notoria: el promedio de 
 
 10\) Lo anterior es consistente con algunos de los interés manifestados en materia de capacitación: comercialización y formalización. También se recogió un significativo interés en capacitaciones relativas a la seguridad náutica y manipulación del producto *(Por más consideraciones al respecto, léase los hallazgos de carácter cualitativo en la página 29).*
 
-11\) La flota artesanal relevada está compuesta por 60 embarcaciones. La mayoría (77%) combina fibra y madera en su casco, y en su totalidad operan con motor fuera de borda de baja o media potencia (en su mayoría Yamaha o Mercury). En cuanto a su estado, el 53% son nuevas o están en buen estado y un 43% son antiguas pero con buen mantenimiento. Respecto a la tenencia, el 95% son propias, lo que confirma el carácter de trabajadores autónomos o cuentapropistas del sector.
+11\) La flota artesanal relevada de la cual se dispone información, está compuesta por 60 embarcaciones. La mayoría (77%) combina fibra y madera en su casco, y en su totalidad operan con motor fuera de borda de baja o media potencia (en su mayoría Yamaha o Mercury). En cuanto a su estado, el 53% son nuevas o están en buen estado y un 43% son antiguas pero con buen mantenimiento. Respecto a la tenencia, el 95% son propias, lo que confirma el carácter de trabajadores autónomos o cuentapropistas del sector.
 
 12\) En cuanto a la seguridad de la flota, la gran mayoría cuenta con equipamiento básico obligatorio: el 97% tiene chalecos salvavidas, el 80% luces de navegación y el 72% radio y navegación nocturna. Sin embargo, solo el 10% cuenta con motor auxiliar, lo que evidencia una vulnerabilidad ante fallas mecánicas en alta mar.
 
