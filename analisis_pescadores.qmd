@@ -3313,6 +3313,8 @@ A nivel de cada embarcación, la diferencia también es notoria: el promedio de 
 
 # Conclusiones
 
+#### 
+
 1\) Más del 60% de los hogares y las personas que trabajan en la pesca artesanal en el departamento ubican su lugar de residencia en la zona de Arazatí y en el barrio Penino de Ciudad del Plata.
 
 2\) La mitad de los pescadores artesanales tienen una condición de tenencia precaria de los terrenos donde residen, ubicándose la mayor parte de estos en predios fiscales en calidad de ocupantes y otro grupo en terrenos prestados.
@@ -3321,13 +3323,13 @@ A nivel de cada embarcación, la diferencia también es notoria: el promedio de 
 
 4\) Con relación a los servicios, se observa que aproximadamente una cuarta parte de los pescadores artesanales no tiene acceso a agua segura lo que se refleja en los reclamos registrados en formato cualitativo. Con respecto a la evacuación de aguas servidas, más de las tres cuartas parte vierte en pozo negro y casi una quinta parte de forma totalmente precaria.
 
-5\) El sector tiene una significativa particpación en la actividad productiva de mujeres, que representan más de la quinta parte de los pescadores artesanales del departamento de San José. En relación a las edades, dos tercios de pescadores/as tienen entre 25 y 55 años, siendo el intervalo de mayor concentración entre 40 y 54 años.
+5\) El sector tiene una significativa particpación en la actividad productiva de mujeres, que representan más de la quinta parte de los pescadores artesanales del departamento de San José. En relación con las edades, dos tercios de pescadores/as tienen entre 25 y 55 años, siendo el intervalo de mayor concentración entre 40 y 54 años.
 
 6\) Con respecto a nivel educativo, la actividad concentra trabajadores cuya trayectoria en gran parte no supera los niveles iniciales de educación formal: casi las tres cuarta parte de los pescadores dice haber alcanzado Primaria. Si se le suma el primer ciclo de Educación Secundaria se completa el 88% de la población de estudio.
 
-7\) Se constata que se trata de un sector con significativa informalidad en distintas dimensiones. Con relación a la previsión social, el 64% no realiza aportes al BPS. Con respecto a la actividad propiamente dicha, alrededor de un 38% no tiene permiso de Dinara y un 23% de las embarcaciones ingresa sin el permiso correspondiente de prefectura. Es de destacar sí, que entre quienes nubnca han tenido permiso de Dinar, el 100% manifiesta interés en regularizar.
+7\) Se trata de un sector con una informalidad significativa en distintas dimensiones. En previsión social, el 64% no realiza aportes al BPS. En la actividad propiamente dicha, el 23% de las embarcaciones opera sin el permiso correspondiente de Prefectura y el 38% sin permiso de pesca de Dinara.
 
-8\) Una quinta parte de los pescadores actualmente no están pudiendo acceder al descuento de combustible que contempla al sector por una variedad de situaciones explicitadas en el desarrollo del informe, lo que les impide acceder a un beneficio importante para reducir costos operativos. Ofrecer algún tipo de acompañamiento, podría facilitar la regularización de algunos casos.
+8\) Considerando toda la flota, unas seis de cada diez embarcaciones no acceden al descuento de combustible previsto para el sector: el 38% por no contar con permiso de Dinara y otro 22% que, aun teniéndolo, no logra acceder por las razones detalladas en el punto 15. Esto les impide aprovechar un beneficio importante para reducir costos operativos
 
 9\) Al momento de identificar los principales problemas del sector, cuatro aspectos aparecen como los más destacados: los bajos precios que reciben por el producto, la formalización, dificultades de infraestructura como ausencia y precariedad de muelle y la contaminación que incide en los volúmenes de pesca.
 
@@ -3339,7 +3341,7 @@ A nivel de cada embarcación, la diferencia también es notoria: el promedio de 
 
 13\) La operativa se concentra en los puertos base de Arazatí (32%), Penino (30%) y Boca del Cufré (20%). En zafra, el 90% de los pescadores opera exclusivamente en su puerto base o localidad, mostrando un fuerte arraigo. Sin embargo, fuera de zafra, la dependencia cae al 73% y un 15% migra hacia otros departamentos (como Colonia) en busca de mejores capturas, configurando una movilidad territorial forzada por la estacionalidad.
 
-14\) En materia de formalización y permisos, se constata una significativa brecha. Si bien el 62% de las embarcaciones cuenta con el permiso de pesca de DINARA, un 38% opera en la informalidad: un 27% nunca tuvo el permiso, un 8% lo tiene vencido y un 3% lo está tramitando. Un dato alentador es que la totalidad (100%) de quienes nunca tuvieron permiso manifestó su interés en regularizarse, reclamando principalmente la simplificación de trámites, la apertura de cupos y mayor asesoramiento.
+14\) En materia de formalización y permisos, se constata una significativa brecha. Si bien el 62% de las embarcaciones cuenta con permiso de pesca de DINARA, un 38% opera en la informalidad: un 27% nunca tuvo el permiso, un 8% lo tiene vencido y un 3% lo está tramitando. Un dato alentador es que la totalidad (100%) de quienes nunca tuvieron permiso manifestó su interés en regularizarse, reclamando principalmente la simplificación de trámites, la apertura de cupos y mayor asesoramiento.
 
 15\) El acceso a beneficios operativos, como el descuento en el combustible, sigue siendo esquivo para una parte del sector. El 35% de quienes tienen permiso de DINARA no pueden acceder a este beneficio. Las razones principales son trabas burocráticas (trámites o documentación pendiente, 53,8%) y conflictos con la situación previsional (BPS, 23,1%). Esto evidencia que la informalidad y la carga administrativa no solo afectan la legalidad de la actividad, sino que impactan directamente en los costos de producción, marcando la necesidad de acompañamiento técnico para la regularización.
 
@@ -3351,6 +3353,6 @@ A nivel de cada embarcación, la diferencia también es notoria: el promedio de 
 
 19\) En cuanto a la comercialización, existe una asimetría estructural muy marcada: el 100% de los pescadores le vende a un intermediario y solo un marginal 17% logra colocar algo de su producción directo al público. La venta se hace mayoritariamente en formato entero (100%), con bajo nivel de valor agregado (filete en un 22% y eviscerado en un 8%). Esta falta de canales alternativos explica la insatisfacción con los precios.
 
-20\) El destino principal del descarte es la devolución al agua (82%). Muy marginalmente se usa como carnada (5%) o para consumo familiar (3%). Esto indica que gran parte del volumen capturado no tiene aprovechamiento comercial y podría trabajarse mediante la formalización de plantas de procesamiento o mesas de fileteo para capturar un mayor margen.
+20\) El destino principal del descarte es la devolución al agua (82%). Muy marginalmente se usa como carnada (5%) o para consumo familiar (3%). Esto indica que gran parte del volumen descartado no tiene aprovechamiento comercial y podría trabajarse mediante la formalización de plantas de procesamiento o mesas de fileteo para capturar un mayor margen.
 
 21\) La tripulación es reducida y de tipo familiar o de dupla: el 57% opera con 2 personas y el 38% con 3 personas. La contratación de desmalladores es una tarea tercerizada que genera empleo zafral: en temporada alta se contratan 113 personas en total, pero fuera de zafra la cifra cae a 28. Esto significa que desaparecen 85 puestos de trabajo (una caída del 75%), evidenciando la precariedad estructural del empleo en el sector.
