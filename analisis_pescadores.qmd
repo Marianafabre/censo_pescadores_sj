@@ -225,7 +225,7 @@ tabla_localidad %>%
 
 ### Viviendas
 
-En primer lugar se podrá visualizar la forma de tenencia de los terrenos donde están las viviendas de los hogares con personas que trabajan en la pesca.
+En primer lugar se podrá visualizar la forma de tenencia de los terrenos donde están las viviendas de los hogares con personas que trabajan en la pesca artesanal.
 
 ```{r}
 #| echo: false
@@ -426,7 +426,7 @@ ggplot(tabla_edad, aes(x = grupo_edad, y = pct, fill = grupo_edad)) +
   scale_fill_manual(values = rep(paleta_pesca, length.out = nrow(tabla_edad))) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
   labs(
-    title = "DISTRIBUCIÓN DE EDAD DE LAS PERSONAS QUE TRABAJAN EN PESCA",
+    title = "DISTRIBUCIÓN POR EDAD DE LAS PERSONAS QUE TRABAJAN EN PESCA",
     subtitle = "Porcentaje de personas por tramo de edad",
     caption = fuente_caption, x = NULL, y = "%"
   ) +
@@ -611,7 +611,7 @@ ggplot(roles_resumen, aes(x = Rol, y = Porcentaje, fill = Rol)) +
 
 ```
 
-En cuanto al rol en la pesca (gráfico superior), se observa que el 77% son patrones, un 11,5% marineros, un 4% trabaja en el procesamiento del pescado y el resto se distribuye en otros roles o no sin información.
+En cuanto al rol en la pesca (gráfico superior), se observa que el 77% son patrones, un 11,5% marineros, un 4% trabaja en el procesamiento del pescado y el resto se distribuye en otros roles o sin información.
 
 \newpage
 
@@ -1025,9 +1025,9 @@ g_pesca + g_otras +
   theme(legend.position = "bottom")
 ```
 
-El 88,5% de los que trabajan en la pesca aseguró que su principal fuente de ingreso es la pesca, un 6% dijo que su ingreso principal provenía de otra actividad y el resto no dio información.
+El 88,5% de quienes trabajan en la pesca artesanal, aseguró que su principal fuente de ingreso es la pesca, un 6% dijo que su ingreso principal provenía de otra actividad y el resto no dio información.
 
-A su vez, un 27% de las personas que trabajan en la pesca afirmaron que realizan otras actividades complementarias. Las cuales se concentran en albañilería y changas, seguidas por trabajos rurales y, en menor medida, ocupaciones diversas como limpieza, gastronomía, almacén y leña. La presencia de respuestas múltiples evidencia una marcada pluriactividad entre los pescadores.
+A su vez, un 27% afirmó que realizan otras actividades complementarias. Estas se concentran en albañilería y changas, seguidas por trabajos rurales y, en menor medida, ocupaciones diversas como limpieza, gastronomía, almacén y leña. La presencia de respuestas múltiples evidencia una marcada pluriactividad entre los pescadores.
 
 \newpage
 
@@ -1457,7 +1457,7 @@ g_consejos + g_mesa +
 
 ```
 
-Se preguntó en particular qué conocimiento tenían sobre dos ámbitos de participación: Consejos de Pesca y Mesa de Desarrollo Rural. Como vemos la gran mayoría desconoce ambos espacios: el 70% y el 73% respectivamente. Un 28% conoce los Consejos de Pesca y un 23% la Mesa de Desarrollo Rural. Adentrándonos en detalles sobre estos últimos, sólo la quinta parte de los que conocen no encuentra útil la participación en estos espacios.
+Se preguntó en particular qué conocimiento tenían sobre dos ámbitos de participación: Consejos de Pesca y Mesa de Desarrollo Rural. Como vemos la gran mayoría desconoce ambos espacios: el 70% y el 73% respectivamente. Un 28% conoce los Consejos de Pesca y un 23% la Mesa de Desarrollo Rural. Adentrándonos en detalles sobre estos últimos, la quinta parte de quienes conocen no encuentra útil la participación en estos espacios.
 
 \newpage
 
@@ -1663,15 +1663,15 @@ La cuarta parte, sostuvo que el problema principal es el relativo a los bajos pr
 
 Según localidad los problemas principales más mencionados fueron:
 
-- Arazatí: Es la única localidad donde la Formalización aparece como la principal preocupación (25%), seguida por el Clima (10,7%) y los Precios bajos (10,7%).
+-   Arazatí: Es la única localidad donde la Formalización aparece como la principal preocupación (25%), seguida por el Clima (10,7%) y los Precios bajos (10,7%).
 
-- Kiyú-Ordeig: Casi la mitad de los pescadores (44,4%) señaló los Precios bajos como su principal preocupación.
+-   Kiyú-Ordeig: Casi la mitad de los pescadores (44,4%) señaló los Precios bajos como su principal preocupación.
 
-- Peñino: Este puerto presenta una mirada más vinculada a lo estructural y lo institucional. La Infraestructura (19%), seguida por las demandas hacia DINARA (14,3%) y los Precios bajos (14,3%), demuestran que el foco está puesto en las condiciones materiales para operar y en la regulación estatal.
+-   Peñino: Este puerto presenta una mirada más vinculada a lo estructural y lo institucional. La Infraestructura (19%), seguida por las demandas hacia DINARA (14,3%) y los Precios bajos (14,3%), demuestran que el foco está puesto en las condiciones materiales para operar y en la regulación estatal.
 
-- Boca del Cufré: La principal queja son los Precios bajos (21,4%), pero llama la atención que un 14,3% señale a la Prefectura como el problema más relevante. Esto indica un conflicto específico con la autoridad portuaria o los controles en esa zona.
+-   Boca del Cufré: La principal queja son los Precios bajos (21,4%), pero llama la atención que un 14,3% señale a la Prefectura como el problema más relevante. Esto indica un conflicto específico con la autoridad portuaria o los controles en esa zona.
 
-- Otras localidades: En "Otra" (agrupación de respuestas sueltas), prima la Contaminación (40%). En Colonia Wilson, el único registro válido apunta a los Lobos marinos, un conflicto muy localizado con la fauna.
+-   Otras localidades: En "Otra" (agrupación de respuestas sueltas), prima la Contaminación (40%). En Colonia Wilson, el único registro válido apunta a los Lobos marinos, un conflicto muy localizado con la fauna.
 
 \newpage
 
@@ -1679,11 +1679,11 @@ Para cada uno de los problemas jerarquizados se preguntó a los pescadores que s
 
 *Intermediación y comercialización.*
 
-Los pescadores identifican a los intermediarios como el principal eslabón que captura el valor de su trabajo, y proponen tanto eliminarlos como buscar canales alternativos: "Sacar los intermediarios"; "Buscar mejores mercados para mejorar precios"; "Intervención del Estado, hay un monopolio: (mencionan empresa) Oligopolio. Asimetría porque tienen muchas barcas."
+Los pescadores identifican a los intermediarios como el principal eslabón que captura el valor de su trabajo, y proponen tanto eliminarlos como buscar canales alternativos: "Sacar los intermediarios"; "Buscar mejores mercados para mejorar precios"; "Intervención del Estado, hay un monopolio: (mencionan empresa) Oligopolio. Asimetría porque "tienen muchas barcas."
 
 *Precio y rentabilidad.*
 
-Directamente vinculado al punto anterior, aparece el reclamo por mejores precios y estabilidad "Que sepa, hace años se paga lo mismo"; "Estabilidad en el precio";"Costos suben"
+Directamente vinculado al punto anterior, aparece el reclamo por mejores precios y estabilidad "Que sepa, hace años se paga lo mismo"; "Estabilidad en el precio";"Costos suben".
 
 *Formalización y trámites.*
 
@@ -1711,7 +1711,7 @@ Se mencionan facilidades para la formalización y la necesidad de permisos acces
 
 *Convivencia con turismo y fauna.*
 
-Respuestas puntuales pero significativas por su contenido simbólico: "Respetar el espacio de trabajo"(turismo); "No hay, es el hábitat de ellos también" (lobos marinos)
+Respuestas puntuales pero significativas por su contenido simbólico: "Respetar el espacio de trabajo"(turismo); "No hay, es el hábitat de ellos también" (lobos marinos).
 
 **Tres ejes ordenan el conjunto de las propuestas:**
 
@@ -1753,17 +1753,17 @@ Hay dos respuestas que rompen el tono positivo general y merecen señalarse apar
 
 Tres ideas ordenan el conjunto:
 
-- Autonomía como núcleo identitario: ser independiente, ser patrón, trabajar para uno mismo. Es lo que distingue a la pesca de un empleo asalariado.
+-   Autonomía como núcleo identitario: ser independiente, ser patrón, trabajar para uno mismo. Es lo que distingue a la pesca de un empleo asalariado.
 
-- Bienestar subjetivo: libertad, tranquilidad, paz. No es solo una libertad formal, es una experiencia cotidiana de vivir sin presiones externas.
+-   Bienestar subjetivo: libertad, tranquilidad, paz. No es solo una libertad formal, es una experiencia cotidiana de vivir sin presiones externas.
 
-- Vocación y pertenencia: gusto por la actividad y vínculo con el entorno natural y el territorio.
+-   Vocación y pertenencia: gusto por la actividad y vínculo con el entorno natural y el territorio.
 
 Por último, se recaban algunas observaciones generales, donde vale la pena destacar las menciones a la merma percibida sobre la cantidad de pescado en los últimos 5 años, el mal estado de la bajadas en varios puntos y lo díficil que resulta mantener el monotributo fuera de zafra.
 
 \newpage
 
-## Embarcaciones
+# Embarcaciones
 
 En este apartado, se incorpora el relevamiento sobre las embarcaciones utilizadas para la pesca artesanal del departamento de San José.
 
@@ -1797,9 +1797,9 @@ En el gráfico superior se observa que el puerto base que tiene más embarcacion
 
 ### Características de la embarcación
 
-Al pasar a describir la embarcación, el 100% informó operar con motor "fuera de borda". De las 60 embarcaciones, un 13% cuenta con motores de 100 o más hp; un 25 tienen motores de entre 50 y 90 hp; un 35% tiene motores de 40hp y el resto de 5 hp a 30 hp. El 90% de las embarcaciones tienen motores de las marcas Yamaha o Mercury, en ese orden de magnitud. Además, la tercera parte de las embarcaciones también cuenta con remos.
+Al pasar a describir la embarcación, el 100% informó operar con motor "fuera de borda". De las 60 embarcaciones, un 13% cuenta con motores de 100 o más hp; un 25 tienen motores de entre 50 y 90 hp; un 35% tiene motores de 40 hp y el resto de 5 hp a 30 hp. El 90% de las embarcaciones tienen motores de las marcas Yamaha o Mercury, en ese orden de magnitud. Además, la tercera parte de las embarcaciones también cuenta con remos.
 
-En relación al material del casco, como se observa en la siguiente gráfica, un 77% informó que son de "fibra y madera", un 17% sólo de "fibra" y un 7% dijo que el casco es sólo de madera. Se les pidió también que informaran sobre el estado en que se encontraba la embarcación.
+En relación al material del casco, como se observa en la siguiente gráfica, un 77% informó que son de "fibra y madera", un 17% sólo de "fibra" y un 7% dijo que el casco es sólo de madera.
 
 ```{r}
 #| echo: false
@@ -1875,7 +1875,7 @@ Se observa que el 95%, o sea 57 embarcaciones son propias; dos de propiedad comp
 
 \newpage
 
-Se consulto sobre el equipamiento de seguridad a bordo de las embarcaciones.
+Se consultó sobre el equipamiento de seguridad a bordo de las embarcaciones.
 
 ```{r}
 #| echo: false
@@ -1948,7 +1948,7 @@ Según la información aportada, el 97% de las embarcaciones cuenta con chalecos
 
 ### Formalización y permisos
 
-Se relevo sobre la situación de formalización y permisos de las embarcaciones.
+Se relevó la situación de formalización y permisos de las embarcaciones.
 
 ```{r}
 #| echo: false
@@ -1965,7 +1965,7 @@ grafico_barras_estilo(tabla_permiso, "permiso_dinara",
 
 ```
 
-En el gráfico superior, se ve que un 62% de las embarcaciones cuentan con el permiso de pescado de Dinara, mientras que un 38% no lo tiene aunque aquí se observan distintas situaciones: aquellas que nunca tuvieron el permiso que representan el 27% de las embarcaciones; quienes lo tienen vencido, el 8% y las embarcaciones que están con el permiso en trámite, 3%.
+En el gráfico superior, se ve que un 62% de las embarcaciones cuentan con el permiso de pesca de Dinara, mientras que un 38% no lo tiene aunque aquí se observan distintas situaciones: aquellas que nunca tuvieron el permiso que representan el 27% de las embarcaciones; quienes lo tienen vencido, el 8% y las embarcaciones que están con el permiso en trámite, 3%.
 
 A aquellos que nunca tuvieron permiso (16) se les consultó si tienen interés en formalizarse y el total de manifestó tenerlo.
 
@@ -2119,7 +2119,7 @@ grafico_barras_estilo(tabla_reporta, "reporta_dinara_prefectura",
                       "Entre quienes cuentan con permiso de DINARA")
 ```
 
-Entre quienes cuentan con permiso de Dinara, el 95% informaron que reportaban cuando correspondía, mientras que el resto respondió negativamente.
+Entre quienes cuentan con permiso de Dinara, el 95% informó que reportaban cuando correspondía, mientras que el resto respondió negativamente.
 
 \newpage
 
@@ -2375,7 +2375,7 @@ g_zafra + g_fuera +
   theme(legend.position = "right")
 ```
 
-Se observa una marcada diferencia en el radio de operación de la flota según la temporada. Durante la zafra, la actividad es altamente localizada: el 90% de los pescadores opera exclusivamente en su puerto base o localidad, y los traslados a otros puertos u otros departamentos son marginales (5% en cada caso). Sin embargo, fuera de zafra, la dependencia del puerto base se reduce al 73,3%. Esta caída se explica por un fuerte aumento de la movilidad: un 15% de los pescadores se desplaza a operar en otros departamentos (el triple que en zafra) y un 6,7% migra hacia otros puertos.En otro depto se menciona Colonia.
+Se observa una marcada diferencia en el radio de operación de la flota según la temporada. Durante la zafra, la actividad es altamente localizada: el 90% de los pescadores opera exclusivamente en su puerto base o localidad, y los traslados a otros puertos u otros departamentos son marginales (5% en cada caso). Sin embargo, fuera de zafra, la dependencia del puerto base se reduce al 73,3%. Esta caída se explica por un fuerte aumento de la movilidad: un 15% de los pescadores se desplaza a operar en otros departamentos (el triple que en zafra) y un 6,7% migra hacia otros puertos. En otro departamento se menciona Colonia.
 
 \newpage
 
@@ -2506,7 +2506,7 @@ El volumen de captura muestra una estacionalidad extrema. Mientras que en fuera 
 
 \newpage
 
-A continuación se presentan datos sobre las especies más pescadas y el destino de los descartes.
+A continuación se presentan datos sobre las especies más capturadas y el destino de los descartes.
 
 ```{r}
 #| echo: false
@@ -2640,7 +2640,7 @@ El principal destino del descarte es la devolución al agua, una práctica exten
 
 \newpage
 
-También se relevo información sobre la comercialización del producto.
+También se relevó información sobre la comercialización del producto.
 
 ```{r}
 #| echo: false
@@ -3219,7 +3219,7 @@ g_barra
 
 ```
 
-Al consultar si la embarcación contrata desmalladores (personal encargado de limpiar y preparar el pescado a bordo o en tierra), la mayoría de los pescadores (cerca del 60%) respondió que no contrata este servicio. Esto refleja que el desmallado y la preparación del pescado suelen ser tareas asumidas por los propios tripulantes de la embarcación o por el núcleo familiar, antes que una actividad tercerizada. La contratación de desmalladores queda restringida a un poco más de un tercio de la flota, probablemente aquellas embarcaciones de mayor porte o con volúmenes de captura más altos
+Al consultar si la embarcación contrata desmalladores (personal para limpiar y preparar el pescado a bordo o en tierra), la mayoría de los pescadores (cerca del 60%) respondió que no lo hace. Esto refleja que el desmallado y la preparación del pescado suelen ser tareas asumidas por los propios tripulantes de la embarcación o por el núcleo familiar, antes que una actividad tercerizada. La contratación de desmalladores queda restringida a un poco más de un tercio de la flota, probablemente aquellas embarcaciones de mayor porte o con volúmenes de captura más altos
 
 ```{r}
 #| echo: false
@@ -3313,8 +3313,6 @@ A nivel de cada embarcación, la diferencia también es notoria: el promedio de 
 
 # Conclusiones
 
-#### 
-
 1\) Más del 60% de los hogares y las personas que trabajan en la pesca artesanal en el departamento ubican su lugar de residencia en la zona de Arazatí y en el barrio Penino de Ciudad del Plata.
 
 2\) La mitad de los pescadores artesanales tienen una condición de tenencia precaria de los terrenos donde residen, ubicándose la mayor parte de estos en predios fiscales en calidad de ocupantes y otro grupo en terrenos prestados.
@@ -3333,26 +3331,28 @@ A nivel de cada embarcación, la diferencia también es notoria: el promedio de 
 
 9\) Al momento de identificar los principales problemas del sector, cuatro aspectos aparecen como los más destacados: los bajos precios que reciben por el producto, la formalización, dificultades de infraestructura como ausencia y precariedad de muelle y la contaminación que incide en los volúmenes de pesca.
 
-10\) Lo anterior es consistente con algunos de los interés manifestados en materia de capacitación: comercialización y formalización. También se recogió un significativo interés en capacitaciones relativas a la seguridad náutica y manipulación del producto *(Por más consideraciones al respecto, léase los hallazgos de carácter cualitativo en la página 29).*
+10\) Lo anterior es consistente con algunos de los intereses manifestados en materia de capacitación en que se destacó demandas en materia de comercialización y formalización. También se recogió un significativo interés relativos a la seguridad náutica y manipulación del producto *(Por más consideraciones al respecto, léase los hallazgos de carácter cualitativo en la página 29).*
 
-11\) La flota artesanal relevada está compuesta por 60 embarcaciones. La mayoría (77%) combina fibra y madera en su casco, y en su totalidad operan con motor fuera de borda de baja o media potencia (en su mayoría Yamaha o Mercury). En cuanto a su estado, el 53% son nuevas o están en buen estado y un 43% son antiguas pero con buen mantenimiento. Respecto a la tenencia, el 95% son propias, lo que confirma el carácter de trabajadores autónomos o cuentapropistas del sector.
+11\) Se observó una muy baja visibilidad de los espacios de participación "Consejo de Pesca" y "Mesa de Desarrollo", aspecto consistente con la escasa asociatividad manifestada por los pescadores que trabajan en la costa del departamento de San José. Esta realidad limita la capacidad de incidencia que estos trabajadores pueden tener sobre los temas que les incumben.
 
-12\) En cuanto a la seguridad de la flota, la gran mayoría cuenta con equipamiento básico obligatorio: el 97% tiene chalecos salvavidas, el 80% luces de navegación y el 72% radio y navegación nocturna. Sin embargo, solo el 10% cuenta con motor auxiliar, lo que evidencia una vulnerabilidad ante fallas mecánicas en alta mar.
+12\) La flota artesanal relevada de la cual se dispone información, está compuesta por 60 embarcaciones. La mayoría (77%) combina fibra y madera en su casco, y en su totalidad operan con motor fuera de borda de baja o media potencia (en su mayoría Yamaha o Mercury). En cuanto a su estado, el 53% son nuevas o están en buen estado y un 43% son antiguas pero con buen mantenimiento. Respecto a la tenencia, el 95% son propias, lo que confirma el carácter de trabajadores autónomos o cuentapropistas del sector.
 
-13\) La operativa se concentra en los puertos base de Arazatí (32%), Penino (30%) y Boca del Cufré (20%). En zafra, el 90% de los pescadores opera exclusivamente en su puerto base o localidad, mostrando un fuerte arraigo. Sin embargo, fuera de zafra, la dependencia cae al 73% y un 15% migra hacia otros departamentos (como Colonia) en busca de mejores capturas, configurando una movilidad territorial forzada por la estacionalidad.
+13\) En cuanto a la seguridad de la flota, la gran mayoría cuenta con equipamiento básico obligatorio: el 97% tiene chalecos salvavidas, el 80% luces de navegación y el 72% radio y navegación nocturna. Sin embargo, solo el 10% cuenta con motor auxiliar, lo que evidencia una vulnerabilidad ante fallas mecánicas en alta mar.
 
-14\) En materia de formalización y permisos, se constata una significativa brecha. Si bien el 62% de las embarcaciones cuenta con permiso de pesca de DINARA, un 38% opera en la informalidad: un 27% nunca tuvo el permiso, un 8% lo tiene vencido y un 3% lo está tramitando. Un dato alentador es que la totalidad (100%) de quienes nunca tuvieron permiso manifestó su interés en regularizarse, reclamando principalmente la simplificación de trámites, la apertura de cupos y mayor asesoramiento.
+14\) La operativa se concentra en los puertos base de Arazatí (32%), Penino (30%) y Boca del Cufré (20%). En zafra, el 90% de los pescadores opera exclusivamente en su puerto base o localidad, mostrando un fuerte arraigo. Sin embargo, fuera de zafra, la dependencia cae al 73% y un 15% migra hacia otros departamentos (como Colonia) en busca de mejores capturas, configurando una movilidad territorial forzada por la estacionalidad.
 
-15\) El acceso a beneficios operativos, como el descuento en el combustible, sigue siendo esquivo para una parte del sector. El 35% de quienes tienen permiso de DINARA no pueden acceder a este beneficio. Las razones principales son trabas burocráticas (trámites o documentación pendiente, 53,8%) y conflictos con la situación previsional (BPS, 23,1%). Esto evidencia que la informalidad y la carga administrativa no solo afectan la legalidad de la actividad, sino que impactan directamente en los costos de producción, marcando la necesidad de acompañamiento técnico para la regularización.
+15\) En materia de formalización y permisos, se constata una significativa brecha. Si bien el 62% de las embarcaciones cuenta con permiso de pesca de DINARA, un 38% opera en la informalidad: un 27% nunca tuvo el permiso, un 8% lo tiene vencido y un 3% lo está tramitando. Un dato alentador es que la totalidad (100%) de quienes nunca tuvieron permiso manifestó su interés en regularizarse, reclamando principalmente la simplificación de trámites, la apertura de cupos y mayor asesoramiento.
 
-16\) La zafra no es un bloque único, sino que presenta una marcada bimodalidad a lo largo del año, con picos muy fuertes en verano (diciembre y enero, con más del 84% de las menciones) y un segundo bloque en invierno (julio y agosto, con más del 52%). Esto explica por qué el 83% de los pescadores afirma trabajar todo el año, alternando las especies objetivo según la temporada.
+16\) El acceso a beneficios operativos, como el descuento en el combustible, sigue siendo esquivo para una parte del sector. El 35% de quienes tienen permiso de DINARA no pueden acceder a este beneficio. Las razones principales son trabas burocráticas (trámites o documentación pendiente, 53,8%) y conflictos con la situación previsional (BPS, 23,1%). Esto evidencia que la informalidad y la carga administrativa no solo afectan la legalidad de la actividad, sino que impactan directamente en los costos de producción, marcando la necesidad de acompañamiento técnico para la regularización.
 
-17\) El esfuerzo y volumen de pesca se desploma fuera de temporada. En zafra, la mediana de captura es de 6.000 kg mensuales por embarcación, mientras que fuera de zafra cae abruptamente a 1.000 kg (una merma del 80%). Esto es consistente con la reducción de los días de trabajo (de 20 días en zafra a 10 fuera de ella).
+17\) La zafra no es un bloque único, sino que presenta una marcada bimodalidad a lo largo del año, con picos muy fuertes en verano (diciembre y enero, con más del 84% de las menciones) y un segundo bloque en invierno (julio y agosto, con más del 52%). Esto explica por qué el 83% de los pescadores afirma trabajar todo el año, alternando las especies objetivo según la temporada.
 
-18\) La actividad es estrictamente multiespecífica, pero altamente dependiente de pocas especies comerciales: el sábalo (80%), el bagre (50%) y la corvina (50%) son las principales capturas. Sin embargo, al preguntar por la rentabilidad, el sábalo (50%) y la corvina (43%) concentran casi toda la preferencia. Esta dependencia de solo dos especies expone al sector a una gran vulnerabilidad frente a cambios biológicos o de mercado.
+18\) El esfuerzo y volumen de pesca se desploma fuera de temporada. En zafra, la mediana de captura es de 6.000 kg mensuales por embarcación, mientras que fuera de zafra cae abruptamente a 1.000 kg (una merma del 80%). Esto es consistente con la reducción de los días de trabajo (de 20 días en zafra a 10 fuera de ella).
 
-19\) En cuanto a la comercialización, existe una asimetría estructural muy marcada: el 100% de los pescadores le vende a un intermediario y solo un marginal 17% logra colocar algo de su producción directo al público. La venta se hace mayoritariamente en formato entero (100%), con bajo nivel de valor agregado (filete en un 22% y eviscerado en un 8%). Esta falta de canales alternativos explica la insatisfacción con los precios.
+19\) La actividad es estrictamente multiespecífica, pero altamente dependiente de pocas especies comerciales: el sábalo (80%), el bagre (50%) y la corvina (50%) son las principales capturas. Sin embargo, al preguntar por la rentabilidad, el sábalo (50%) y la corvina (43%) concentran casi toda la preferencia. Esta dependencia de solo dos especies expone al sector a una gran vulnerabilidad frente a cambios biológicos o de mercado.
 
-20\) El destino principal del descarte es la devolución al agua (82%). Muy marginalmente se usa como carnada (5%) o para consumo familiar (3%). Esto indica que gran parte del volumen descartado no tiene aprovechamiento comercial y podría trabajarse mediante la formalización de plantas de procesamiento o mesas de fileteo para capturar un mayor margen.
+20\) En cuanto a la comercialización, existe una asimetría estructural muy marcada: el 100% de los pescadores le vende a un intermediario y solo un marginal 17% logra colocar algo de su producción directo al público. La venta se hace mayoritariamente en formato entero (100%), con bajo nivel de valor agregado (filete en un 22% y eviscerado en un 8%). Esta falta de canales alternativos explica la insatisfacción con los precios.
 
-21\) La tripulación es reducida y de tipo familiar o de dupla: el 57% opera con 2 personas y el 38% con 3 personas. La contratación de desmalladores es una tarea tercerizada que genera empleo zafral: en temporada alta se contratan 113 personas en total, pero fuera de zafra la cifra cae a 28. Esto significa que desaparecen 85 puestos de trabajo (una caída del 75%), evidenciando la precariedad estructural del empleo en el sector.
+21\) El destino principal del descarte es la devolución al agua (82%). Muy marginalmente se usa como carnada (5%) o para consumo familiar (3%). Esto indica que gran parte del volumen descartado no tiene aprovechamiento comercial y podría trabajarse mediante la formalización de plantas de procesamiento o mesas de fileteo para capturar un mayor margen.
+
+22\) La tripulación es reducida y de tipo familiar o de dupla: el 57% opera con 2 personas y el 38% con 3 personas. La contratación de desmalladores es una tarea tercerizada que genera empleo zafral: en temporada alta se contratan 113 personas en total, pero fuera de zafra la cifra cae a 28. Esto significa que desaparecen 85 puestos de trabajo (una caída del 75%), evidenciando la precariedad estructural del empleo en el sector.
