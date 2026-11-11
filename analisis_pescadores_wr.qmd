@@ -43,7 +43,7 @@ Aquellos ciudadanos que tengan dudas o requieran información adicional, pueden 
 
 # Aspectos metodológicos
 
-La estrategia de abordaje consistió en "barridas" por principales puntos de pesca del departamento apuntando principalmente a relevar los hogares de pescadores. y se realizó mediante identificación directa y, en un segundo paso, por la técnica de bola de nieve que permitió llegar a los pescadores a través de la referencia de sus pares anteriormente contactados.
+La estrategia de abordaje consistió en "barridas" por los principales puntos de pesca del departamento apuntando principalmente a relevar los hogares de personas que trabajan en el sector. La identificación se realizó de forma directa, y en un segundo paso, por la técnica de bola de nieve, que permitió llegar a los pescadores a través de la referencia de sus pares anteriormente contactados.
 
 Se localizaron 78 personas que trabajan en la pesca, pertenecientes a 53 hogares y 62 embarcaciones.
 
@@ -158,11 +158,11 @@ grafico_barras_estilo <- function(tabla, var, titulo, subtitulo = NULL) {
 }
 ```
 
-La siguiente tabla indica la distribución de los hogares y la cantidad de personas por localidad que trabajan en la pesca artesanal[^1]. En total se relevaron 53 hogares de pescadores artesanales, en los cuales residen 159 personas de los que se identificaron a 78 que trabajan en la pesca artesanal. El promedio es de 3 personas por hogar. Hay que señalar que dos pares de hogares comparten vivienda. .
+La siguiente tabla indica la distribución de los hogares y la cantidad de personas por localidad que trabajan en la pesca artesanal[^1]. En total se relevaron 53 hogares de pescadores artesanales, en los cuales residen 159 personas de los que se identificaron a 78 que trabajan en la pesca artesanal. El promedio es de 3 personas por hogar. Hay que señalar que cuatro hogares comparten dos viviendas.
 
-[^1]: Más adelante se profundiza sobre los "desmalladores", otro grupo personas ocupadas en la actividad productiva
+[^1]: Más adelante se profundiza sobre los "desmalladores", otro grupo de personas ocupadas en la actividad productiva
 
-La mayor concentración de hogares y personas se encuentran en Arazatí y Penino respectivamente que reúnen en ambas categorías alrededor de las dos terceras partes de las unidades relevadas. Luego se encuentran Boca del Cufré , Kiyú y Ordeig, otras y por últimos Colonia Wilson. Hay cuatro hogares que comparten viviendas
+La mayor concentración de hogares y personas se encuentra en Arazatí y Penino respectivamente que reúnen en ambas categorías alrededor de las dos terceras partes de las unidades relevadas. Luego se encuentran Boca del Cufré , Kiyú y Ordeig, otros departamentos (dos casos en Juan Lacaze y uno de San Luis) y por último Colonia Wilson.
 
 ```{r}
 #| echo: false
@@ -175,7 +175,7 @@ recode_localidad <- function(x) {
     "kiyu_ordeig"   = "Kiyú-Ordeig",
     "boca_cufre"    = "Boca del Cufré",
     "coloniawilson" = "Colonia Wilson",
-    "otra"          = "Otras"
+    "otro depto."          = "Otro departamento"
   )
 }
 
@@ -359,6 +359,98 @@ En cuanto a servicios básicos, en el gráfico superior se observa que la gran m
 
 \newpage
 
+A continuación se presenta un índice de "Precariedad Habitacional"[^2], de elaboración propia, para poder distinguir algunas diferencias sobre la situación de precariedad de los hogares de los pescadores según las localidades donde se radican.
+
+[^2]: Para estimar la precariedad de los hogares de los pescadores, se construyó un indicador sintético a partir de las siguientes cuatro dimensiones críticas de la vivienda:
+
+    1.  Materialidad de paredes: Se consideró precario si el material principal era chapa, madera de costaneros, desecho u otro material no consolidado (bloque o ladrillo se consideraron adecuados).
+
+    2.  Materialidad de pisos: Se clasificó como precario si el piso era de tierra o desecho (cerámica y hormigón se consideraron adecuados).
+
+    3.  Acceso al agua: Se consideró una carencia si el origen del agua no era la red de OSE (incluyendo pozo, recolección de lluvia, compra o préstamo de vecinos), lo que imposibilita garantizar agua segura para el consumo.
+
+    4.  Saneamiento: Se clasificó como deficitario si la evacuación de aguas servidas no se realizaba por pozo negro o saneamiento.
+
+    A cada hogar se le asignó un valor de 1 (tiene la carencia) o 0 (no la tiene) en cada dimensión. Posteriormente, se creó la variable "Hogares con al menos una carencia", que identifica a aquellos núcleos familiares que presentan déficit en al menos uno de los cuatro puntos anteriores. Finalmente, los datos se agregaron por localidad para calcular la proporción de hogares afectados en cada territorio.
+
+```{r}
+#| echo: false
+
+# ============================================================
+# 1. Indicadores de precariedad por hogar
+# ============================================================
+tabla_precariedad <- hogares %>%
+  mutate(
+    prec_paredes     = ifelse(material_paredes %in% c("chapa", "madera_costaneros", "desecho", "otro"), 1, 0),
+    prec_piso        = ifelse(material_piso %in% c("tierra", "desecho", "otro"), 1, 0),
+    sin_agua         = ifelse(!is.na(origen_agua) & origen_agua != "ose", 1, 0),
+    prec_saneamiento = ifelse(evacuacion_bano %in% c("otro"), 1, 0)
+  ) %>%
+  mutate(
+    al_menos_una_carencia = ifelse((prec_paredes + prec_piso + sin_agua + prec_saneamiento) > 0, 1, 0)
+  ) %>%
+  filter(!is.na(localidad), localidad != "")
+
+# ============================================================
+# 2. Tabla resumen
+# ============================================================
+nombres_localidad <- c(
+  "arazati"       = "Arazatí",
+  "penino"        = "Penino",
+  "boca_cufre"    = "Boca del Cufré",
+  "kiyu_ordeig"   = "Kiyú-Ordeig",
+  "otro depto."   = "Otro departamento",
+  "coloniawilson" = "Colonia Wilson"
+)
+
+tabla_final <- tabla_precariedad %>%
+  mutate(Localidad = recode(localidad, !!!nombres_localidad)) %>%
+  group_by(Localidad) %>%
+  summarise(
+    Hogares  = n(),
+    Paredes  = sum(prec_paredes),
+    Pisos    = sum(prec_piso),
+    Agua     = sum(sin_agua),
+    Saneam   = sum(prec_saneamiento),
+    Carencia = sum(al_menos_una_carencia),
+    .groups = "drop"
+  ) %>%
+  arrange(desc(Hogares))
+
+fila_total <- tabla_final %>%
+  summarise(across(-Localidad, sum)) %>%
+  mutate(Localidad = "Total")
+
+tabla_final <- bind_rows(tabla_final, fila_total) %>%
+  mutate(Pct = format(round(Carencia / Hogares * 100, 1), decimal.mark = ","))
+
+# ============================================================
+# 3. Tabla para el informe
+# ============================================================
+tabla_final %>%
+  kbl(
+    align     = "lccccccc",
+    caption   = "Precariedad habitacional según localidad (cantidad de hogares)",
+    col.names = c("Localidad", "Hogares", "Paredes precarias", "Pisos precarios",
+                  "Sin agua de OSE", "Aguas servidas", "Con al menos 1 carencia",
+                  "% con al menos 1 carencia")
+  ) %>%
+  kable_styling(latex_options = "HOLD_position", full_width = FALSE,
+                position = "center", font_size = 9) %>%
+  column_spec(1, width = "2.8cm") %>%
+  column_spec(2:8, width = "1.5cm") %>%
+  row_spec(nrow(tabla_final), bold = TRUE, background = "#f0f0f0")
+
+```
+
+El análisis de las carencias habitacionales revela una realidad crítica que afecta a la mayoría de los pescadores, aunque con diferencias territoriales marcadas. A nivel general, Arazatí se posiciona como la localidad más vulnerable: el 73,7% de sus hogares (14 de 19) presenta al menos una carencia. Allí se concentran los problemas de falta de agua segura (8 hogares) y las paredes precarias (9 hogares).
+
+Le siguen Boca del Cufré y Kiyú-Ordeig, donde el 62,5% y el 60% de los hogares respectivamente tienen al menos una carencia, destacándose en ambas un fuerte déficit en la evacuación de aguas servidas. Penino, a pesar de ser uno de los puertos con mayor cantidad de embarcaciones, muestra un nivel de precariedad relativamente menor (47,1%), aunque casi la mitad de sus hogares (8 de 17) presentan paredes con materiales precarios.
+
+Un caso aparte lo constituye Colonia Wilson, donde su único hogar registrado acumula carencias en todas las dimensiones (paredes, agua y saneamiento). Finalmente, en la categoría "Otra", el 50% de los hogares presenta carencias, principalmente vinculadas a la falta de acceso a la red de OSE.
+
+\newpage
+
 ### Composición de los hogares
 
 Los hogares tienen un tamaño promedio de 3 personas, lo cual es 0,5 puntos porcentuales mayor que el tamaño promedio de los hogares uruguayos y los del departamento.
@@ -382,7 +474,7 @@ discapacidad <-sum(hogares$hay_discapacidad=="si")
 #| echo: false
 
 tabla_frecuencias(hogares, "menor_no_escolarizado") %>%
-  grafico_barras_estilo("menor_no_escolarizado", "Porcentaje de hogares con menores no escolarizados")
+  grafico_barras_estilo("menor_no_escolarizado", "¿El hogar tiene menores no escolarizados?")
 ```
 
 \newpage
@@ -399,7 +491,7 @@ tabla_frecuencias(personas_solo, "sexo") %>%
 
 ```
 
-El gráfico da cuenta que el 77% son varones y el 23% mujeres. De las mujeres, el 70% tienen 45 años o menos.
+El gráfico da cuenta que el 77% son varones y el 23% mujeres.
 
 \newpage
 
@@ -433,7 +525,7 @@ ggplot(tabla_edad, aes(x = grupo_edad, y = pct, fill = grupo_edad)) +
   tema_informe
 ```
 
-Según la distribución por edades, se observa que el intervalo modal está entre los 40 y los 54 años, grupo que representa el 40% de los pescadores. El 27% está entre 25 y 39 años, el 16% entre 55 y 64 años y el resto se distribuye en proporciones casi iguales en los extremos de la distribución. Resumiendo, las tres cuartas partes de los/las pescadores/as tienen menos de 55 años.
+Según la distribución por edades, se observa que el intervalo modal está entre los 40 y los 54 años, grupo que representa el 40% de los pescadores. El 27% está entre 25 y 39 años, el 16% entre 55 y 64 años y el resto se distribuye en proporciones casi iguales en los extremos de la distribución. Resumiendo, las tres cuartas partes las personas que trabajan en el sector tienen menos de 55 años.
 
 \newpage
 
@@ -483,7 +575,7 @@ tabla_frecuencias(
   grafico_barras_estilo("tiempo_residencia_zona", "Tiempo de residencia en la zona")
 ```
 
-En el gráfico anterior se observa la distribución porcentual por tiempo de residencia en el lugar de trabajo. Cómo se ve, casi todos tienen un tiempo de permanencia en sus respectivas localidades superior a los dos años. Un 1,3% dijo que está en el lugar hace un año o menos y un porcentaje similar no vive en la zona donde trabaja.
+En el gráfico anterior se observa la distribución porcentual por tiempo de residencia en el lugar de trabajo. Como se ve, casi todos tienen un tiempo de permanencia en sus respectivas localidades superior a los dos años. Un 1,3% dijo que está en el lugar hace un año o menos y un porcentaje similar no vive en la zona donde trabaja.
 
 \newpage
 
@@ -544,7 +636,7 @@ ggplot(trayectoria, aes(x = hsize, y = Porcentaje, fill = Tramos_antiguedad)) +
 
 ```
 
-Como se ve, la mitad tiene una trayectoria media en el rubro: de 10 a 25 años, la cuarta parte más de 25 años y una quinta parte, menos de 10 años. De un 4% no se obtuvo datos.
+Como se ve, la mitad tiene una trayectoria de 10 a 25 años en el rubro, la cuarta parte más de 25 años y una quinta parte, menos de 10 años. De un 4% no se obtuvo datos. Es de destacar que más del 75% de las personas del sector trabajan hace 10 o más años en la pesca artesanal.
 
 \newpage
 
@@ -712,7 +804,7 @@ g_emb + g_lib +
   theme(legend.position = "bottom")
 ```
 
-En total se relevaron 62 embarcaciones. De quienes tienen embarcación propia, la gran mayoría informó tener sólo una, excepto seis casos que afirman tener dos cada uno
+En total se relevaron 62 embarcaciones. De quienes tienen embarcación propia, la gran mayoría informó tener sólo una, excepto seis casos que afirman tener dos cada uno.
 
 Un 72% de las personas que trabajan en la pesca dijeron ser propietarios de sus embarcaciones, un 17% dijo no serlo, mientras que un 11,5% no informó al respecto.
 
@@ -1031,7 +1123,7 @@ A su vez, un 27% afirmó que realizan otras actividades complementarias. Estas s
 
 \newpage
 
-En el gráfico siguiente se observa, la distribución de los intervalos de ingreso (ganancia resultante una vez pagado todos los costos), según zafra y fuera de zafra de acuerdo a lo que marcan los pescadores.
+En el gráfico siguiente se observa, la distribución de los intervalos de ingreso (ganancia resultante una vez pago todos los costos), según zafra y fuera de zafra de acuerdo a lo que marcan los pescadores.
 
 ```{r}
 #| echo: false
@@ -1092,8 +1184,8 @@ g_zafra <- ggplot(tabla_zafra, aes(x = ganancia_mensual_zafra, y = pct, fill = g
   scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
   coord_flip() +
   labs(
-    title    = "GANANCIA MENSUAL EN ZAFRA",
-    subtitle = "Porcentaje de pescadores por intervalo",
+    title    = "EN ZAFRA",
+    subtitle = "Porcentaje por intervalo",
     x = NULL, y = "%"
   ) +
   tema_informe
@@ -1110,8 +1202,8 @@ g_fuera <- ggplot(tabla_fuera, aes(x = ganancia_mensual_fuera_zafra, y = pct, fi
   scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
   coord_flip() +
   labs(
-    title    = "GANANCIA MENSUAL FUERA DE ZAFRA",
-    subtitle = "Porcentaje de pescadores por intervalo",
+    title    = "FUERA DE ZAFRA",
+    subtitle = "Porcentaje por intervalo",
     x = NULL, y = NULL
   ) +
   tema_informe
@@ -1335,11 +1427,11 @@ ggplot(tabla_cap_temas, aes(x = etiqueta, y = pct, fill = etiqueta)) +
   tema_informe
 ```
 
-El tema más mencionado fue comercialización, elegido por el 36% de los pescadores; en segundo lugar formalización, mencionado por el 32%; en tercer lugar, 28%, el interés se volcó por seguridad naútica y en cuarto lugar, manipulación del pescado, mencionado por el 23% de los pescadores. También otros temas como manejo de artes de pesca y primeros auxilios fueron mencionados por casi una quinta parte de los entrevistas como temas de interés para capacitarse. Con porcentajes menores de menciones aparecen buceo, administración y gestión ambiental. En "Otro" se encuentran tres menciones más a "Administración", una a "Meteorología" y otra a "Mecánica".
+El tema más mencionado fue comercialización, elegido por el 36% de los pescadores; en segundo lugar formalización, mencionado por el 32%; en tercer lugar, 28%, el interés se volcó por seguridad náutica y en cuarto lugar, manipulación del pescado, mencionado por el 23% de los pescadores. También otros temas como manejo de artes de pesca y primeros auxilios fueron mencionados por casi una quinta parte de los entrevistados como temas de interés para capacitarse. Con porcentajes menores de menciones aparecen buceo, administración y gestión ambiental. En "Otro" se encuentran tres menciones más a "Administración", una a "Meteorología" y otra a "Mecánica".
 
 \newpage
 
-En cuanto a la participación en asociaciones o organizaciones sociales por parte de los pescadores, solamente se encuentran dos casos que declaran participar de sindicatos, mostrando un bajo nivel asociativo del sector.
+En cuanto a la participación en asociaciones u organizaciones sociales por parte de los pescadores, solamente se encuentran dos casos que declaran participar de sindicatos, mostrando un bajo nivel asociativo del sector.
 
 ```{r}
 #| echo: false
@@ -1659,19 +1751,19 @@ tabla_cruce <- datos_cruce %>%
 
 ```
 
-La cuarta parte, sostuvo que el problema principal es el relativo a los bajos precios, un 15% jerarquizó el tema de la formalización y un porcentaje igual problemas de infraestructura. Un 13% seleccionó como problema principal el derivado de la contaminación y luego aparecen en ese orden temas tales como clima, vivienda y prefectura con 7,5%; Dinara con 6% de los pescadores que la mencionan como fuente de problema y lobos marinos y turismo con 2% cada uno.
+La cuarta parte, sostuvo que el problema principal es el relativo a los bajos precios, un 15% jerarquizó el tema de la formalización y un porcentaje igual, problemas de infraestructura. Un 13% seleccionó como problema principal el derivado de la contaminación y luego aparecen en ese orden temas tales como clima, vivienda y prefectura con 7,5%; Dinara con 6% de los pescadores que la mencionan como fuente de problema y lobos marinos y turismo con 2% cada uno.
 
 Según localidad los problemas principales más mencionados fueron:
 
--   Arazatí: Es la única localidad donde la Formalización aparece como la principal preocupación (25%), seguida por el Clima (10,7%) y los Precios bajos (10,7%).
+- Arazatí: Es la única localidad donde la Formalización aparece como la principal preocupación (25%), seguida por el Clima (10,7%) y los Precios bajos (10,7%).
 
--   Kiyú-Ordeig: Casi la mitad de los pescadores (44,4%) señaló los Precios bajos como su principal preocupación.
+- Kiyú-Ordeig: Casi la mitad de los pescadores (44,4%) señaló los Precios bajos como su principal preocupación.
 
--   Peñino: Este puerto presenta una mirada más vinculada a lo estructural y lo institucional. La Infraestructura (19%), seguida por las demandas hacia DINARA (14,3%) y los Precios bajos (14,3%), demuestran que el foco está puesto en las condiciones materiales para operar y en la regulación estatal.
+- Penino: Este puerto presenta una mirada más vinculada a lo estructural y lo institucional. La Infraestructura (19%), seguida por las demandas hacia DINARA (14,3%) y los Precios bajos (14,3%), demuestran que el foco está puesto en las condiciones materiales para operar y en la regulación estatal.
 
--   Boca del Cufré: La principal queja son los Precios bajos (21,4%), pero llama la atención que un 14,3% señale a la Prefectura como el problema más relevante. Esto indica un conflicto específico con la autoridad portuaria o los controles en esa zona.
+- Boca del Cufré: La principal queja son los Precios bajos (21,4%), pero llama la atención que un 14,3% señale a la Prefectura como el problema más relevante. Esto indica un conflicto específico con la autoridad portuaria o los controles en esa zona.
 
--   Otras localidades: En "Otra" (agrupación de respuestas sueltas), prima la Contaminación (40%). En Colonia Wilson, el único registro válido apunta a los Lobos marinos, un conflicto muy localizado con la fauna.
+- Otras localidades: En "Otra" (agrupación de respuestas sueltas), prima la Contaminación (40%). En Colonia Wilson, el único registro válido apunta a los lobos marinos, un conflicto muy localizado con la fauna.
 
 \newpage
 
@@ -1753,17 +1845,17 @@ Hay dos respuestas que rompen el tono positivo general y merecen señalarse apar
 
 Tres ideas ordenan el conjunto:
 
--   Autonomía como núcleo identitario: ser independiente, ser patrón, trabajar para uno mismo. Es lo que distingue a la pesca de un empleo asalariado.
+- Autonomía como núcleo identitario: ser independiente, ser patrón, trabajar para uno mismo. Es lo que distingue a la pesca de un empleo asalariado.
 
--   Bienestar subjetivo: libertad, tranquilidad, paz. No es solo una libertad formal, es una experiencia cotidiana de vivir sin presiones externas.
+- Bienestar subjetivo: libertad, tranquilidad, paz. No es solo una libertad formal, es una experiencia cotidiana de vivir sin presiones externas.
 
--   Vocación y pertenencia: gusto por la actividad y vínculo con el entorno natural y el territorio.
+- Vocación y pertenencia: gusto por la actividad y vínculo con el entorno natural y el territorio.
 
-Por último, se recaban algunas observaciones generales, donde vale la pena destacar las menciones a la merma percibida sobre la cantidad de pescado en los últimos 5 años, el mal estado de la bajadas en varios puntos y lo díficil que resulta mantener el monotributo fuera de zafra.
+Por último, se recaban algunas observaciones generales, donde vale la pena destacar las menciones a la merma percibida sobre la cantidad de pescado en los últimos 5 años, el mal estado de las bajadas en varios puntos y lo difícil que resulta mantener el monotributo fuera de zafra.
 
 \newpage
 
-# Embarcaciones
+## Embarcaciones
 
 En este apartado, se incorpora el relevamiento sobre las embarcaciones utilizadas para la pesca artesanal del departamento de San José.
 
@@ -1791,13 +1883,13 @@ grafico_barras_estilo(tabla_puerto, "puerto_base",
                       "Distribución de embarcaciones según puerto base")
 ```
 
-En el gráfico superior se observa que el puerto base que tiene más embarcaciones es Arazatí con el 32% de las mismas y, en segundo lugar, Penino, con el 30%. Es decir que estos dos puertos base, concentran el 62% de las embarcaciones que operan en la pesca artesanal de la costa platense de San José. Después vemos que el 20% trabajan desde Boca del Cufré, un 12% desde Kiyú-Ordeig y un 7% restante desde otros. Sobre estos últimos, uno dice salir desde Autódromo, próximo a Penino, dos dicen tener como referencia puertos base de Colonia y uno Montevideo.
+En el gráfico superior se observa que los puertos bases que tiene más embarcaciones son Penino y Arazatí con el 32% de las mismas cada uno. Es decir que estos dos puertos base, concentran casi el 64% de las embarcaciones que operan en la pesca artesanal de la costa platense de San José. Después vemos que el 20% trabajan desde Boca del Cufré, un 12% desde Kiyú-Ordeig y un 5% restante desde otros. Sobre estos últimos, dos dicen tener como referencia puertos base de Colonia y uno Montevideo.
 
 \newpage
 
 ### Características de la embarcación
 
-Al pasar a describir la embarcación, el 100% informó operar con motor "fuera de borda". De las 60 embarcaciones, un 13% cuenta con motores de 100 o más hp; un 25 tienen motores de entre 50 y 90 hp; un 35% tiene motores de 40 hp y el resto de 5 hp a 30 hp. El 90% de las embarcaciones tienen motores de las marcas Yamaha o Mercury, en ese orden de magnitud. Además, la tercera parte de las embarcaciones también cuenta con remos.
+Al pasar a describir la embarcación, el 100% informó operar con motor "fuera de borda". De las 60 embarcaciones, un 13% cuenta con motores de 100 o más hp; un 25% tienen motores de entre 50 y 90 hp; un 35% tiene motores de 40 hp y el resto de 5 hp a 30 hp. El 90% de las embarcaciones tienen motores de las marcas Yamaha o Mercury, en ese orden de magnitud. Además, la tercera parte de las embarcaciones también cuenta con remos.
 
 En relación al material del casco, como se observa en la siguiente gráfica, un 77% informó que son de "fibra y madera", un 17% sólo de "fibra" y un 7% dijo que el casco es sólo de madera.
 
@@ -1820,7 +1912,7 @@ grafico_barras_estilo(tabla_material_casco, "material_casco",
 
 \newpage
 
-También se relevo sobre la percepción sobre el estado de las embarcaciones.
+También se relevó sobre la percepción sobre el estado de las embarcaciones.
 
 ```{r}
 #| echo: false
@@ -1836,7 +1928,7 @@ grafico_barras_estilo(tabla_estado, "estado_embarcacion",
                       "Distribución de embarcaciones según su estado")
 ```
 
-Se informó que un 53% de las embarcaciones son nueva o están en buen estado; un 43% si bien son antiguas, se encuentran en buen estado de mantenimiento y un 3%, además de antiguas, se están en mal estado.
+Se informó que un 53% de las embarcaciones son nuevas o están en buen estado; un 43% si bien son antiguas, se encuentran en buen estado de mantenimiento y un 3%, además de antiguas, están en mal estado.
 
 En la tabla inferior se ve la distribución de las embarcaciones según régimen de tenencia.
 
@@ -1967,7 +2059,7 @@ grafico_barras_estilo(tabla_permiso, "permiso_dinara",
 
 En el gráfico superior, se ve que un 62% de las embarcaciones cuentan con el permiso de pesca de Dinara, mientras que un 38% no lo tiene aunque aquí se observan distintas situaciones: aquellas que nunca tuvieron el permiso que representan el 27% de las embarcaciones; quienes lo tienen vencido, el 8% y las embarcaciones que están con el permiso en trámite, 3%.
 
-A aquellos que nunca tuvieron permiso (16) se les consultó si tienen interés en formalizarse y el total de manifestó tenerlo.
+A aquellos que nunca tuvieron permiso (16) se les consultó si tienen interés en formalizarse y el total se manifestó tenerlo.
 
 En cuanto a las dificultades que encuentran para formalizarse, tabla inferior, un 45% reclamó simplificar los trámites, un 30% dijo que estaban a la espera que Dinara habilitara el registro y una quinta parte demanda asesoramiento e información.
 
@@ -2164,8 +2256,6 @@ tabla_zona %>%
 
 \newpage
 
-#### Artes
-
 Se preguntó sobre el uso de artes de pesca. Los pescadores informaron que el 100% de las embarcaciones usa trasmallo; nueve de ellos (15%) usan además palangre y tres (5%), utilizan línea de mano. Ninguno informó usar otro tipo de artes. Entre quienes usan palangre la cantidad de anzuelos utilizados va desde aquellos que solo cuentan decenas, la mayoría, hasta dos embarcaciones que utilizan mil o más.
 
 En el gráfico siguiente se informa sobre el largo total de las redes utilizadas.
@@ -2204,11 +2294,11 @@ embarcaciones <- embarcaciones %>%
   mutate(luz_malla_tramo = case_when(
     is.na(red_luz_malla_cm) ~ "Sin dato",
     red_luz_malla_cm < 8    ~ "Menos de 8 cm",
-    red_luz_malla_cm <= 14  ~ "8 a 14 cm",
-    TRUE                    ~ "Más de 14 cm"
+    red_luz_malla_cm < 14  ~ "8 a 13 cm",
+    TRUE                    ~ "14 cm y más"
   ))
 
-niveles_luz <- c("Sin dato", "Menos de 8 cm", "8 a 14 cm", "Más de 14 cm")
+niveles_luz <- c("Sin dato", "Menos de 8 cm", "8 a 13 cm", "14 cm y más")
 
 tabla_luz_malla <- tabla_frecuencias_ordenada(embarcaciones, "luz_malla_tramo", niveles_luz)
 
@@ -2218,7 +2308,7 @@ grafico_barras_estilo(tabla_luz_malla, "luz_malla_tramo",
 
 ```
 
-Casi la mitad (un 47%) dio usar redes con luz de malla de entre 8 y 14 centímetros; un 28% luz de malla inferior a 8 cm; un 22% más de 14 cm y un 3% no aportó información.
+Más de la mitad (un 53%) dijo usar redes con luz de malla de 14 centímetros o más (acorde a la exigencia normativa de DINARA - Resolución N°333/2022); un 28% menos de 8 cm; un 15% luz de malla de entre 8 a 13 cm; y un 3% no aportó información. Según estos datos, un 43% de las embarcaciones estaría pescando con una luz de malla que no cumple la normativa (si bien recientemente hubo una excepción para los pescadores de Boca del Cufré para este año que admite una luz de malla mínima de 8 cm).
 
 \newpage
 
@@ -2276,6 +2366,7 @@ g_fuera <- ggplot(dias, aes(x = dias_pesca_fuera_zafra)) +
   geom_vline(aes(xintercept = mean(dias_pesca_fuera_zafra, na.rm = TRUE)),
              linetype = "dashed", color = "gray30") +
   scale_x_continuous(breaks = seq(0, 30, 5)) +
+  scale_y_continuous(breaks = seq(0, 13, 3)) +
   labs(
     title    = "DÍAS DE PESCA FUERA DE ZAFRA",
     subtitle = "Línea punteada: media",
@@ -2348,7 +2439,8 @@ g_zafra <- ggplot(tabla_zafra, aes(x = hsize, y = pct, fill = zona_pesca_zafra))
   labs(title = "ZAFRA", subtitle = "Distribución porcentual") +
   tema_informe +
   theme(axis.title = element_blank(), axis.ticks = element_blank(), 
-        axis.text = element_blank(), panel.grid = element_blank())
+        axis.text = element_blank(), panel.grid = element_blank(),
+        legend.position = "none")
 
 g_fuera <- ggplot(tabla_fuera, aes(x = hsize, y = pct, fill = zona_pesca_fuera_zafra)) +
   geom_col(color = "white", width = 1) +
@@ -2358,7 +2450,8 @@ g_fuera <- ggplot(tabla_fuera, aes(x = hsize, y = pct, fill = zona_pesca_fuera_z
   labs(title = "FUERA DE ZAFRA", subtitle = "Distribución porcentual") +
   tema_informe +
   theme(axis.title = element_blank(), axis.ticks = element_blank(), 
-        axis.text = element_blank(), panel.grid = element_blank())
+        axis.text = element_blank(), panel.grid = element_blank(),
+        legend.position = "right")
 
 # 4. Panel final: acá aplicamos la escala y el tema con el operador "&"
 g_zafra + g_fuera +
@@ -2371,8 +2464,7 @@ g_zafra + g_fuera +
       plot.caption = element_text(size = 8, color = "gray50", hjust = 1)
     )
   ) & 
-  scale_fill_manual(values = paleta_pesca, name = "Zona de pesca", drop = FALSE) & 
-  theme(legend.position = "right")
+  scale_fill_manual(values = paleta_pesca, name = "Zona de pesca", drop = FALSE)
 ```
 
 Se observa una marcada diferencia en el radio de operación de la flota según la temporada. Durante la zafra, la actividad es altamente localizada: el 90% de los pescadores opera exclusivamente en su puerto base o localidad, y los traslados a otros puertos u otros departamentos son marginales (5% en cada caso). Sin embargo, fuera de zafra, la dependencia del puerto base se reduce al 73,3%. Esta caída se explica por un fuerte aumento de la movilidad: un 15% de los pescadores se desplaza a operar en otros departamentos (el triple que en zafra) y un 6,7% migra hacia otros puertos. En otro departamento se menciona Colonia.
@@ -2567,7 +2659,7 @@ ggplot(tabla_especies, aes(x = Especie, y = pct, fill = Especie)) +
   tema_informe
 ```
 
-La corvina, el sábalo y el bagre se posicionan como las especies principales de la pesca artesanal en la zona, siendo mencionadas por la gran mayoría de los pescadores. En un segundo plano aparecen especies como la boga, viejas y el pejerrey, que dan cuenta de la diversidad de la captura. Esta variedad refleja una estrategia de pesca multiespecífica, característica del sector artesanal. Se registran cinco casos que mencionan pescar especies no comercializables.
+El sábalo, el bagre y la corvina se posicionan como las especies principales de la pesca artesanal en la zona, siendo mencionadas por la gran mayoría de los pescadores. En un segundo plano aparecen especies como la boga, viejas y el pejerrey, que dan cuenta de la diversidad de la captura. Esta variedad refleja una estrategia de pesca multiespecífica, característica del sector artesanal. Se registran cinco casos que mencionan pescar especies no comercializables.
 
 \newpage
 
@@ -2777,7 +2869,7 @@ La comercialización del pescado se realiza mayoritariamente en su formato enter
 
 \newpage
 
-Para terminar este apartado se preguntó sobre los precios de venta y se estimo el ingreso bruto mensual por barca.
+Para terminar este apartado se preguntó sobre los precios de venta y se estimó el ingreso bruto mensual por barca.
 
 ```{r}
 #| echo: false
@@ -2877,7 +2969,17 @@ ggplot(datos_long, aes(x = temporada, y = ingreso, fill = temporada)) +
     caption  = fuente_caption,
     x = NULL, y = "Pesos ($)"
   ) +
-  tema_informe
+theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 11, hjust = 0.5),
+    plot.subtitle = element_text(size = 9, hjust = 0.5, color = "gray40"),
+    plot.caption = element_text(size = 8, color = "gray50", hjust = 1),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.y = element_blank(),
+    plot.background = element_rect(fill = "white", color = NA),
+    legend.position = "none"
+  )
+
 
 
 
@@ -2995,11 +3097,22 @@ ggplot(datos_grafico, aes(x = Puerto, y = ingreso_zafra, fill = Puerto)) +
     caption  = fuente_caption,
     x = NULL, y = "Ingreso bruto mensual ($)"
   ) +
-  tema_informe
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 11, hjust = 0.5),
+    plot.subtitle = element_text(size = 9, hjust = 0.5, color = "gray40"),
+    plot.caption = element_text(size = 8, color = "gray50", hjust = 1),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.y = element_blank(),
+    plot.background = element_rect(fill = "white", color = NA),
+    legend.position = "none"
+  )
+
+ 
 
 ```
 
-El análisis del ingreso bruto estimado (precio × captura) revela una fuerte heterogeneidad territorial entre los puertos de la zona. El Puerto de Peñino se destaca muy por encima del resto: sus embarcaciones registran una mediana de 348.750 pesos mensuales en zafra y un promedio de 421.833 pesos, con picos que alcanzan el millón de pesos. Esto sugiere la presencia de una flota de mayor porte o con acceso a caladeros de mayor volumen (coincide que el equipo de encuestadores se encontró con una zafra de pesca en Penino).
+El análisis del ingreso bruto estimado (precio × captura) revela una fuerte heterogeneidad territorial entre los puertos de la zona. El puerto de Penino se destaca muy por encima del resto: sus embarcaciones registran una mediana de 348.750 pesos mensuales en zafra y un promedio de 421.833 pesos, con picos que alcanzan el millón de pesos. Esto sugiere la presencia de una flota de mayor porte o con acceso a caladeros de mayor volumen (coincide que el equipo de encuestadores se encontró con una zafra de pesca en Penino).
 
 En un segundo escalón se ubican Kiyú-Ordeig (mediana de 207.500 pesos) y Boca del Cufré (mediana de 180.000 pesos), mostrando niveles de facturación sólidos pero considerablemente menores. Por su parte, Arazatí presenta los ingresos más bajos de la muestra, con una mediana de 120.000 pesos y un promedio de 148.784 pesos, lo que refleja una flota más pequeña o con menores volúmenes de captura.
 
@@ -3007,8 +3120,7 @@ En un segundo escalón se ubican Kiyú-Ordeig (mediana de 207.500 pesos) y Boca 
 
 ```{r}
 #| echo: false
-library(dplyr)
-library(ggplot2)
+
 
 # ============================================================
 # 1. Limpieza y tabla resumen
@@ -3065,7 +3177,7 @@ ggplot(tabla_precio_anio, aes(x = hsize, y = Porcentaje, fill = cambio_precio_an
   )
 ```
 
-Al consultar sobre la evolución del precio del pescado en el último año, la mayoría de los pescadores percibe que el precio se mantuvo estable, mientras que un grupo menor señala que subió o bajó. Esta percepción de 'estabilidad' es sumamente significativa si se la cruza con los datos de inflación y aumento de costos: si el precio del pescado se mantuvo estático (o subió por debajo de la inflación) mientras los costos operativos (combustible, insumos, carnada) se incrementaron, el resultado es una pérdida real de poder adquisitivo para el sector. Esto dialoga directamente con la frase de un pescador en la sección cualitativa: 'Que seba, hace años se paga lo mismo'
+Al consultar sobre la evolución del precio del pescado en el último año, la mayoría de los pescadores percibe que el precio se mantuvo estable, mientras que un grupo menor señala que subió o bajó. Esta percepción de 'estabilidad' es sumamente significativa si se la cruza con los datos de inflación y aumento de costos: si el precio del pescado se mantuvo estático (o subió por debajo de la inflación) mientras los costos operativos (combustible, insumos, carnada) se incrementaron, el resultado es una pérdida real de poder adquisitivo para el sector. Esto dialoga directamente con la frase de un pescador en la sección cualitativa: 'Que suba, hace años se paga lo mismo'
 
 \newpage
 
@@ -3118,7 +3230,7 @@ Al consultar cuál es la especie que les reporta la mejor ganancia, las respuest
 
 ### Tripulación
 
-Finalmente, se pregunto sobre la tripulación a bordo de las embarcaciones y los desmalladores.
+Finalmente, se preguntó sobre la tripulación a bordo de las embarcaciones y los desmalladores.
 
 ```{r}
 #| echo: false
@@ -3163,7 +3275,7 @@ ggplot(tabla_personas, aes(x = factor(personas_a_bordo), y = pct, fill = factor(
   )
 ```
 
-La tripulación de la flota artesanal se caracteriza por ser reducida y de tipo familiar o de dupla. Más de la mitad de las embarcaciones (un 56,7%) opera habitualmente con 2 personas a bordo, mientras que un 38,3% lo hace con 3 personas. Las salidas individuales (1 persona) son prácticamente inexistentes, representando solo un 5% de los casos. Esta estructura de tripulación (predominio de dúos y tríos) es coherente con la organización del trabajo artesanal: una persona se aboca a la conducción de la embarcación y las artes de pesca, mientras que la otra (u otras dos) colabora con la maniobra, la selección de la captura y el desmallado. En total se registran 140 personas a bordo.
+La tripulación de la flota artesanal se caracteriza por ser reducida y de tipo familiar o de dupla. Más de la mitad de las embarcaciones (un 56,7%) opera habitualmente con 2 personas a bordo, mientras que un 38,3% lo hace con 3 personas. Las salidas individuales (1 persona) son prácticamente inexistentes, representando sólo un 5% de los casos. Esta estructura de tripulación (predominio de dúos y tríos) es coherente con la organización del trabajo artesanal: una persona se aboca a la conducción de la embarcación y las artes de pesca, mientras que la otra (u otras dos) colabora con la maniobra, la selección de la captura y el desmallado. En total se registran 140 personas a bordo.
 
 ```{r}
 #| echo: false
@@ -3313,37 +3425,41 @@ A nivel de cada embarcación, la diferencia también es notoria: el promedio de 
 
 # Conclusiones
 
-1\) Más del 60% de los hogares y las personas que trabajan en la pesca artesanal en el departamento ubican su lugar de residencia en la zona de Arazatí y en el barrio Penino de Ciudad del Plata.
+## Hogares y personas que trabajan en la pesca
 
-2\) La mitad de los pescadores artesanales tienen una condición de tenencia precaria de los terrenos donde residen, ubicándose la mayor parte de estos en predios fiscales en calidad de ocupantes y otro grupo en terrenos prestados.
+1\) Más del 60% de los hogares y las personas que trabajan en la pesca artesanal en el departamento ubican su lugar de residencia en la zona de Arazatí y en Penino de Ciudad del Plata.
+
+2\) La mitad de los pescadores artesanales tienen una condición de tenencia insegura de los terrenos donde residen, ubicándose la mayor parte de estos en predios fiscales o privados en calidad de ocupantes y otro grupo en terrenos prestados.
 
 3\) En cuanto a la materialidad de las viviendas, casi un 40% de los hogares ocupan unidades con algún grado de precariedad.
 
 4\) Con relación a los servicios, se observa que aproximadamente una cuarta parte de los pescadores artesanales no tiene acceso a agua segura lo que se refleja en los reclamos registrados en formato cualitativo. Con respecto a la evacuación de aguas servidas, más de las tres cuartas parte vierte en pozo negro y casi una quinta parte de forma totalmente precaria.
 
-5\) El sector tiene una significativa particpación en la actividad productiva de mujeres, que representan más de la quinta parte de los pescadores artesanales del departamento de San José. En relación con las edades, dos tercios de pescadores/as tienen entre 25 y 55 años, siendo el intervalo de mayor concentración entre 40 y 54 años.
+5\) El sector tiene una baja participación en la actividad productiva de mujeres, que representan cerca de la quinta parte de los pescadores artesanales de San José. En relación con las edades, dos tercios de pescadores/as tienen entre 25 y 55 años, siendo el intervalo de mayor concentración entre 40 y 54 años.
 
-6\) Con respecto a nivel educativo, la actividad concentra trabajadores cuya trayectoria en gran parte no supera los niveles iniciales de educación formal: casi las tres cuarta parte de los pescadores dice haber alcanzado Primaria. Si se le suma el primer ciclo de Educación Secundaria se completa el 88% de la población de estudio.
+6\) Con respecto a nivel educativo, la actividad concentra trabajadores cuya trayectoria en gran parte no supera los niveles iniciales de educación formal. Además, se registran 26% de hogares en los que hay menores de 18 años que no asisten a ningún centro educativo.
 
-7\) Se trata de un sector con una informalidad significativa en distintas dimensiones. En previsión social, el 64% no realiza aportes al BPS. En la actividad propiamente dicha, el 23% de las embarcaciones opera sin el permiso correspondiente de Prefectura y el 38% sin permiso de pesca de Dinara.
+7\) Respecto a la estabilidad en el rubro y su locación, más del 75% de los pescadores hace 10 años o más que están en actividad; y el 97% hace más de dos años que residen en la misma zona. También se destaca que el 77% de los pescadores relevados son patrones, dando cuenta de un perfil más autónomo de la actividad.
 
-8\) Considerando toda la flota, unas seis de cada diez embarcaciones no acceden al descuento de combustible previsto para el sector: el 38% por no contar con permiso de Dinara y otro 22% que, aun teniéndolo, no logra acceder por las razones detalladas en el punto 15. Esto les impide aprovechar un beneficio importante para reducir costos operativos
+8\) Se trata de un sector con una informalidad significativa en distintas dimensiones. En previsión social, el 64% no realiza aportes al BPS. En la actividad propiamente dicha, el 23% de los pescadores opera sin el permiso correspondiente de Prefectura y el 38% de las embarcaciones sin permiso de pesca de Dinara.
 
-9\) Al momento de identificar los principales problemas del sector, cuatro aspectos aparecen como los más destacados: los bajos precios que reciben por el producto, la formalización, dificultades de infraestructura como ausencia y precariedad de muelle y la contaminación que incide en los volúmenes de pesca.
+9\) Al momento de identificar los principales problemas del sector, cuatro aspectos aparecen como los más destacados: los bajos precios que reciben por el producto, la formalización, dificultades de infraestructura como ausencia y precariedad de muelle y la contaminación que incide en los volúmenes de pesca, estos problemas aparecen con diferentes niveles de prioridad según la localidad de que se trate.
 
-10\) Lo anterior es consistente con algunos de los intereses manifestados en materia de capacitación en que se destacó demandas en materia de comercialización y formalización. También se recogió un significativo interés relativos a la seguridad náutica y manipulación del producto *(Por más consideraciones al respecto, léase los hallazgos de carácter cualitativo en la página 29).*
+10\) Lo anterior es consistente con algunos de los intereses manifestados en materia de capacitación en que se destacó demandas en materia de comercialización y formalización. También se recogió un significativo interés relativos a la seguridad náutica y manipulación del producto *(Por más consideraciones al respecto, léase los hallazgos de carácter cualitativo en la página 31).*
 
 11\) Se observó una muy baja visibilidad de los espacios de participación "Consejo de Pesca" y "Mesa de Desarrollo", aspecto consistente con la escasa asociatividad manifestada por los pescadores que trabajan en la costa del departamento de San José. Esta realidad limita la capacidad de incidencia que estos trabajadores pueden tener sobre los temas que les incumben.
+
+## Embarcaciones y comercialización
 
 12\) La flota artesanal relevada de la cual se dispone información, está compuesta por 60 embarcaciones. La mayoría (77%) combina fibra y madera en su casco, y en su totalidad operan con motor fuera de borda de baja o media potencia (en su mayoría Yamaha o Mercury). En cuanto a su estado, el 53% son nuevas o están en buen estado y un 43% son antiguas pero con buen mantenimiento. Respecto a la tenencia, el 95% son propias, lo que confirma el carácter de trabajadores autónomos o cuentapropistas del sector.
 
 13\) En cuanto a la seguridad de la flota, la gran mayoría cuenta con equipamiento básico obligatorio: el 97% tiene chalecos salvavidas, el 80% luces de navegación y el 72% radio y navegación nocturna. Sin embargo, solo el 10% cuenta con motor auxiliar, lo que evidencia una vulnerabilidad ante fallas mecánicas en alta mar.
 
-14\) La operativa se concentra en los puertos base de Arazatí (32%), Penino (30%) y Boca del Cufré (20%). En zafra, el 90% de los pescadores opera exclusivamente en su puerto base o localidad, mostrando un fuerte arraigo. Sin embargo, fuera de zafra, la dependencia cae al 73% y un 15% migra hacia otros departamentos (como Colonia) en busca de mejores capturas, configurando una movilidad territorial forzada por la estacionalidad.
+14\) La operativa se concentra en los puertos base de Arazatí (32%), Penino (32%) y Boca del Cufré (20%). En zafra, el 90% de los pescadores opera exclusivamente en su puerto base o localidad, mostrando un fuerte arraigo. Sin embargo, fuera de zafra, la dependencia cae al 73% y un 15% migra hacia otros departamentos (como Colonia) en busca de mejores capturas, configurando una movilidad territorial forzada por la estacionalidad.
 
 15\) En materia de formalización y permisos, se constata una significativa brecha. Si bien el 62% de las embarcaciones cuenta con permiso de pesca de DINARA, un 38% opera en la informalidad: un 27% nunca tuvo el permiso, un 8% lo tiene vencido y un 3% lo está tramitando. Un dato alentador es que la totalidad (100%) de quienes nunca tuvieron permiso manifestó su interés en regularizarse, reclamando principalmente la simplificación de trámites, la apertura de cupos y mayor asesoramiento.
 
-16\) El acceso a beneficios operativos, como el descuento en el combustible, sigue siendo esquivo para una parte del sector. El 35% de quienes tienen permiso de DINARA no pueden acceder a este beneficio. Las razones principales son trabas burocráticas (trámites o documentación pendiente, 53,8%) y conflictos con la situación previsional (BPS, 23,1%). Esto evidencia que la informalidad y la carga administrativa no solo afectan la legalidad de la actividad, sino que impactan directamente en los costos de producción, marcando la necesidad de acompañamiento técnico para la regularización.
+16\) El acceso a beneficios operativos, como el descuento en el combustible, sigue siendo esquivo para una parte del sector. El 35% de quienes tienen permiso de DINARA no pueden acceder a este beneficio. Las razones principales son trabas burocráticas (trámites o documentación pendiente, 53,8%) y conflictos con la situación previsional (BPS, 23,1%). Esto evidencia que la informalidad y la carga administrativa no sólo afectan la legalidad de la actividad, sino que impactan directamente en los costos de producción, marcando la necesidad de acompañamiento técnico para la regularización.
 
 17\) La zafra no es un bloque único, sino que presenta una marcada bimodalidad a lo largo del año, con picos muy fuertes en verano (diciembre y enero, con más del 84% de las menciones) y un segundo bloque en invierno (julio y agosto, con más del 52%). Esto explica por qué el 83% de los pescadores afirma trabajar todo el año, alternando las especies objetivo según la temporada.
 
@@ -3356,3 +3472,15 @@ A nivel de cada embarcación, la diferencia también es notoria: el promedio de 
 21\) El destino principal del descarte es la devolución al agua (82%). Muy marginalmente se usa como carnada (5%) o para consumo familiar (3%). Esto indica que gran parte del volumen descartado no tiene aprovechamiento comercial y podría trabajarse mediante la formalización de plantas de procesamiento o mesas de fileteo para capturar un mayor margen.
 
 22\) La tripulación es reducida y de tipo familiar o de dupla: el 57% opera con 2 personas y el 38% con 3 personas. La contratación de desmalladores es una tarea tercerizada que genera empleo zafral: en temporada alta se contratan 113 personas en total, pero fuera de zafra la cifra cae a 28. Esto significa que desaparecen 85 puestos de trabajo (una caída del 75%), evidenciando la precariedad estructural del empleo en el sector.
+
+23\) La estacionalidad de los ingresos brutos (que caen de una mediana de 180.000 pesos en zafra a 30.000 pesos fuera de ella, una baja del 83%), actúa como un factor de estrés financiero que impide la acumulación de capital y la mejora de las condiciones de vida. Esta volatilidad extrema explica la dependencia de la pluriactividad (mencionada en apartados anteriores) y la imposibilidad de muchos pescadores de invertir en la mejora de sus viviendas o en mantener la formalización de sus embarcaciones (como el pago de permisos o el monotributo) durante los meses de veda.
+
+24\) La heterogeneidad territorial en los ingresos (con Penino generando medianas de 348.750 pesos frente a los 120.000 pesos de Arazatí) demuestra que las políticas públicas deben ser diferenciadas según la localidad. No basta con intervenir en la actividad pesquera en general; se requiere un abordaje focalizado que atienda las necesidades de infraestructura habitacional (agua y saneamiento) prioritariamente en Arazatí y Boca del Cufré, al mismo tiempo que se generan incentivos para el fortalecimiento comercial y el agregado de valor en aquellos puertos con mayor volumen de captura, como Penino.
+
+25\) Existe una relación directa entre las condiciones habitacionales y la vulnerabilidad económica del sector. Arazatí, la localidad con mayor índice de precariedad habitacional (73,7% de los hogares con al menos una carencia, incluyendo falta de agua segura y paredes precarias), es a su vez el puerto que registra los ingresos brutos más bajos en zafra (mediana de 120.000 pesos). Esto evidencia un círculo de exclusión donde el déficit de infraestructura básica y la baja rentabilidad de la pesca se retroalimentan, afectando la calidad de vida de los núcleos familiares que dependen de esta actividad.
+
+\newpage
+
+# Anexo
+
+En este apartado se incluyen los formularios utilizados en el Censo de Pescadores Artesanales de la costa del Río de la Plata del departamento de San José, año 2026:
