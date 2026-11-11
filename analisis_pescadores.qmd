@@ -160,7 +160,7 @@ grafico_barras_estilo <- function(tabla, var, titulo, subtitulo = NULL) {
 
 La siguiente tabla indica la distribución de los hogares y la cantidad de personas por localidad que trabajan en la pesca artesanal[^1]. En total se relevaron 53 hogares de pescadores artesanales, en los cuales residen 159 personas de los que se identificaron a 78 que trabajan en la pesca artesanal. El promedio es de 3 personas por hogar. Hay que señalar que cuatro hogares comparten dos viviendas.
 
-[^1]: Más adelante se profundiza sobre los "desmalladores", otro grupo personas ocupadas en la actividad productiva
+[^1]: Más adelante se profundiza sobre los "desmalladores", otro grupo de personas ocupadas en la actividad productiva
 
 La mayor concentración de hogares y personas se encuentra en Arazatí y Penino respectivamente que reúnen en ambas categorías alrededor de las dos terceras partes de las unidades relevadas. Luego se encuentran Boca del Cufré , Kiyú y Ordeig, otros departamentos (dos casos en Juan Lacaze y uno de San Luis) y por último Colonia Wilson.
 
@@ -369,7 +369,7 @@ A continuación se presenta un índice de "Precariedad Habitacional"[^2], de ela
 
     3.  Acceso al agua: Se consideró una carencia si el origen del agua no era la red de OSE (incluyendo pozo, recolección de lluvia, compra o préstamo de vecinos), lo que imposibilita garantizar agua segura para el consumo.
 
-    4.  Saneamiento: Se clasificó como deficitario si la evacuación de aguas servidas no se realizaba por pozo negro o saneameinto.
+    4.  Saneamiento: Se clasificó como deficitario si la evacuación de aguas servidas no se realizaba por pozo negro o saneamiento.
 
     A cada hogar se le asignó un valor de 1 (tiene la carencia) o 0 (no la tiene) en cada dimensión. Posteriormente, se creó la variable "Hogares con al menos una carencia", que identifica a aquellos núcleos familiares que presentan déficit en al menos uno de los cuatro puntos anteriores. Finalmente, los datos se agregaron por localidad para calcular la proporción de hogares afectados en cada territorio.
 
@@ -1123,7 +1123,7 @@ A su vez, un 27% afirmó que realizan otras actividades complementarias. Estas s
 
 \newpage
 
-En el gráfico siguiente se observa, la distribución de los intervalos de ingreso (ganancia resultante una vez pagado todos los costos), según zafra y fuera de zafra de acuerdo a lo que marcan los pescadores.
+En el gráfico siguiente se observa, la distribución de los intervalos de ingreso (ganancia resultante una vez pago todos los costos), según zafra y fuera de zafra de acuerdo a lo que marcan los pescadores.
 
 ```{r}
 #| echo: false
@@ -1427,7 +1427,7 @@ ggplot(tabla_cap_temas, aes(x = etiqueta, y = pct, fill = etiqueta)) +
   tema_informe
 ```
 
-El tema más mencionado fue comercialización, elegido por el 36% de los pescadores; en segundo lugar formalización, mencionado por el 32%; en tercer lugar, 28%, el interés se volcó por seguridad naútica y en cuarto lugar, manipulación del pescado, mencionado por el 23% de los pescadores. También otros temas como manejo de artes de pesca y primeros auxilios fueron mencionados por casi una quinta parte de los entrevistas como temas de interés para capacitarse. Con porcentajes menores de menciones aparecen buceo, administración y gestión ambiental. En "Otro" se encuentran tres menciones más a "Administración", una a "Meteorología" y otra a "Mecánica".
+El tema más mencionado fue comercialización, elegido por el 36% de los pescadores; en segundo lugar formalización, mencionado por el 32%; en tercer lugar, 28%, el interés se volcó por seguridad náutica y en cuarto lugar, manipulación del pescado, mencionado por el 23% de los pescadores. También otros temas como manejo de artes de pesca y primeros auxilios fueron mencionados por casi una quinta parte de los entrevistados como temas de interés para capacitarse. Con porcentajes menores de menciones aparecen buceo, administración y gestión ambiental. En "Otro" se encuentran tres menciones más a "Administración", una a "Meteorología" y otra a "Mecánica".
 
 \newpage
 
@@ -1851,7 +1851,7 @@ Tres ideas ordenan el conjunto:
 
 - Vocación y pertenencia: gusto por la actividad y vínculo con el entorno natural y el territorio.
 
-Por último, se recaban algunas observaciones generales, donde vale la pena destacar las menciones a la merma percibida sobre la cantidad de pescado en los últimos 5 años, el mal estado de la bajadas en varios puntos y lo díficil que resulta mantener el monotributo fuera de zafra.
+Por último, se recaban algunas observaciones generales, donde vale la pena destacar las menciones a la merma percibida sobre la cantidad de pescado en los últimos 5 años, el mal estado de las bajadas en varios puntos y lo difícil que resulta mantener el monotributo fuera de zafra.
 
 \newpage
 
@@ -1883,13 +1883,13 @@ grafico_barras_estilo(tabla_puerto, "puerto_base",
                       "Distribución de embarcaciones según puerto base")
 ```
 
-En el gráfico superior se observa que los puertos bases que tiene más embarcaciones son Penino y Araziti con el 32% de las mismas cada uno. Es decir que estos dos puertos base, concentran casi el 64% de las embarcaciones que operan en la pesca artesanal de la costa platense de San José. Después vemos que el 20% trabajan desde Boca del Cufré, un 12% desde Kiyú-Ordeig y un 5% restante desde otros. Sobre estos últimos, dos dicen tener como referencia puertos base de Colonia y uno Montevideo.
+En el gráfico superior se observa que los puertos bases que tiene más embarcaciones son Penino y Arazatí con el 32% de las mismas cada uno. Es decir que estos dos puertos base, concentran casi el 64% de las embarcaciones que operan en la pesca artesanal de la costa platense de San José. Después vemos que el 20% trabajan desde Boca del Cufré, un 12% desde Kiyú-Ordeig y un 5% restante desde otros. Sobre estos últimos, dos dicen tener como referencia puertos base de Colonia y uno Montevideo.
 
 \newpage
 
 ### Características de la embarcación
 
-Al pasar a describir la embarcación, el 100% informó operar con motor "fuera de borda". De las 60 embarcaciones, un 13% cuenta con motores de 100 o más hp; un 25 tienen motores de entre 50 y 90 hp; un 35% tiene motores de 40 hp y el resto de 5 hp a 30 hp. El 90% de las embarcaciones tienen motores de las marcas Yamaha o Mercury, en ese orden de magnitud. Además, la tercera parte de las embarcaciones también cuenta con remos.
+Al pasar a describir la embarcación, el 100% informó operar con motor "fuera de borda". De las 60 embarcaciones, un 13% cuenta con motores de 100 o más hp; un 25% tienen motores de entre 50 y 90 hp; un 35% tiene motores de 40 hp y el resto de 5 hp a 30 hp. El 90% de las embarcaciones tienen motores de las marcas Yamaha o Mercury, en ese orden de magnitud. Además, la tercera parte de las embarcaciones también cuenta con remos.
 
 En relación al material del casco, como se observa en la siguiente gráfica, un 77% informó que son de "fibra y madera", un 17% sólo de "fibra" y un 7% dijo que el casco es sólo de madera.
 
@@ -1912,7 +1912,7 @@ grafico_barras_estilo(tabla_material_casco, "material_casco",
 
 \newpage
 
-También se relevo sobre la percepción sobre el estado de las embarcaciones.
+También se relevó sobre la percepción sobre el estado de las embarcaciones.
 
 ```{r}
 #| echo: false
@@ -1928,7 +1928,7 @@ grafico_barras_estilo(tabla_estado, "estado_embarcacion",
                       "Distribución de embarcaciones según su estado")
 ```
 
-Se informó que un 53% de las embarcaciones son nueva o están en buen estado; un 43% si bien son antiguas, se encuentran en buen estado de mantenimiento y un 3%, además de antiguas, se están en mal estado.
+Se informó que un 53% de las embarcaciones son nuevas o están en buen estado; un 43% si bien son antiguas, se encuentran en buen estado de mantenimiento y un 3%, además de antiguas, están en mal estado.
 
 En la tabla inferior se ve la distribución de las embarcaciones según régimen de tenencia.
 
@@ -2059,7 +2059,7 @@ grafico_barras_estilo(tabla_permiso, "permiso_dinara",
 
 En el gráfico superior, se ve que un 62% de las embarcaciones cuentan con el permiso de pesca de Dinara, mientras que un 38% no lo tiene aunque aquí se observan distintas situaciones: aquellas que nunca tuvieron el permiso que representan el 27% de las embarcaciones; quienes lo tienen vencido, el 8% y las embarcaciones que están con el permiso en trámite, 3%.
 
-A aquellos que nunca tuvieron permiso (16) se les consultó si tienen interés en formalizarse y el total de manifestó tenerlo.
+A aquellos que nunca tuvieron permiso (16) se les consultó si tienen interés en formalizarse y el total se manifestó tenerlo.
 
 En cuanto a las dificultades que encuentran para formalizarse, tabla inferior, un 45% reclamó simplificar los trámites, un 30% dijo que estaban a la espera que Dinara habilitara el registro y una quinta parte demanda asesoramiento e información.
 
@@ -2308,7 +2308,7 @@ grafico_barras_estilo(tabla_luz_malla, "luz_malla_tramo",
 
 ```
 
-Más de la mitad (un 53%) dijo usar redes con luz de malla de 14 centímetros o más (acorde a la exigencia normativa de DINARA - Resolución N°333/2022); un 28% menos de 8 cm; un 15% luz de malla de entre 8 a 13 cm; y un 3% no aportó información. Según estos datos, un 43% de las embarcaciones estaría pescando con una luz de malla que no cumple la normativa (si bien recientemente hubo una excepción para los pescadores de Boca de Cufré para este año que admite una luz de malla mínima de 8 cm).
+Más de la mitad (un 53%) dijo usar redes con luz de malla de 14 centímetros o más (acorde a la exigencia normativa de DINARA - Resolución N°333/2022); un 28% menos de 8 cm; un 15% luz de malla de entre 8 a 13 cm; y un 3% no aportó información. Según estos datos, un 43% de las embarcaciones estaría pescando con una luz de malla que no cumple la normativa (si bien recientemente hubo una excepción para los pescadores de Boca del Cufré para este año que admite una luz de malla mínima de 8 cm).
 
 \newpage
 
@@ -2869,7 +2869,7 @@ La comercialización del pescado se realiza mayoritariamente en su formato enter
 
 \newpage
 
-Para terminar este apartado se preguntó sobre los precios de venta y se estimo el ingreso bruto mensual por barca.
+Para terminar este apartado se preguntó sobre los precios de venta y se estimó el ingreso bruto mensual por barca.
 
 ```{r}
 #| echo: false
@@ -3230,7 +3230,7 @@ Al consultar cuál es la especie que les reporta la mejor ganancia, las respuest
 
 ### Tripulación
 
-Finalmente, se pregunto sobre la tripulación a bordo de las embarcaciones y los desmalladores.
+Finalmente, se preguntó sobre la tripulación a bordo de las embarcaciones y los desmalladores.
 
 ```{r}
 #| echo: false
@@ -3478,3 +3478,9 @@ A nivel de cada embarcación, la diferencia también es notoria: el promedio de 
 24\) La heterogeneidad territorial en los ingresos (con Penino generando medianas de 348.750 pesos frente a los 120.000 pesos de Arazatí) demuestra que las políticas públicas deben ser diferenciadas según la localidad. No basta con intervenir en la actividad pesquera en general; se requiere un abordaje focalizado que atienda las necesidades de infraestructura habitacional (agua y saneamiento) prioritariamente en Arazatí y Boca del Cufré, al mismo tiempo que se generan incentivos para el fortalecimiento comercial y el agregado de valor en aquellos puertos con mayor volumen de captura, como Penino.
 
 25\) Existe una relación directa entre las condiciones habitacionales y la vulnerabilidad económica del sector. Arazatí, la localidad con mayor índice de precariedad habitacional (73,7% de los hogares con al menos una carencia, incluyendo falta de agua segura y paredes precarias), es a su vez el puerto que registra los ingresos brutos más bajos en zafra (mediana de 120.000 pesos). Esto evidencia un círculo de exclusión donde el déficit de infraestructura básica y la baja rentabilidad de la pesca se retroalimentan, afectando la calidad de vida de los núcleos familiares que dependen de esta actividad.
+
+\newpage
+
+# Anexo
+
+En este apartado se incluyen los formularios utilizados en el Censo de Pescadores Artesanales de la costa del Río de la Plata del departamento de San José, año 2026:
