@@ -445,7 +445,7 @@ tabla_final %>%
 
 El análisis de las carencias habitacionales revela una realidad crítica que afecta a la mayoría de los pescadores, aunque con diferencias territoriales marcadas. A nivel general, Arazatí se posiciona como la localidad más vulnerable: el 73,7% de sus hogares (14 de 19) presenta al menos una carencia. Allí se concentran los problemas de falta de agua segura (8 hogares) y las paredes precarias (9 hogares).
 
-Le siguen Boca del Cufré y Kiyú-Ordeig, donde el 62,5% y el 60% de los hogares respectivamente tienen al menos una carencia, destacándose en ambas un fuerte déficit en la evacuación de aguas servidas. Penino, a pesar de ser uno de los puertos con mayor cantidad de embarcaciones, muestra un nivel de precariedad relativamente menor (43,8%), aunque la mitad de sus viviendas (8 de 16) presentan paredes con materiales precarios.
+Le siguen Boca del Cufré y Kiyú-Ordeig, donde el 62,5% y el 60% de los hogares respectivamente tienen al menos una carencia, destacándose en ambas un fuerte déficit en la evacuación de aguas servidas. Penino, a pesar de ser uno de los puertos con mayor cantidad de embarcaciones, muestra un nivel de precariedad relativamente menor (47,1%), aunque casi la mitad de sus hogares (8 de 17) presentan paredes con materiales precarios.
 
 Un caso aparte lo constituye Colonia Wilson, donde su único hogar registrado acumula carencias en todas las dimensiones (paredes, agua y saneamiento). Finalmente, en la categoría "Otra", el 50% de los hogares presenta carencias, principalmente vinculadas a la falta de acceso a la red de OSE.
 
